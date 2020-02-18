@@ -10,7 +10,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "com.stfalcon.getstreamlow_level_client_kotlin_test"
+        applicationId "io.getstream.getstreamlow_level_client_kotlin_test"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1

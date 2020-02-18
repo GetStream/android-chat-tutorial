@@ -1,4 +1,4 @@
-package com.stfalcon.getstreamlow_level_client_kotlin_test
+package io.getstream.getstreamlow_level_client_kotlin_test
 
 import android.app.Application
 import android.app.PendingIntent
@@ -15,7 +15,6 @@ import io.getstream.chat.android.client.logger.ChatLoggerImpl
 import io.getstream.chat.android.client.logger.ChatLoggerLevel
 import io.getstream.chat.android.client.models.Message
 import io.getstream.chat.android.client.notifications.ChatNotificationConfig
-import io.getstream.chat.android.client.notifications.ChatNotificationsManagerImpl
 import io.getstream.chat.android.client.notifications.DeviceRegisteredListener
 import io.getstream.chat.android.client.notifications.NotificationMessageLoadListener
 import io.getstream.chat.android.client.notifications.options.ChatNotificationOptions

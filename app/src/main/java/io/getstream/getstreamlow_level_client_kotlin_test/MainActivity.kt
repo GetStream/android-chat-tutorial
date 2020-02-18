@@ -1,9 +1,9 @@
-package com.stfalcon.getstreamlow_level_client_kotlin_test
+package io.getstream.getstreamlow_level_client_kotlin_test
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.api.models.*
 import io.getstream.chat.android.client.errors.ChatError

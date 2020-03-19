@@ -1,4 +1,4 @@
-package com.stfalcon.getstreamlow_level_client_kotlin_test
+package io.getstream.docs
 
 import android.app.Application
 

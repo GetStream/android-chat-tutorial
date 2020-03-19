@@ -1,4 +1,4 @@
-package com.stfalcon.getstreamlow_level_client_kotlin_test
+package io.getstream.docs
 
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +17,7 @@ import io.getstream.chat.android.client.utils.FilterObject
 import io.getstream.chat.android.client.utils.ProgressCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
+import io.getstream.docs.R
 
 
 /**

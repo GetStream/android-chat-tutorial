@@ -1,35 +1,40 @@
 package com.stfalcon.getstreamlow_level_client_kotlin_test
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.api.models.*
 import io.getstream.chat.android.client.errors.ChatError
 import io.getstream.chat.android.client.events.ConnectedEvent
+import io.getstream.chat.android.client.events.NewMessageEvent
 import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.Message
 import io.getstream.chat.android.client.models.User
+import io.getstream.chat.android.client.socket.InitConnectionListener
 import io.getstream.chat.android.client.utils.FilterObject
 import io.getstream.chat.android.client.utils.ProgressCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
-class MainActivity : AppCompatActivity() {
+
+/**
+ * https://getstream.io/chat/docs/?language=kotlin
+ */
+class DocsActivity : AppCompatActivity() {
     companion object {
         private val TAG = this::class.java.simpleName
     }
 
-    private val client = ChatClient.instance()
+    lateinit var client: ChatClient
     private lateinit var channel: Channel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        client.setUser(User("bender"))
+        initClient()
 
         client.events().subscribe { event ->
             if (event is ConnectedEvent) {
@@ -40,6 +45,103 @@ class MainActivity : AppCompatActivity() {
 
         initButtons()
     }
+
+    private fun initClient() {
+
+        /**
+         * Typically done in your Application class
+         */
+
+        val apiKey = "qk4nn7rpcn75"
+        val token =
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiYmVuZGVyIn0.3KYJIoYvSPgTURznP8nWvsA2Yj2-vLqrm-ubqAeOlcQ"
+        val context = getApplicationContext()
+        val client = ChatClient.Builder(apiKey, context).build()
+
+        /**
+         * Set the user to establish the websocket connection
+         * Usually done when you open the chat interface
+         */
+
+
+        /**
+         * extraData allows you to add any custom fields you want to store about your user
+         * the UI components will pick up name and image by default
+         */
+        val user = User("bender")
+        user.extraData["image"] = "https://bit.ly/321RmWb"
+        user.extraData["name"] = "Bender"
+
+        client.setUser(user, token, object : InitConnectionListener() {
+
+            override fun onSuccess(data: ConnectionData) {
+                val user = data.user
+                val connectionId = data.connectionId
+            }
+
+            override fun onError(error: ChatError) {
+                error.printStackTrace()
+            }
+        })
+
+        this.client = client
+    }
+
+    private fun queryChannels() {
+
+        /**
+         * Note how the withWatch() argument ensures that we are watching the channel for any changes/new messages
+         */
+
+        val channelType = "messaging"
+        val channelId = "uniq-channel-id"
+
+        val channelController = client.channel(channelType, channelId)
+        val request = ChannelQueryRequest().withMessages(20).withWatch()
+
+        channelController.query(request).enqueue {
+            if (it.isSuccess) {
+                val channel = it.data()
+            } else {
+                it.error().printStackTrace()
+            }
+        }
+    }
+
+    private fun sendMessage() {
+
+        /**
+         * Prepare the message
+         */
+        val message = Message()
+        message.text = "Hello world"
+
+        val channelType = "messaging"
+        val channelId = "uniq-channel-id"
+
+        val channel = client.channel(channelType, channelId)
+
+        /**
+         * Send the message to the channel
+         */
+        channel.sendMessage(message).enqueue {
+            if (it.isSuccess) {
+                val message = it.data()
+            } else {
+                it.error().printStackTrace()
+            }
+        }
+    }
+
+    private fun events() {
+        val subscription = client.events().subscribe { event ->
+            if (event is NewMessageEvent) {
+                val message = event.message
+            }
+        }
+        subscription.unsubscribe()
+    }
+
 
     private fun initButtons() {
         channelQueryBtn?.setOnClickListener {
@@ -52,7 +154,7 @@ class MainActivity : AppCompatActivity() {
             stopWatching()
         }
         channelSendMessageBtn?.setOnClickListener {
-            sendMessageToChannel()
+            sendMessage()
         }
         channelShowBtn?.setOnClickListener {
             showChannel()
@@ -132,36 +234,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun queryChannels() {
-        client.queryChannels(
-            QueryChannelsRequest(
-                Filters.eq("type", "messaging"),
-                0,
-                1
-            )
-        ).enqueue { channelList ->
-            if (channelList.isSuccess) {
-                channel = channelList.data().first()
-            }
-        }
-    }
 
     private fun watchChannel() {
+
+        val chController = client.channel("", "")
+
         Thread {
-            val watchResult = channel.watch(ChannelWatchRequest()).execute()
+            val watchResult = chController.watch().execute()
             Log.d(TAG, "Watch: $watchResult")
         }.start()
-    }
-
-    private fun sendMessageToChannel() {
-        val message = Message().apply { text = "My first message" }
-        client.sendMessage(
-            channelId = channel.id,
-            channelType = channel.type,
-            message = message
-        ).enqueue { result ->
-            result.isSuccess
-        }
     }
 
     private fun stopWatching() {
@@ -192,7 +273,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun markReadMessage() {
-        client.markRead(
+        client.markMessageRead(
             channelType = channel.type,
             channelId = channel.id,
             messageId = "message-id"
@@ -463,11 +544,6 @@ class MainActivity : AppCompatActivity() {
         ).enqueue { result ->
             // Check result and show message
         }
-    }
-
-    private fun getUnreadCound() {
-        client.getState().user?.unreadChannels
-        client.getState().user?.totalUnreadCount
     }
 
 }

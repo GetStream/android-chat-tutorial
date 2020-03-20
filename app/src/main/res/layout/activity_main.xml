@@ -1,193 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/testMainContainer"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.getstream.sdk.chat.viewmodel.ChannelListViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:context=".DocsActivity"
-        tools:visibility="visible">
+        tools:context="com.example.chattutorial.MainActivity">
 
-        <Button
-            android:id="@+id/channelQueryBtn"
+        <com.getstream.sdk.chat.view.ChannelListView
+            android:id="@+id/channelList"
             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:streamReadStateAvatarHeight="15dp"
+            app:streamReadStateAvatarWidth="15dp"
+            app:streamReadStateTextSize="9sp"
+            app:streamShowReadState="true" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Channel query" />
+            app:isGone="@{!safeUnbox(viewModel.loading)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/channelWatchBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Watch channel" />
+        <ProgressBar
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="16dp"
+            app:isGone="@{!safeUnbox(viewModel.loadingMore)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/channelStopWatchingBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Stop watching channel" />
-
-        <Button
-            android:id="@+id/channelSendMessageBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send Message to channel" />
-
-        <Button
-            android:id="@+id/channelShowBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show channel" />
-
-        <Button
-            android:id="@+id/channelHideBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hide channel" />
-
-        <Button
-            android:id="@+id/channelMessageMarkReadBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mark as read" />
-
-        <Button
-            android:id="@+id/channelAcceptInviteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Accept channel Invite" />
-
-        <Button
-            android:id="@+id/channelRejectInviteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reject channel Invite" />
-
-        <Button
-            android:id="@+id/channelUpdateMsgBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update channel message" />
-
-        <Button
-            android:id="@+id/getUsersBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get users" />
-
-        <Button
-            android:id="@+id/userAddMemberBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add member" />
-
-        <Button
-            android:id="@+id/userRemoveMemberBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Remove member" />
-
-        <Button
-            android:id="@+id/userMuteUserBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mute user" />
-
-        <Button
-            android:id="@+id/userUnMuteUserBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Un Mute user" />
-
-        <Button
-            android:id="@+id/userBanBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ban user" />
-
-        <Button
-            android:id="@+id/userUnBanBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ban unuser" />
-
-        <Button
-            android:id="@+id/messageSearchBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Search message" />
-
-        <Button
-            android:id="@+id/messageGetBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get message" />
-
-        <Button
-            android:id="@+id/messageUpdateBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update message" />
-
-        <Button
-            android:id="@+id/messageSendActionBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send action" />
-
-        <Button
-            android:id="@+id/messageGetRepliesBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get replies" />
-
-        <Button
-            android:id="@+id/messageGetReactionsBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Get reactions" />
-
-        <Button
-            android:id="@+id/messageDeleteReactionsBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete reactions" />
-
-        <Button
-            android:id="@+id/messageDeleteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete message" />
-
-        <Button
-            android:id="@+id/fileSendBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send file" />
-
-        <Button
-            android:id="@+id/imageSendBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send image" />
-
-        <Button
-            android:id="@+id/fileDeleteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete file" />
-
-        <Button
-            android:id="@+id/imageDeleteBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete image" />
-
-    </LinearLayout>
-</ScrollView>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

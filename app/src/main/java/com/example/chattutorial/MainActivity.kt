@@ -1,59 +1,55 @@
 package com.example.chattutorial
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
-import com.example.chattutorial.databinding.ActivityMainBinding
-import com.getstream.sdk.chat.StreamChat
-import com.getstream.sdk.chat.viewmodel.ChannelListViewModel
-import io.getstream.chat.android.client.models.Filters.`in`
-import io.getstream.chat.android.client.models.Filters.and
-import io.getstream.chat.android.client.models.Filters.eq
+import com.getstream.sdk.chat.Chat
+import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
+import com.getstream.sdk.chat.viewmodel.channels.bindView
+import io.getstream.chat.android.client.errors.ChatError
+import io.getstream.chat.android.client.logger.ChatLogLevel
+import io.getstream.chat.android.client.logger.ChatLogger
 import io.getstream.chat.android.client.models.User
+import io.getstream.chat.android.client.socket.InitConnectionListener
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+    private val viewModel by lazy { ChannelsViewModelImpl() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
 
-        // setup the client using the example API key
-        // normally you would call init in your Application class and not the activity
-        StreamChat.init(StreamChat.Config("2mhcpx4yke7x", this.applicationContext))
-        val client = StreamChat.getInstance()
-        val extraData = HashMap<String, Any>()
-        extraData["name"] = "Paranoid Android"
-        extraData["image"] = "https://bit.ly/2TIt8NR"
-        val currentUser = User("weathered-dust-6")
+        Chat.Builder(apiKey = "b67pax5b2wdq", context = applicationContext).build()
+        ChatLogger.instance =
+            ChatLogger.Builder(ChatLogger.Config(level = ChatLogLevel.ALL, handler = null)).build()
+
+        val user = User("summer-brook-2").apply {
+            extraData["name"] = "Paranoid Android"
+            extraData["image"] = "https://bit.ly/2TIt8NR"
+        }
+
         // User token is typically provided by your server when the user authenticates
-        client.setUser(
-            currentUser,
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoid2VhdGhlcmVkLWR1c3QtNiJ9.BkWDEi7suYpXBpJQs8ddzKd6sKJJSmS1_5vZkA70_FE"
+        Chat.getInstance().setUser(
+            user = user,
+            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0",
+            callbacks = object : InitConnectionListener() {
+                override fun onSuccess(data: ConnectionData) {
+                    Log.i("MainActivity", "setUser completed")
+                }
+
+                override fun onError(error: ChatError) {
+                    Toast.makeText(this@MainActivity, error.toString(), Toast.LENGTH_LONG).show()
+                    Log.e("MainActivity", "setUser onError")
+                }
+            }
         )
 
-        // we're using data binding in this example
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        // Specify the current activity as the lifecycle owner.
-        binding.lifecycleOwner = this
-
-        // most the business logic for chat is handled in the ChannelListViewModel view model
-        val viewModel = ViewModelProvider(this).get(ChannelListViewModel::class.java)
-
-        binding.viewModel = viewModel
-        binding.channelList.setViewModel(viewModel, this)
-
-        // query all channels of type messaging
-        val filter = and(eq("type", "messaging"), `in`("members", "weathered-dust-6"))
-        viewModel.setChannelFilter(filter)
-
-        // click handlers for clicking a user avatar or channel
-        binding.channelList.setOnChannelClickListener { channel ->
+        channelsView.setOnChannelClickListener { channel ->
             // open the channel activity
-        }
-        binding.channelList.setOnUserClickListener { user ->
-            // open your user profile
+            startActivity(ChannelActivity.newIntent(this, channel))
         }
 
+        viewModel.bindView(channelsView, this)
     }
 }

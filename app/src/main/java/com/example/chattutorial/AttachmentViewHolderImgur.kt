@@ -18,7 +18,7 @@ class AttachmentViewHolderImgur(resId: Int, parent: ViewGroup) :
 
     override fun bind(
         context: Context,
-        messageListItem: MessageListItem,
+        messageListItem: MessageListItem.MessageItem,
         message: Message,
         attachment: Attachment,
         style: MessageListViewStyle,

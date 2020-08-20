@@ -3,89 +3,83 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.example.chattutorial.databinding.ActivityChannelBinding
-import com.getstream.sdk.chat.StreamChat
-import com.getstream.sdk.chat.model.Channel
-import com.getstream.sdk.chat.utils.PermissionChecker
-import com.getstream.sdk.chat.view.MessageInputView.PermissionRequestListener
-import com.getstream.sdk.chat.viewmodel.ChannelViewModel
-import com.getstream.sdk.chat.viewmodel.ChannelViewModelFactory
+import com.getstream.sdk.chat.view.common.visible
+import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
+import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
+import com.getstream.sdk.chat.viewmodel.bindView
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
+import com.getstream.sdk.chat.viewmodel.messages.bindView
+import io.getstream.chat.android.client.models.Channel
+import kotlinx.android.synthetic.main.activity_channel.*
 
 /**
  * Show the messages for a channel
  *
  */
-class ChannelActivity : AppCompatActivity(), PermissionRequestListener {
+class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
 
-    private lateinit var binding: ActivityChannelBinding
+    private val cid by lazy {
+        intent.getStringExtra(CID_KEY)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // receive the intent and create a channel object
-        val intent = intent
-        val channelType = intent.getStringExtra(EXTRA_CHANNEL_TYPE)
-        val channelID = intent.getStringExtra(EXTRA_CHANNEL_ID)
-        val client = StreamChat.getInstance()
+        val messagesViewModel = MessageListViewModel(cid)
+            .apply {
+                bindView(messageListView, this@ChannelActivity)
+                state.observe(
+                    this@ChannelActivity,
+                    {
+                        when (it) {
+                            is MessageListViewModel.State.Loading -> progressBar.visible(true)
+                            is MessageListViewModel.State.Result -> progressBar.visible(false)
+                            is MessageListViewModel.State.NavigateUp -> finish()
+                        }
+                    }
+                )
+            }
 
-        // we're using data binding in this example
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_channel)
-        // most the business logic of the chat is handled in the ChannelViewModel view model
-        binding.lifecycleOwner = this
+        ChannelHeaderViewModel(cid).bindView(channelHeaderView, this)
 
-        val viewModelFactory = ChannelViewModelFactory(application, channelType, channelID)
-        val viewModel = ViewModelProvider(this, viewModelFactory).get(ChannelViewModel::class.java)
-
-        viewModel.initializedState.observe(this, Observer {
-            // connect the view model
-            binding.viewModel = viewModel
-            binding.messageList.setViewModel(viewModel, this)
-            binding.messageInput.setViewModel(viewModel, this)
-            // TODO: add typing events
-            binding.channelHeader.setViewModel(viewModel, this)
-            // If you are using own MessageInputView please comment this line.
-            binding.messageInput.setPermissionRequestListener(this)
-        })
-    }
-
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // If you are using own MessageInputView please comment this line.
-        binding.messageInput.captureMedia(requestCode, resultCode, data)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String?>,
-        grantResults: IntArray
-    ) { // If you are using own MessageInputView please comment this line.
-        binding.messageInput.permissionResult(requestCode, permissions, grantResults)
-    }
-
-    override fun openPermissionRequest() {
-        PermissionChecker.permissionCheck(this, null)
-        // If you are writing a Channel Screen in a Fragment, use the code below instead of the code above.
-        // PermissionChecker.permissionCheck(getActivity(), this);
+        MessageInputViewModel(cid).apply {
+            bindView(messageInputView, this@ChannelActivity)
+            messagesViewModel.mode.observe(
+                this@ChannelActivity,
+                {
+                    when (it) {
+                        is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
+                        is MessageListViewModel.Mode.Normal -> resetThread()
+                    }
+                }
+            )
+            messageListView.setOnMessageEditHandler {
+                editMessage.postValue(it)
+            }
+        }
+        val backButtonHandler = {
+            messagesViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
+        }
+        channelHeaderView.onBackClick = { backButtonHandler() }
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    backButtonHandler()
+                }
+            }
+        )
     }
 
     companion object {
+        private const val CID_KEY = "key:cid"
 
-        private const val EXTRA_CHANNEL_TYPE = "com.example.chattutorial.CHANNEL_TYPE"
-        private const val EXTRA_CHANNEL_ID = "com.example.chattutorial.CHANNEL_ID"
-
-        fun newIntent(context: Context, channel: Channel): Intent {
-            val intent = Intent(context, ChannelActivity::class.java)
-            intent.putExtra(EXTRA_CHANNEL_TYPE, channel.type)
-            intent.putExtra(EXTRA_CHANNEL_ID, channel.id)
-            return intent
-        }
+        fun newIntent(context: Context, channel: Channel) =
+            Intent(context, ChannelActivity::class.java).apply {
+                putExtra(CID_KEY, channel.cid)
+            }
     }
-
 }

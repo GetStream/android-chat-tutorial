@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
@@ -15,20 +15,17 @@ import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 import kotlinx.android.synthetic.main.activity_channel.*
 
-/**
- * Show the messages for a channel
- *
- */
 class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
 
-    private val cid by lazy {
-        intent.getStringExtra(CID_KEY)
+    private val cid: String by lazy {
+        intent.getStringExtra(CID_KEY)!!
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val messagesViewModel = MessageListViewModel(cid)
+        val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
+        //TODO Set ViewHolderFactory
+        val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
             .apply {
                 bindView(messageListView, this@ChannelActivity)
                 state.observe(
@@ -43,9 +40,9 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
                 )
             }
 
-        ChannelHeaderViewModel(cid).bindView(channelHeaderView, this)
+        viewModelProvider.get(ChannelHeaderViewModel::class.java).bindView(channelHeaderView, this)
 
-        MessageInputViewModel(cid).apply {
+        viewModelProvider.get(MessageInputViewModel::class.java).apply {
             bindView(messageInputView, this@ChannelActivity)
             messagesViewModel.mode.observe(
                 this@ChannelActivity,

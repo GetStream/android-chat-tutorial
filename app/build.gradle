@@ -30,13 +30,14 @@ android {
         exclude 'META-INF/*.kotlin_module'
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
 }
 
 dependencies {
-    implementation 'com.github.getStream:stream-chat-android:4.2.11-beta-8'
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0-alpha07"
+    implementation 'com.github.GetStream:stream-chat-android:4.2.11-beta-11'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 

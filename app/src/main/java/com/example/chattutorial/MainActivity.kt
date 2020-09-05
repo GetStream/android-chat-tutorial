@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.Chat
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
@@ -15,14 +16,13 @@ import io.getstream.chat.android.client.socket.InitConnectionListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
-    private val viewModel by lazy { ChannelsViewModelImpl() }
+    private val viewModel by lazy { ViewModelProvider(this).get(ChannelsViewModelImpl::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Chat.Builder(apiKey = "b67pax5b2wdq", context = applicationContext).build()
-        ChatLogger.instance =
-            ChatLogger.Builder(ChatLogger.Config(level = ChatLogLevel.ALL, handler = null)).build()
+        ChatLogger.Builder(ChatLogger.Config(level = ChatLogLevel.ALL, handler = null)).build()
 
         val user = User("summer-brook-2").apply {
             extraData["name"] = "Paranoid Android"

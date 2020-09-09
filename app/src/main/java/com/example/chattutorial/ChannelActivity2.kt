@@ -30,15 +30,16 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
             .apply {
                 bindView(messageListView, this@ChannelActivity2)
                 state.observe(
-                    this@ChannelActivity2,
-                    {
-                        when (it) {
-                            is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                            is MessageListViewModel.State.Result -> progressBar.visible(false)
-                            is MessageListViewModel.State.NavigateUp -> finish()
-                        }
-                    }
+                    this@ChannelActivity2
                 )
+                {
+                    when (it) {
+                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
+                        is MessageListViewModel.State.Result -> progressBar.visible(false)
+                        is MessageListViewModel.State.NavigateUp -> finish()
+                    }
+                }
+
             }
 
         viewModelProvider.get(ChannelHeaderViewModel::class.java).bindView(channelHeaderView, this)
@@ -46,14 +47,15 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
         viewModelProvider.get(MessageInputViewModel::class.java).apply {
             bindView(messageInputView, this@ChannelActivity2)
             messagesViewModel.mode.observe(
-                this@ChannelActivity2,
-                {
-                    when (it) {
-                        is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
-                        is MessageListViewModel.Mode.Normal -> resetThread()
-                    }
-                }
+                this@ChannelActivity2
             )
+            {
+                when (it) {
+                    is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
+                    is MessageListViewModel.Mode.Normal -> resetThread()
+                }
+            }
+
             messageListView.setOnMessageEditHandler {
                 editMessage.postValue(it)
             }

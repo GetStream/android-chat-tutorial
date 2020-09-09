@@ -34,15 +34,15 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             .apply {
                 bindView(messageListView, this@ChannelActivity3)
                 state.observe(
-                    this@ChannelActivity3,
-                    {
-                        when (it) {
-                            is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                            is MessageListViewModel.State.Result -> progressBar.visible(false)
-                            is MessageListViewModel.State.NavigateUp -> finish()
-                        }
-                    }
+                    this@ChannelActivity3
                 )
+                {
+                    when (it) {
+                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
+                        is MessageListViewModel.State.Result -> progressBar.visible(false)
+                        is MessageListViewModel.State.NavigateUp -> finish()
+                    }
+                }
             }
 
         val channelController = ChatClient.instance().channel(cid)
@@ -53,12 +53,12 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
                 is TypingStartEvent -> {
-                    val name = it.user.extraData["name"]!! as String
+                    val name = it.user.extraData["name"] as String
                     typingCopy += name
                     currentlyTyping.postValue(typingCopy)
                 }
                 is TypingStopEvent -> {
-                    val name = it.user.extraData["name"]!! as String
+                    val name = it.user.extraData["name"] as String
                     typingCopy -= name
                     currentlyTyping.postValue(typingCopy)
                 }
@@ -77,14 +77,13 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         viewModelProvider.get(MessageInputViewModel::class.java).apply {
             bindView(messageInputView, this@ChannelActivity3)
             messagesViewModel.mode.observe(
-                this@ChannelActivity3,
-                {
-                    when (it) {
-                        is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
-                        is MessageListViewModel.Mode.Normal -> resetThread()
-                    }
+                this@ChannelActivity3
+            ) {
+                when (it) {
+                    is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
+                    is MessageListViewModel.Mode.Normal -> resetThread()
                 }
-            )
+            }
             messageListView.setOnMessageEditHandler {
                 editMessage.postValue(it)
             }

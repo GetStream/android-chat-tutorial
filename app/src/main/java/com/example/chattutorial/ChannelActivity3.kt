@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
@@ -20,51 +21,51 @@ import kotlinx.android.synthetic.main.activity_channel_3.*
 
 class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
-    private val cid by lazy {
-        intent.getStringExtra(CID_KEY)
+    private val cid: String by lazy {
+        intent.getStringExtra(CID_KEY)!!
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
 
         messageListView.setViewHolderFactory(MyMessageViewHolderFactory())
-        val messagesViewModel = MessageListViewModel(cid)
+        val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
             .apply {
                 bindView(messageListView, this@ChannelActivity3)
                 state.observe(
-                    this@ChannelActivity3,
-                    Observer {
-                        when (it) {
-                            is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                            is MessageListViewModel.State.Result -> progressBar.visible(false)
-                            is MessageListViewModel.State.NavigateUp -> finish()
-                        }
-                    }
+                    this@ChannelActivity3
                 )
+                {
+                    when (it) {
+                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
+                        is MessageListViewModel.State.Result -> progressBar.visible(false)
+                        is MessageListViewModel.State.NavigateUp -> finish()
+                    }
+                }
             }
 
         val channelController = ChatClient.instance().channel(cid)
-        val currentlyTyping = MutableLiveData<List<String>>(ArrayList())
+        val currentlyTyping = MutableLiveData<Set<String>>(HashSet())
 
         channelController.events().subscribe {
-            val name = it.user!!.extraData["name"]!! as String
-            val typing = currentlyTyping.value ?: listOf()
-            val typingCopy: MutableList<String> = typing.toMutableList()
+            val typing = currentlyTyping.value ?: setOf()
+            val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
                 is TypingStartEvent -> {
-                    if (typingCopy.contains(name).not()) {
-                        typingCopy.add(name)
-                    }
+                    val name = it.user.extraData["name"] as String
+                    typingCopy += name
                     currentlyTyping.postValue(typingCopy)
                 }
                 is TypingStopEvent -> {
-                    typingCopy.remove(name)
+                    val name = it.user.extraData["name"] as String
+                    typingCopy -= name
                     currentlyTyping.postValue(typingCopy)
                 }
             }
         }
 
-        val typingObserver = Observer<List<String>> { users ->
+        val typingObserver = Observer<Set<String>> { users ->
             var typing = "nobody is typing"
             if (users.isNotEmpty()) {
                 typing = "typing: " + users.joinToString(", ")
@@ -73,17 +74,16 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         }
         currentlyTyping.observe(this, typingObserver)
 
-        MessageInputViewModel(cid).apply {
+        viewModelProvider.get(MessageInputViewModel::class.java).apply {
             bindView(messageInputView, this@ChannelActivity3)
             messagesViewModel.mode.observe(
-                this@ChannelActivity3,
-                Observer {
-                    when (it) {
-                        is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
-                        is MessageListViewModel.Mode.Normal -> resetThread()
-                    }
+                this@ChannelActivity3
+            ) {
+                when (it) {
+                    is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
+                    is MessageListViewModel.Mode.Normal -> resetThread()
                 }
-            )
+            }
             messageListView.setOnMessageEditHandler {
                 editMessage.postValue(it)
             }

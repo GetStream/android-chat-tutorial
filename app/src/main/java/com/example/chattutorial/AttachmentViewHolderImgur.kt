@@ -4,6 +4,7 @@ package com.example.chattutorial
 import android.content.Context
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.getstream.sdk.chat.adapter.AttachmentListItem
 import com.getstream.sdk.chat.adapter.BaseAttachmentViewHolder
 import com.getstream.sdk.chat.adapter.MessageListItem
 import com.getstream.sdk.chat.utils.roundedImageView.PorterShapeImageView
@@ -20,7 +21,7 @@ class AttachmentViewHolderImgur(resId: Int, parent: ViewGroup) :
         context: Context,
         messageListItem: MessageListItem.MessageItem,
         message: Message,
-        attachment: Attachment,
+        attachmentListItem: AttachmentListItem,
         style: MessageListViewStyle,
         bubbleHelper: MessageListView.BubbleHelper,
         clickListener: MessageListView.AttachmentClickListener?,
@@ -30,12 +31,12 @@ class AttachmentViewHolderImgur(resId: Int, parent: ViewGroup) :
             messageListItem.message,
             messageListItem.isMine,
             messageListItem.positions,
-            attachment
+            attachmentListItem.attachment
         )
         ivMediaThumb.setShape(context, background)
 
         Glide.with(context)
-            .load(attachment.thumbUrl)
+            .load(attachmentListItem.attachment.thumbUrl)
             .into(ivMediaThumb)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.chattutorial
 
 import android.view.ViewGroup
+import com.getstream.sdk.chat.adapter.AttachmentListItem
 import com.getstream.sdk.chat.adapter.AttachmentListItemAdapter
 import com.getstream.sdk.chat.adapter.BaseAttachmentViewHolder
 import com.getstream.sdk.chat.adapter.MessageViewHolderFactory
@@ -10,23 +11,13 @@ import io.getstream.chat.android.client.models.Message
 class MyMessageViewHolderFactory : MessageViewHolderFactory() {
 
     override fun getAttachmentViewType(
-        message: Message?,
-        mine: Boolean?,
-        position: Position?,
-        attachments: List<Attachment>?,
-        attachment: Attachment
+        attachmentItem: AttachmentListItem
     ): Int {
-        val imageUrl = attachment.imageUrl ?: ""
+        val imageUrl = attachmentItem.attachment.imageUrl ?: ""
         return if (imageUrl.indexOf("imgur") != -1) {
             IMGUR_TYPE
         } else {
-            super.getAttachmentViewType(
-                message,
-                mine,
-                position,
-                attachments,
-                attachment
-            )
+            super.getAttachmentViewType(attachmentItem)
         }
     }
 

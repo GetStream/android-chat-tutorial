@@ -46,10 +46,10 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             }
 
         val channelController = ChatClient.instance().channel(cid)
-        val currentlyTyping = MutableLiveData<Set<String>>(HashSet())
+        val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
 
         channelController.events().subscribe {
-            val typing = currentlyTyping.value ?: setOf()
+            val typing = currentlyTyping.value ?: emptySet()
             val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
                 is TypingStartEvent -> {

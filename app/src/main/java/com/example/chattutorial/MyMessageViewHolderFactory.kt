@@ -25,10 +25,11 @@ class MyMessageViewHolderFactory : MessageViewHolderFactory() {
         adapter: AttachmentListItemAdapter,
         parent: ViewGroup,
         viewType: Int
-    ): BaseAttachmentViewHolder = if (viewType == IMGUR_TYPE) {
-        AttachmentViewHolderImgur(R.layout.list_item_attach_imgur, parent)
-    } else {
-        super.createAttachmentViewHolder(adapter, parent, viewType)
+    ): BaseAttachmentViewHolder {
+        return when (viewType) {
+            IMGUR_TYPE -> AttachmentViewHolderImgur(R.layout.list_item_attach_imgur, parent)
+            else -> super.createAttachmentViewHolder(adapter, parent, viewType)
+        }
     }
 
     companion object {

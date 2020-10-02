@@ -24,7 +24,9 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
-        // TODO set custom ViewHolderFactory
+
+        // TODO set custom AttachmentViewHolderFactory
+
         val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
             .apply {
                 bindView(messageListView, this@ChannelActivity)

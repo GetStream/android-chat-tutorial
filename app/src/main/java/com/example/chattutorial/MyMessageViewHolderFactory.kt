@@ -1,34 +1,29 @@
 package com.example.chattutorial
 
 import android.view.ViewGroup
-import com.getstream.sdk.chat.adapter.AttachmentListItem
-import com.getstream.sdk.chat.adapter.AttachmentListItemAdapter
-import com.getstream.sdk.chat.adapter.BaseAttachmentViewHolder
-import com.getstream.sdk.chat.adapter.MessageViewHolderFactory
-import io.getstream.chat.android.client.models.Attachment
-import io.getstream.chat.android.client.models.Message
+import com.getstream.sdk.chat.adapter.*
+import com.getstream.sdk.chat.adapter.viewholder.attachment.BaseAttachmentViewHolder
+import com.getstream.sdk.chat.view.MessageListViewStyle
 
-class MyMessageViewHolderFactory : MessageViewHolderFactory() {
+class MyAttachmentViewHolderFactory : AttachmentViewHolderFactory() {
 
-    override fun getAttachmentViewType(
-        attachmentItem: AttachmentListItem
-    ): Int {
+    override fun getAttachmentViewType(attachmentItem: AttachmentListItem): Int {
         val imageUrl = attachmentItem.attachment.imageUrl ?: ""
-        return if (imageUrl.indexOf("imgur") != -1) {
-            IMGUR_TYPE
-        } else {
-            super.getAttachmentViewType(attachmentItem)
+        return when {
+            imageUrl.indexOf("imgur") != -1 -> IMGUR_TYPE
+            else -> super.getAttachmentViewType(attachmentItem)
         }
     }
 
     override fun createAttachmentViewHolder(
-        adapter: AttachmentListItemAdapter,
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
+        style: MessageListViewStyle,
+        messageItem: MessageListItem.MessageItem
     ): BaseAttachmentViewHolder {
         return when (viewType) {
-            IMGUR_TYPE -> AttachmentViewHolderImgur(R.layout.list_item_attach_imgur, parent)
-            else -> super.createAttachmentViewHolder(adapter, parent, viewType)
+            IMGUR_TYPE -> AttachmentViewHolderImgur(parent, bubbleHelper, messageItem)
+            else -> super.createAttachmentViewHolder(parent, viewType, style, messageItem)
         }
     }
 

@@ -29,7 +29,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         super.onCreate(savedInstanceState)
         val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
 
-        messageListView.setViewHolderFactory(MyMessageViewHolderFactory())
+        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
         val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
             .apply {
                 bindView(messageListView, this@ChannelActivity3)
@@ -46,10 +46,10 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             }
 
         val channelController = ChatClient.instance().channel(cid)
-        val currentlyTyping = MutableLiveData<Set<String>>(HashSet())
+        val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
 
-        channelController.events().subscribe {
-            val typing = currentlyTyping.value ?: setOf()
+        channelController.subscribe {
+            val typing = currentlyTyping.value ?: emptySet()
             val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
                 is TypingStartEvent -> {

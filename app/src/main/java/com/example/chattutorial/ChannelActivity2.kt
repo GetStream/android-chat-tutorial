@@ -13,7 +13,10 @@ import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel_2.*
+import kotlinx.android.synthetic.main.activity_channel_2.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel_2.messageInputView
+import kotlinx.android.synthetic.main.activity_channel_2.messageListView
+import kotlinx.android.synthetic.main.activity_channel_2.progressBar
 
 class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
 
@@ -25,7 +28,7 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
         super.onCreate(savedInstanceState)
         val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
 
-        messageListView.setViewHolderFactory(MyMessageViewHolderFactory())
+        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
         val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
             .apply {
                 bindView(messageListView, this@ChannelActivity2)

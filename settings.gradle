@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='Getstream low-level-client-kotlin-test'
+rootProject.name='doc-sample-android-chat-client-kotlin'

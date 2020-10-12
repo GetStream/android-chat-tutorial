@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
@@ -43,20 +45,34 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
                 }
             }
 
-        channelHeaderView.text = "nobody is typing"
-        val currentlyTyping = mutableSetOf<String>()
-        ChatClient.instance().channel(cid).subscribe { event ->
-            when (event) {
-                is TypingStartEvent -> event.user.extraData["name"]?.let {
-                    currentlyTyping.add(it as String)
-                    updateChannelHeaderView(currentlyTyping)
+        val channelController = ChatClient.instance().channel(cid)
+        val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
+
+        channelController.subscribe {
+            val typing = currentlyTyping.value ?: emptySet()
+            val typingCopy: MutableSet<String> = typing.toMutableSet()
+            when (it) {
+                is TypingStartEvent -> {
+                    val name = it.user.extraData["name"] as String
+                    typingCopy += name
+                    currentlyTyping.postValue(typingCopy)
                 }
-                is TypingStopEvent -> event.user.extraData["name"]?.let {
-                    currentlyTyping.remove(it as String)
-                    updateChannelHeaderView(currentlyTyping)
+                is TypingStopEvent -> {
+                    val name = it.user.extraData["name"] as String
+                    typingCopy -= name
+                    currentlyTyping.postValue(typingCopy)
                 }
             }
         }
+
+        val typingObserver = Observer<Set<String>> { users ->
+            var typing = "nobody is typing"
+            if (users.isNotEmpty()) {
+                typing = "typing: " + users.joinToString(", ")
+            }
+            channelHeaderView.text = typing
+        }
+        currentlyTyping.observe(this, typingObserver)
 
         viewModelProvider.get(MessageInputViewModel::class.java).apply {
             bindView(messageInputView, this@ChannelActivity3)
@@ -84,13 +100,6 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
                 }
             }
         )
-    }
-
-    private fun updateChannelHeaderView(currentlyTyping: Set<String>) {
-        channelHeaderView.text = when {
-            currentlyTyping.isNotEmpty() -> "typing: ${currentlyTyping.joinToString()}"
-            else -> "nobody is typing"
-        }
     }
 
     companion object {

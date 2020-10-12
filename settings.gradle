@@ -1,2 +1,2 @@
-include ':app'
+include ':samplekotlin'
 rootProject.name='doc-sample-android-chat-client-kotlin'

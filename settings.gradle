@@ -1,2 +1,3 @@
+include ':samplejava'
 include ':samplekotlin'
 rootProject.name='doc-sample-android-chat-client-kotlin'

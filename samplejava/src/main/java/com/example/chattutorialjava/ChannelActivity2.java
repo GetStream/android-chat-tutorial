@@ -37,7 +37,7 @@ public class ChannelActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel2);
+        setContentView(R.layout.activity_channel_2);
         final MessageListView messageListView = findViewById(R.id.messageListView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         final ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);

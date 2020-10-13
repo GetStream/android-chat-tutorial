@@ -1,17 +1,18 @@
+import com.example.chattutorial.Dependencies
+import com.example.chattutorial.Configuration
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion Configuration.compileSdkVersion
     defaultConfig {
         applicationId "com.example.chattutorial"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion Configuration.minSdkVersion
+        targetSdkVersion Configuration.targetSdkVersion
+        versionCode Configuration.versionCode
+        versionName Configuration.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,7 +27,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     packagingOptions {
@@ -39,13 +40,14 @@ android {
 }
 
 dependencies {
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0-beta01"
-    implementation 'com.github.GetStream:stream-chat-android:4.3.0-beta-5'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation Dependencies.kotlinSTDLib
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation Dependencies.lifecycleViewModel
+    implementation Dependencies.streamAndroid
+    implementation Dependencies.glide
+    annotationProcessor Dependencies.glideCompiler
+
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation Dependencies.appCompat
+    implementation Dependencies.constraintLayout
 }

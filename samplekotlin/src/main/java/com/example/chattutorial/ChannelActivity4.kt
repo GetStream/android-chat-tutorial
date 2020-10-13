@@ -17,9 +17,9 @@ import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel_3.*
+import kotlinx.android.synthetic.main.activity_channel_4.*
 
-class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
+class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
 
     private val cid: String by lazy {
         intent.getStringExtra(CID_KEY)!!
@@ -32,9 +32,9 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
         val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
             .apply {
-                bindView(messageListView, this@ChannelActivity3)
+                bindView(messageListView, this@ChannelActivity4)
                 state.observe(
-                    this@ChannelActivity3
+                    this@ChannelActivity4
                 )
                 {
                     when (it) {
@@ -75,9 +75,9 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         currentlyTyping.observe(this, typingObserver)
 
         viewModelProvider.get(MessageInputViewModel::class.java).apply {
-            bindView(messageInputView, this@ChannelActivity3)
+            bindView(messageInputView, this@ChannelActivity4)
             messagesViewModel.mode.observe(
-                this@ChannelActivity3
+                this@ChannelActivity4
             ) {
                 when (it) {
                     is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
@@ -106,7 +106,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         private const val CID_KEY = "key:cid"
 
         fun newIntent(context: Context, channel: Channel) =
-            Intent(context, ChannelActivity3::class.java).apply {
+            Intent(context, ChannelActivity4::class.java).apply {
                 putExtra(CID_KEY, channel.cid)
             }
     }

@@ -33,12 +33,12 @@ import io.getstream.chat.android.client.models.User;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
-public class ChannelActivity3 extends AppCompatActivity {
+public class ChannelActivity4 extends AppCompatActivity {
 
     private final static String CID_KEY = "key:cid";
 
     public static Intent newIntent(Context context, Channel channel) {
-        final Intent intent = new Intent(context, ChannelActivity3.class);
+        final Intent intent = new Intent(context, ChannelActivity4.class);
         intent.putExtra(CID_KEY, channel.getCid());
         return intent;
     }
@@ -46,7 +46,7 @@ public class ChannelActivity3 extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel3);
+        setContentView(R.layout.activity_channel4);
         final MessageListView messageListView = findViewById(R.id.messageListView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         final TextView channelHeaderView = findViewById(R.id.channelHeaderView);

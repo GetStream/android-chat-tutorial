@@ -6,4 +6,5 @@ object Configuration {
 	const val minSdkVersion = 21
 	const val versionCode = 1
 	const val versionName = "1.0"
+	const val ndkVersion = "21.3.6528147"
 }

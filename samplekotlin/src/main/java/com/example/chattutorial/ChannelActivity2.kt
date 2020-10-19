@@ -3,10 +3,10 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
@@ -37,8 +37,8 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
                 )
                 {
                     when (it) {
-                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                        is MessageListViewModel.State.Result -> progressBar.visible(false)
+                        is MessageListViewModel.State.Loading -> progressBar.visibility = View.VISIBLE
+                        is MessageListViewModel.State.Result -> progressBar.visibility = View.GONE
                         is MessageListViewModel.State.NavigateUp -> finish()
                     }
                 }

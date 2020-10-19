@@ -3,12 +3,12 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
@@ -17,7 +17,10 @@ import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel_3.*
+import kotlinx.android.synthetic.main.activity_channel_3.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel_3.messageInputView
+import kotlinx.android.synthetic.main.activity_channel_3.messageListView
+import kotlinx.android.synthetic.main.activity_channel_3.progressBar
 
 class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
@@ -38,8 +41,8 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
                 )
                 {
                     when (it) {
-                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                        is MessageListViewModel.State.Result -> progressBar.visible(false)
+                        is MessageListViewModel.State.Loading -> progressBar.visibility = View.VISIBLE
+                        is MessageListViewModel.State.Result -> progressBar.visibility = View.GONE
                         is MessageListViewModel.State.NavigateUp -> finish()
                     }
                 }

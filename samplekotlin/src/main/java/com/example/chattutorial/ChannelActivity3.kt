@@ -50,11 +50,13 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         val nobodyTypingText = "nobody is typing"
         channelHeaderView.text = nobodyTypingText
         val typingObserver = Observer<List<User>> { users ->
-            var typing = nobodyTypingText
-            if (users.isNotEmpty()) {
-                typing = "typing: " + users.joinToString(", ") { it.name }
+            channelHeaderView.text = if (users.isNotEmpty()) {
+                "typing: " + users.joinToString(", ") { it.name }
+            } else {
+                nobodyTypingText
             }
         }
+
         ChatDomain.instance().useCases.watchChannel(cid, messageLimit = 30).enqueue {
             if (it.isSuccess) {
                 val channelController = it.data()

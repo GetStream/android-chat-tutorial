@@ -66,11 +66,11 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         }
 
         val typingObserver = Observer<Set<String>> { users ->
-            var typing = "nobody is typing"
-            if (users.isNotEmpty()) {
-                typing = "typing: " + users.joinToString(", ")
+            channelHeaderView.text = if (users.isEmpty()) {
+                "nobody is typing"
+            } else {
+                "typing: " + users.joinToString(", ")
             }
-            channelHeaderView.text = typing
         }
         currentlyTyping.observe(this, typingObserver)
 

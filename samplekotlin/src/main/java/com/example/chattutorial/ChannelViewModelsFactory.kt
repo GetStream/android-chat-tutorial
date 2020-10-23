@@ -7,6 +7,7 @@ import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 
 @Suppress("UNCHECKED_CAST")
+// TODO: move to library?
 class ChannelViewModelsFactory(private val cid: String) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
         MessageListViewModel::class.java -> MessageListViewModel(cid) as T

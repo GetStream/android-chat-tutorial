@@ -54,7 +54,6 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             if (users.isNotEmpty()) {
                 typing = "typing: " + users.joinToString(", ") { it.name }
             }
-            channelHeaderView.text = typing
         }
         ChatDomain.instance().useCases.watchChannel(cid, messageLimit = 30).enqueue {
             if (it.isSuccess) {

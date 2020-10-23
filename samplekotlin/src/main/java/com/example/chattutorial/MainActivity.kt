@@ -6,17 +6,25 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.Chat
+import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
 import io.getstream.chat.android.client.errors.ChatError
 import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.logger.ChatLogger
+import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.client.socket.InitConnectionListener
+import io.getstream.chat.android.client.utils.FilterObject
+import io.getstream.chat.android.livedata.ChatDomain
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
-    private val viewModel by lazy { ViewModelProvider(this).get(ChannelsViewModelImpl::class.java) }
+    private val viewModel by lazy {
+        val filter = Filters.and(Filters.eq("type", "messaging"), Filters.`in`("members", listOf(ChatDomain.instance().currentUser.id)))
+        val viewModelFactory = ChannelsViewModelFactory(filter, ChannelsViewModel.DEFAULT_SORT)
+        ViewModelProvider(this, viewModelFactory).get(ChannelsViewModelImpl::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +40,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         // User token is typically provided by your server when the user authenticates
         Chat.getInstance().setUser(
             user = user,
-            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0",
-            callbacks = object : InitConnectionListener() {
-                override fun onSuccess(data: ConnectionData) {
-                    Log.i("MainActivity", "setUser completed")
-                }
-
-                override fun onError(error: ChatError) {
-                    Toast.makeText(this@MainActivity, error.toString(), Toast.LENGTH_LONG).show()
-                    Log.e("MainActivity", "setUser onError")
-                }
-            }
+            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
         )
 
         channelsView.setOnChannelClickListener { channel ->

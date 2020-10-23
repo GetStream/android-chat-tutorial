@@ -71,23 +71,24 @@ public class ChannelActivity3 extends AppCompatActivity {
 
         ChannelController channelController = ChatClient.instance().channel(cid);
         MutableLiveData<Set<String>> currentlyTyping = new MutableLiveData<>(new HashSet<>());
-        channelController.subscribe(event -> {
-
-            if (event instanceof TypingStartEvent) {
-                User user = ((TypingStartEvent) event).getUser();
-                String name = (String) user.getExtraData().get("name");
-                Set<String> typingCopy = currentlyTyping.getValue();
-                typingCopy.add(name);
-                currentlyTyping.postValue(typingCopy);
-            } else if (event instanceof TypingStopEvent) {
-                User user = ((TypingStopEvent) event).getUser();
-                String name = (String) user.getExtraData().get("name");
-                Set<String> typingCopy = currentlyTyping.getValue();
-                typingCopy.remove(name);
-                currentlyTyping.postValue(typingCopy);
-            }
-            return null;
-        });
+        channelController.subscribeFor(
+                new Class[]{TypingStartEvent.class, TypingStartEvent.class},
+                event -> {
+                    if (event instanceof TypingStartEvent) {
+                        User user = ((TypingStartEvent) event).getUser();
+                        String name = (String) user.getExtraData().get("name");
+                        Set<String> typingCopy = currentlyTyping.getValue();
+                        typingCopy.add(name);
+                        currentlyTyping.postValue(typingCopy);
+                    } else if (event instanceof TypingStopEvent) {
+                        User user = ((TypingStopEvent) event).getUser();
+                        String name = (String) user.getExtraData().get("name");
+                        Set<String> typingCopy = currentlyTyping.getValue();
+                        typingCopy.remove(name);
+                        currentlyTyping.postValue(typingCopy);
+                    }
+                    return null;
+                });
         currentlyTyping.observe(this, users -> {
             String typing = "nobody is typing";
             if (!users.isEmpty()) {

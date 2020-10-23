@@ -15,13 +15,22 @@ import org.jetbrains.annotations.Nullable;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.Arrays;
+import java.util.Collections;
+
 import io.getstream.chat.android.client.errors.ChatError;
 import io.getstream.chat.android.client.logger.ChatLogLevel;
 import io.getstream.chat.android.client.logger.ChatLogger;
 import io.getstream.chat.android.client.logger.ChatLogger.Config;
+import io.getstream.chat.android.client.models.Filters;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.client.socket.InitConnectionListener;
+import io.getstream.chat.android.client.utils.FilterObject;
+import io.getstream.chat.android.livedata.ChatDomain;
 import kotlin.Unit;
+
+import static java.util.Collections.singletonList;
 
 public final class MainActivity extends AppCompatActivity {
 
@@ -47,9 +56,18 @@ public final class MainActivity extends AppCompatActivity {
                 Log.e("MainActivity", "setUser onError");
             }
         });
-        final ChannelsViewModel channelsViewModel = new ViewModelProvider(this).get(ChannelsViewModelImpl.class);
 
-        final ChannelsView channelsView = findViewById(R.id.channelsView);
+        FilterObject filter = Filters.and(
+                Filters.eq("type", "messaging"),
+                Filters.in("members", singletonList(ChatDomain.instance().getCurrentUser().getId()))
+        );
+        ChannelsViewModelFactory factory = new ChannelsViewModelFactory(
+                filter,
+                ChannelsViewModel.DEFAULT_SORT
+        );
+        ChannelsViewModel channelsViewModel = new ViewModelProvider(this, factory).get(ChannelsViewModelImpl.class);
+
+        ChannelsView channelsView = findViewById(R.id.channelsView);
         channelsView.setOnChannelClickListener((channel -> {
             startActivity(ChannelActivity.newIntent(this, channel));
             return Unit.INSTANCE;

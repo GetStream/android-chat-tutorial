@@ -14,6 +14,7 @@ import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.controllers.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
@@ -48,7 +49,10 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         val channelController = ChatClient.instance().channel(cid)
         val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
 
-        channelController.subscribe {
+        channelController.subscribeFor(
+            TypingStartEvent::class,
+            TypingStopEvent::class
+        ) {
             val typing = currentlyTyping.value ?: emptySet()
             val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
@@ -66,8 +70,9 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         }
 
         val typingObserver = Observer<Set<String>> { users ->
-            channelHeaderView.text = if (users.isEmpty()) { "nobody is typing" } else {
-                "typing: " + users.joinToString(", ")
+            channelHeaderView.text = when {
+                users.isEmpty() -> "nobody is typing"
+                else -> "typing: " + users.joinToString(", ")
             }
         }
         currentlyTyping.observe(this, typingObserver)

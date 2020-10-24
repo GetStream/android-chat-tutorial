@@ -19,6 +19,7 @@
         <activity android:name=".ChannelActivity" />
         <activity android:name=".ChannelActivity2" />
         <activity android:name=".ChannelActivity3" />
+        <activity android:name=".ChannelActivity4" />
     </application>
 
 </manifest>

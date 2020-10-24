@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.getstream.sdk.chat.view.MessageListView;
@@ -20,23 +21,24 @@ import com.getstream.sdk.chat.viewmodel.MessageInputViewModelBinding;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModelBinding;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+import io.getstream.chat.android.client.ChatClient;
+import io.getstream.chat.android.client.controllers.ChannelController;
+import io.getstream.chat.android.client.events.TypingStartEvent;
+import io.getstream.chat.android.client.events.TypingStopEvent;
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.User;
-import io.getstream.chat.android.livedata.ChatDomain;
-import io.getstream.chat.android.livedata.controller.ChannelController;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
-public class ChannelActivity3 extends AppCompatActivity {
+public class ChannelActivity4 extends AppCompatActivity {
 
     private final static String CID_KEY = "key:cid";
-    private final static int MESSAGE_LIMIT = 30;
 
     public static Intent newIntent(Context context, Channel channel) {
-        final Intent intent = new Intent(context, ChannelActivity3.class);
+        final Intent intent = new Intent(context, ChannelActivity4.class);
         intent.putExtra(CID_KEY, channel.getCid());
         return intent;
     }
@@ -44,7 +46,7 @@ public class ChannelActivity3 extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel_3);
+        setContentView(R.layout.activity_channel_4);
         final MessageListView messageListView = findViewById(R.id.messageListView);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         final TextView channelHeaderView = findViewById(R.id.channelHeaderView);
@@ -67,24 +69,31 @@ public class ChannelActivity3 extends AppCompatActivity {
             }
         });
 
-        String nobodyTypingText = "nobody is typing";
-        channelHeaderView.setText(nobodyTypingText);
-        ChatDomain.instance().getUseCases().getWatchChannel().invoke(cid, MESSAGE_LIMIT).enqueue(result -> {
-            if (result.isSuccess()) {
-                ChannelController channelController = result.data();
-                runOnUiThread(() -> channelController.getTyping().observe(this, users -> {
-                    String typing = nobodyTypingText;
-                    if (!users.isEmpty()) {
-                        List<String> names = new LinkedList<>();
-                        for (User user : users) {
-                            names.add((String) user.getExtraData().get("name"));
-                        }
-                        typing = "typing: " + TextUtils.join(", ", names);
-                    }
-                    channelHeaderView.setText(typing);
-                }));
+        ChannelController channelController = ChatClient.instance().channel(cid);
+        MutableLiveData<Set<String>> currentlyTyping = new MutableLiveData<>(new HashSet<>());
+        channelController.subscribe(event -> {
+
+            if (event instanceof TypingStartEvent) {
+                User user = ((TypingStartEvent) event).getUser();
+                String name = (String) user.getExtraData().get("name");
+                Set<String> typingCopy = currentlyTyping.getValue();
+                typingCopy.add(name);
+                currentlyTyping.postValue(typingCopy);
+            } else if (event instanceof TypingStopEvent) {
+                User user = ((TypingStopEvent) event).getUser();
+                String name = (String) user.getExtraData().get("name");
+                Set<String> typingCopy = currentlyTyping.getValue();
+                typingCopy.remove(name);
+                currentlyTyping.postValue(typingCopy);
             }
-            return Unit.INSTANCE;
+            return null;
+        });
+        currentlyTyping.observe(this, users -> {
+            String typing = "nobody is typing";
+            if (!users.isEmpty()) {
+                typing = "typing: " + TextUtils.join(", ", users);
+            }
+            channelHeaderView.setText(typing);
         });
 
         final MessageInputViewModel messageInputViewModel = viewModelProvider.get(MessageInputViewModel.class);

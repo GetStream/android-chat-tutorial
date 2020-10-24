@@ -30,12 +30,12 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
+        // TODO set custom AttachmentViewHolderFactory
+
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
         channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
-
-        // TODO set custom AttachmentViewHolderFactory
 
         // step 3 - let the message input know when we open a thread
         messageListViewModel.mode.observe(this) {

@@ -30,12 +30,14 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
+        // Set custom AttachmentViewHolderFactory
+        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
 
-        // Set custom AttachmentViewHolderFactory
-        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+
 
         // step 3 - let the message input know when we open a thread
         messageListViewModel.mode.observe(this) {
@@ -57,15 +59,8 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             }
         }
 
-        ChatDomain.instance().useCases.watchChannel(cid, messageLimit = 30).enqueue {
-            if (it.isSuccess) {
-                val channelController = it.data()
-                runOnUiThread {
-                    channelController.typing.observe(this, typingObserver)
-                }
-
-            }
-        }
+        val channelController = ChatDomain.instance().useCases.watchChannel(cid, 0).execute().data()
+        channelController.typing.observe(this, typingObserver)
 
         // step 5 - handle back button behaviour correctly when you're in a thread
         val backButtonHandler = {
@@ -86,7 +81,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         private const val CID_KEY = "key:cid"
 
         fun newIntent(context: Context, channel: Channel) =
-            Intent(context, ChannelActivity::class.java).apply {
+            Intent(context, ChannelActivity3::class.java).apply {
                 putExtra(CID_KEY, channel.cid)
             }
     }

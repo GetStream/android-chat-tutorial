@@ -18,10 +18,13 @@ import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel_4.*
+import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel.messageInputView
+import kotlinx.android.synthetic.main.activity_channel.messageListView
+import kotlinx.android.synthetic.main.activity_channel_3.*
 
 
-class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
+class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +36,13 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
+        // set custom AttachmentViewHolderFactory
+        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
+        channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
-
-        // Set custom AttachmentViewHolderFactory
-        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
 
         // step 3 - let the message input know when we open a thread
         messageListViewModel.mode.observe(this) {
@@ -52,6 +56,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
             messageInputViewModel.editMessage.postValue(it)
         }
 
+        // custom typing info header bar
         val channelController = ChatClient.instance().channel(cid)
         val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
 
@@ -84,6 +89,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         val backButtonHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        channelHeaderView.onBackClick = { backButtonHandler() }
 
         onBackPressedDispatcher.addCallback(
             this,

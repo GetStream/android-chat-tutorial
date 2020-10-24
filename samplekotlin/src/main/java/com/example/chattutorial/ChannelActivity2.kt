@@ -24,21 +24,19 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
         super.onCreate(savedInstanceState)
         val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {"Specifying a channel id is required when starting ChannelActivity"}
 
-
-
         // step 1 - we create 3 separate ViewModels for the views so it's easy to customize one of the components
         val viewModelProvider = ViewModelProvider(this, ChannelViewModelFactory(cid))
         val channelHeaderViewModel = viewModelProvider.get(ChannelHeaderViewModel::class.java)
         val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
+        // set custom AttachmentViewHolderFactory
+        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
         channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
-
-        // Set custom AttachmentViewHolderFactory
-        messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
 
         // step 3 - let the message input know when we open a thread
         messageListViewModel.mode.observe(this) {

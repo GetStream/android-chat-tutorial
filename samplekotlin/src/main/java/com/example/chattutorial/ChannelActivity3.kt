@@ -16,7 +16,11 @@ import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.livedata.ChatDomain
+import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel.messageInputView
+import kotlinx.android.synthetic.main.activity_channel.messageListView
 import kotlinx.android.synthetic.main.activity_channel_3.*
+
 
 class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
@@ -30,14 +34,13 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
-        // Set custom AttachmentViewHolderFactory
+        // set custom AttachmentViewHolderFactory
         messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
 
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
+        channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
-
-
 
         // step 3 - let the message input know when we open a thread
         messageListViewModel.mode.observe(this) {
@@ -51,6 +54,8 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             messageInputViewModel.editMessage.postValue(it)
         }
 
+        // custom typing info header bar
+        val channelController = ChatDomain.instance().useCases.watchChannel(cid, 0).execute().data()
         val typingObserver = Observer<List<User>> { users ->
             channelHeaderSub.text = if (users.isNotEmpty()) {
                 "typing: " + users.joinToString(", ") { it.extraData["name"] as String }
@@ -58,14 +63,13 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
                 "nobody is typing"
             }
         }
-
-        val channelController = ChatDomain.instance().useCases.watchChannel(cid, 0).execute().data()
         channelController.typing.observe(this, typingObserver)
 
         // step 5 - handle back button behaviour correctly when you're in a thread
         val backButtonHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        channelHeaderView.onBackClick = { backButtonHandler() }
 
         onBackPressedDispatcher.addCallback(
             this,
@@ -81,7 +85,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         private const val CID_KEY = "key:cid"
 
         fun newIntent(context: Context, channel: Channel) =
-            Intent(context, ChannelActivity3::class.java).apply {
+            Intent(context, ChannelActivity::class.java).apply {
                 putExtra(CID_KEY, channel.cid)
             }
     }

@@ -1,6 +1,6 @@
 package com.example.chattutorial
 
-private const val ANDROID_GRADLE_PLUGIN_VERSION = "4.0.2"
+private const val ANDROID_GRADLE_PLUGIN_VERSION = "4.0.1"
 private const val APP_COMPAT_VERSION = "1.2.0"
 private const val CONSTRAINT_LAYOUT_VERSION = "2.0.1"
 private const val GLIDE_VERSION = "4.11.0"

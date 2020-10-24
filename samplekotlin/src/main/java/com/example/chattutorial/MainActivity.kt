@@ -9,6 +9,7 @@ import com.getstream.sdk.chat.Chat
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
+import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
 import io.getstream.chat.android.client.errors.ChatError
 import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.logger.ChatLogger

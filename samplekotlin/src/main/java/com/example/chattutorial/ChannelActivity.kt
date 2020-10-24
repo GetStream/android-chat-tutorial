@@ -6,10 +6,10 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
+import com.getstream.sdk.chat.viewmodel.factory.ChatViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
@@ -25,7 +25,7 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         super.onCreate(savedInstanceState)
 
         // we use 3 separate ViewModels for the views so it's easy to customize one of the components
-        val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
+        val viewModelProvider = ViewModelProvider(this, ChatViewModelFactory(cid))
         val channelHeaderViewModel = viewModelProvider.get(ChannelHeaderViewModel::class.java)
         val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)

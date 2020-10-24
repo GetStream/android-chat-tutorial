@@ -3,11 +3,11 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.getstream.sdk.chat.view.common.visible
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
@@ -20,6 +20,7 @@ import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 >>>>>>> 23067e524310df9e383d921476e1f7625c2b04df
 import io.getstream.chat.android.client.models.Channel
+<<<<<<< HEAD
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.client.models.name
 import io.getstream.chat.android.livedata.ChatDomain
@@ -27,6 +28,12 @@ import kotlinx.android.synthetic.main.activity_channel_4.channelHeaderView
 import kotlinx.android.synthetic.main.activity_channel_4.messageInputView
 import kotlinx.android.synthetic.main.activity_channel_4.messageListView
 import kotlinx.android.synthetic.main.activity_channel_4.progressBar
+=======
+import kotlinx.android.synthetic.main.activity_channel_3.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel_3.messageInputView
+import kotlinx.android.synthetic.main.activity_channel_3.messageListView
+import kotlinx.android.synthetic.main.activity_channel_3.progressBar
+>>>>>>> f712e5c8a3825e1f25e13b80da4cfcc899d81e0a
 
 class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
@@ -47,8 +54,8 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
                 )
                 {
                     when (it) {
-                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                        is MessageListViewModel.State.Result -> progressBar.visible(false)
+                        is MessageListViewModel.State.Loading -> progressBar.visibility = View.VISIBLE
+                        is MessageListViewModel.State.Result -> progressBar.visibility = View.GONE
                         is MessageListViewModel.State.NavigateUp -> finish()
                     }
                 }

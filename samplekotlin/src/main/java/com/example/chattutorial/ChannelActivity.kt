@@ -3,6 +3,7 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -13,7 +14,10 @@ import com.getstream.sdk.chat.viewmodel.factory.ChatViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel.*
+import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel.messageInputView
+import kotlinx.android.synthetic.main.activity_channel.messageListView
+import kotlinx.android.synthetic.main.activity_channel.progressBar
 
 class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
 
@@ -36,16 +40,6 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         messageInputViewModel.bindView(messageInputView, this)
 
         // TODO set custom AttachmentViewHolderFactory
-
-        // custom loading states for the message list view model
-        // TODO: this won't be needed after Sam's refactor
-        messageListViewModel.state.observe(this) {
-            when (it) {
-                is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                is MessageListViewModel.State.Result -> progressBar.visible(false)
-                is MessageListViewModel.State.NavigateUp -> finish()
-            }
-        }
 
         // connect the message list to the message input
         messageListViewModel.mode.observe(this) {

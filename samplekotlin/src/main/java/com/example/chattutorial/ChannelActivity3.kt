@@ -12,6 +12,13 @@ import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
+<<<<<<< HEAD
+=======
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.controllers.subscribeFor
+import io.getstream.chat.android.client.events.TypingStartEvent
+import io.getstream.chat.android.client.events.TypingStopEvent
+>>>>>>> 23067e524310df9e383d921476e1f7625c2b04df
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.client.models.name
@@ -63,6 +70,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
                 runOnUiThread {
                     channelController.typing.observe(this, typingObserver)
                 }
+
             }
         }
 

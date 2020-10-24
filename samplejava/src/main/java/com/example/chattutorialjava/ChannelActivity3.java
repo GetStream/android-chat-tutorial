@@ -67,6 +67,7 @@ public class ChannelActivity3 extends AppCompatActivity {
             }
         });
 
+<<<<<<< HEAD
         String nobodyTypingText = "nobody is typing";
         channelHeaderView.setText(nobodyTypingText);
         ChatDomain.instance().getUseCases().getWatchChannel().invoke(cid, MESSAGE_LIMIT).enqueue(result -> {
@@ -85,6 +86,34 @@ public class ChannelActivity3 extends AppCompatActivity {
                 }));
             }
             return Unit.INSTANCE;
+=======
+        ChannelController channelController = ChatClient.instance().channel(cid);
+        MutableLiveData<Set<String>> currentlyTyping = new MutableLiveData<>(new HashSet<>());
+        channelController.subscribeFor(
+                new Class[]{TypingStartEvent.class, TypingStartEvent.class},
+                event -> {
+                    if (event instanceof TypingStartEvent) {
+                        User user = ((TypingStartEvent) event).getUser();
+                        String name = (String) user.getExtraData().get("name");
+                        Set<String> typingCopy = currentlyTyping.getValue();
+                        typingCopy.add(name);
+                        currentlyTyping.postValue(typingCopy);
+                    } else if (event instanceof TypingStopEvent) {
+                        User user = ((TypingStopEvent) event).getUser();
+                        String name = (String) user.getExtraData().get("name");
+                        Set<String> typingCopy = currentlyTyping.getValue();
+                        typingCopy.remove(name);
+                        currentlyTyping.postValue(typingCopy);
+                    }
+                    return null;
+                });
+        currentlyTyping.observe(this, users -> {
+            String typing = "nobody is typing";
+            if (!users.isEmpty()) {
+                typing = "typing: " + TextUtils.join(", ", users);
+            }
+            channelHeaderView.setText(typing);
+>>>>>>> 23067e524310df9e383d921476e1f7625c2b04df
         });
 
         final MessageInputViewModel messageInputViewModel = viewModelProvider.get(MessageInputViewModel.class);

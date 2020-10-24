@@ -21,8 +21,11 @@ import io.getstream.chat.android.livedata.ChatDomain
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
-    private val viewModel by lazy {
-        val filter = Filters.and(Filters.eq("type", "messaging"), Filters.`in`("members", listOf(ChatDomain.instance().currentUser.id)))
+    private val viewModel: ChannelsViewModel by lazy {
+        val filter = Filters.and(
+            Filters.eq("type", "messaging"),
+            Filters.`in`("members", listOf(ChatDomain.instance().currentUser.id))
+        )
         val viewModelFactory = ChannelsViewModelFactory(filter, ChannelsViewModel.DEFAULT_SORT)
         ViewModelProvider(this, viewModelFactory).get(ChannelsViewModelImpl::class.java)
     }

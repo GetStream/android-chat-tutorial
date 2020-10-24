@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.getstream.sdk.chat.adapter.AttachmentListItem;
 import com.getstream.sdk.chat.adapter.MessageListItem.MessageItem;
 import com.getstream.sdk.chat.adapter.viewholder.attachment.BaseAttachmentViewHolder;
@@ -12,6 +11,9 @@ import com.getstream.sdk.chat.utils.roundedImageView.PorterShapeImageView;
 import com.getstream.sdk.chat.view.MessageListView.BubbleHelper;
 
 import org.jetbrains.annotations.NotNull;
+
+import coil.Coil;
+import coil.request.ImageRequest;
 
 public class AttachmentViewHolderImgur extends BaseAttachmentViewHolder {
     private final BubbleHelper bubbleHelper;
@@ -39,8 +41,11 @@ public class AttachmentViewHolderImgur extends BaseAttachmentViewHolder {
                 attachmentListItem.getAttachment());
         imageView.setShape(getContext(), background);
 
-        Glide.with(getContext())
-                .load(attachmentListItem.getAttachment().getThumbUrl())
-                .into(imageView);
+        ImageRequest request = new ImageRequest.Builder(getContext())
+                .data(attachmentListItem.getAttachment().getThumbUrl())
+                .allowHardware(false)
+                .target(imageView)
+                .build();
+        Coil.imageLoader(getContext()).enqueue(request);
     }
 }

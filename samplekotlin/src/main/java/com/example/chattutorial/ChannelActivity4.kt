@@ -8,47 +8,59 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.getstream.sdk.chat.view.common.visible
+import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
+import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel_4.*
+import io.getstream.chat.android.client.models.User
+import io.getstream.chat.android.livedata.ChatDomain
+import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel.messageInputView
+import kotlinx.android.synthetic.main.activity_channel.messageListView
+
 
 class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
 
-    private val cid: String by lazy {
-        intent.getStringExtra(CID_KEY)!!
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModelProvider = ViewModelProvider(this, ChannelViewModelsFactory(cid))
+        val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {"Specifying a channel id is required when starting ChannelActivity"}
 
+        // step 1 - we create 3 separate ViewModels for the views so it's easy to customize one of the components
+        val viewModelProvider = ViewModelProvider(this, ChannelViewModelFactory(cid))
+        val channelHeaderViewModel = viewModelProvider.get(ChannelHeaderViewModel::class.java)
+        val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
+        val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
+
+        // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
+        channelHeaderViewModel.bindView(channelHeaderView, this)
+        messageListViewModel.bindView(messageListView, this)
+        messageInputViewModel.bindView(messageInputView, this)
+
+        // Set custom AttachmentViewHolderFactory
         messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
-        val messagesViewModel = viewModelProvider.get(MessageListViewModel::class.java)
-            .apply {
-                bindView(messageListView, this@ChannelActivity4)
-                state.observe(
-                    this@ChannelActivity4
-                )
-                {
-                    when (it) {
-                        is MessageListViewModel.State.Loading -> progressBar.visible(true)
-                        is MessageListViewModel.State.Result -> progressBar.visible(false)
-                        is MessageListViewModel.State.NavigateUp -> finish()
-                    }
-                }
+
+        // step 3 - let the message input know when we open a thread
+        messageListViewModel.mode.observe(this) {
+            when (it) {
+                is MessageListViewModel.Mode.Thread -> messageInputViewModel.setActiveThread(it.parentMessage)
+                is MessageListViewModel.Mode.Normal -> messageInputViewModel.resetThread()
             }
+        }
+        // step 4 - let the message input know when we are editing a message
+        messageListView.setOnMessageEditHandler {
+            messageInputViewModel.editMessage.postValue(it)
+        }
 
         val channelController = ChatClient.instance().channel(cid)
         val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
 
-        channelController.subscribe {
+        channelController.subscribeFor(TypingStartEvent::class, TypingStopEvent::class) {
             val typing = currentlyTyping.value ?: emptySet()
             val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
@@ -74,23 +86,11 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         }
         currentlyTyping.observe(this, typingObserver)
 
-        viewModelProvider.get(MessageInputViewModel::class.java).apply {
-            bindView(messageInputView, this@ChannelActivity4)
-            messagesViewModel.mode.observe(
-                this@ChannelActivity4
-            ) {
-                when (it) {
-                    is MessageListViewModel.Mode.Thread -> setActiveThread(it.parentMessage)
-                    is MessageListViewModel.Mode.Normal -> resetThread()
-                }
-            }
-            messageListView.setOnMessageEditHandler {
-                editMessage.postValue(it)
-            }
-        }
+        // step 5 - handle back button behaviour correctly when you're in a thread
         val backButtonHandler = {
-            messagesViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
+            messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        channelHeaderView.onBackClick = { backButtonHandler() }
 
         onBackPressedDispatcher.addCallback(
             this,
@@ -106,7 +106,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         private const val CID_KEY = "key:cid"
 
         fun newIntent(context: Context, channel: Channel) =
-            Intent(context, ChannelActivity4::class.java).apply {
+            Intent(context, ChannelActivity::class.java).apply {
                 putExtra(CID_KEY, channel.cid)
             }
     }

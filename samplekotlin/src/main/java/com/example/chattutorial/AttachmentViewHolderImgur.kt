@@ -2,7 +2,7 @@ package com.example.chattutorial
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
+import coil.load
 import com.getstream.sdk.chat.adapter.AttachmentListItem
 import com.getstream.sdk.chat.adapter.MessageListItem
 import com.getstream.sdk.chat.adapter.viewholder.attachment.BaseAttachmentViewHolder
@@ -30,8 +30,8 @@ class AttachmentViewHolderImgur(
         )
         ivMediaThumb.setShape(context, background)
 
-        Glide.with(context)
-            .load(attachmentListItem.attachment.thumbUrl)
-            .into(ivMediaThumb)
+        ivMediaThumb.load(attachmentListItem.attachment.thumbUrl) {
+            allowHardware(false)
+        }
     }
 }

@@ -34,10 +34,6 @@ android {
     packagingOptions {
         exclude 'META-INF/*.kotlin_module'
     }
-
-    buildFeatures {
-        dataBinding true
-    }
 }
 
 dependencies {
@@ -45,8 +41,7 @@ dependencies {
 
     implementation Dependencies.lifecycleViewModel
     implementation Dependencies.streamAndroid
-    implementation Dependencies.glide
-    annotationProcessor Dependencies.glideCompiler
+    implementation Dependencies.coil
     implementation Dependencies.appCompat
     implementation Dependencies.constraintLayout
 }

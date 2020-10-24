@@ -18,11 +18,7 @@ import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.client.models.User
-import io.getstream.chat.android.livedata.ChatDomain
-import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
-import kotlinx.android.synthetic.main.activity_channel.messageInputView
-import kotlinx.android.synthetic.main.activity_channel.messageListView
+import kotlinx.android.synthetic.main.activity_channel_4.*
 
 
 class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
@@ -38,7 +34,6 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
-        channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
 
@@ -60,7 +55,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         val channelController = ChatClient.instance().channel(cid)
         val currentlyTyping = MutableLiveData<Set<String>>(emptySet())
 
-        channelController.subscribeFor(TypingStartEvent::class, TypingStopEvent::class) {
+        channelController.subscribeFor(TypingStartEvent::class.java, TypingStopEvent::class.java) {
             val typing = currentlyTyping.value ?: emptySet()
             val typingCopy: MutableSet<String> = typing.toMutableSet()
             when (it) {
@@ -90,7 +85,6 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         val backButtonHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        channelHeaderView.onBackClick = { backButtonHandler() }
 
         onBackPressedDispatcher.addCallback(
             this,

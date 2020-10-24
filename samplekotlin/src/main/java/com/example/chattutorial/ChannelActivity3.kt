@@ -16,10 +16,7 @@ import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.livedata.ChatDomain
-import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
-import kotlinx.android.synthetic.main.activity_channel.messageInputView
-import kotlinx.android.synthetic.main.activity_channel.messageListView
-
+import kotlinx.android.synthetic.main.activity_channel_3.*
 
 class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
@@ -34,7 +31,6 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
 
         // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
-        channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
 
@@ -57,7 +53,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         channelHeaderView.text = nobodyTypingText
         val typingObserver = Observer<List<User>> { users ->
             channelHeaderView.text = if (users.isNotEmpty()) {
-                "typing: " + users.joinToString(", ") { it.name }
+                "typing: " + users.joinToString(", ") { it.extraData["name"] as String }
             } else {
                 nobodyTypingText
             }
@@ -77,7 +73,6 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         val backButtonHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        channelHeaderView.onBackClick = { backButtonHandler() }
 
         onBackPressedDispatcher.addCallback(
             this,

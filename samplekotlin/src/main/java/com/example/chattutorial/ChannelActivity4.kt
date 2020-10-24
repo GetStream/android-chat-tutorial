@@ -62,18 +62,17 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
                 is TypingStartEvent -> {
                     val name = it.user.extraData["name"] as String
                     typingCopy += name
-                    currentlyTyping.postValue(typingCopy)
                 }
                 is TypingStopEvent -> {
                     val name = it.user.extraData["name"] as String
                     typingCopy -= name
-                    currentlyTyping.postValue(typingCopy)
                 }
             }
+            currentlyTyping.postValue(typingCopy)
         }
 
         val typingObserver = Observer<Set<String>> { users ->
-            channelHeaderView.text = if (users.isEmpty()) {
+            channelHeaderSub.text = if (users.isEmpty()) {
                 "nobody is typing"
             } else {
                 "typing: " + users.joinToString(", ")

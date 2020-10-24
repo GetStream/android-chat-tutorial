@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         // step 1 - setup the Chat Client
         Chat.Builder(apiKey = "b67pax5b2wdq", context = applicationContext).build()
-        ChatLogger.Builder(ChatLogger.Config(level = ChatLogLevel.ALL, handler = null)).build()
+        //ChatLogger.Builder(ChatLogger.Config(level = ChatLogLevel.ALL, handler = null)).build()
 
         val user = User("summer-brook-2").apply {
             extraData["name"] = "Paranoid Android"
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         viewModel.bindView(channelsView, this)
         channelsView.setOnChannelClickListener { channel ->
             // open the channel activity
-            startActivity(ChannelActivity.newIntent(this, channel))
+            startActivity(ChannelActivity3.newIntent(this, channel))
         }
     }
 }

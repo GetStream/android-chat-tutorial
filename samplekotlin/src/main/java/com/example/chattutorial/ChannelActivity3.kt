@@ -49,13 +49,11 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             messageInputViewModel.editMessage.postValue(it)
         }
 
-        val nobodyTypingText = "nobody is typing"
-        channelHeaderView.text = nobodyTypingText
         val typingObserver = Observer<List<User>> { users ->
-            channelHeaderView.text = if (users.isNotEmpty()) {
+            channelHeaderSub.text = if (users.isNotEmpty()) {
                 "typing: " + users.joinToString(", ") { it.extraData["name"] as String }
             } else {
-                nobodyTypingText
+                "nobody is typing"
             }
         }
 

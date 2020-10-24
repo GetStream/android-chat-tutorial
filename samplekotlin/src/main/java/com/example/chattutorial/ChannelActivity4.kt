@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.activity_channel.messageListView
 import kotlinx.android.synthetic.main.activity_channel_3.*
 
 
-class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
+class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

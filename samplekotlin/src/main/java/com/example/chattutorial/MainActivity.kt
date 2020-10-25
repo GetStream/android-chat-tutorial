@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         // step 1 - setup the Chat Client
         Chat.Builder(apiKey = "b67pax5b2wdq", context = applicationContext).build()
-        //ChatLogger.Builder(ChatLogger.Config(level = ChatLogLevel.ALL, handler = null)).build()
+        // TODO: set log level to all
 
         val user = User("summer-brook-2").apply {
             extraData["name"] = "Paranoid Android"

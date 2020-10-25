@@ -62,16 +62,16 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
 
         channelController.subscribeFor(TypingStartEvent::class.java, TypingStopEvent::class.java) {
             val typing = currentlyTyping.value ?: emptySet()
-            val typingCopy: MutableSet<String> = typing.toMutableSet()
-            when (it) {
+            val typingCopy = when (it) {
                 is TypingStartEvent -> {
                     val name = it.user.extraData["name"] as String
-                    typingCopy += name
+                    typing.toMutableSet() + name
                 }
                 is TypingStopEvent -> {
                     val name = it.user.extraData["name"] as String
-                    typingCopy -= name
+                    typing.toMutableSet() - name
                 }
+                else -> {emptySet()}
             }
             currentlyTyping.postValue(typingCopy)
         }

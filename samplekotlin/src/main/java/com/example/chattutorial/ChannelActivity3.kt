@@ -72,6 +72,10 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         }
 
         // custom typing info header bar
+        val nobodyTyping = "nobody is typing"
+
+        channelHeaderSub.text = nobodyTyping
+
         ChatDomain
             .instance().useCases.watchChannel(cid, 0)
             .execute()
@@ -79,7 +83,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             .observe(this) { users ->
                 channelHeaderSub.text = when {
                     users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
-                    else -> "nobody is typing"
+                    else -> nobodyTyping
                 }
             }
     }

@@ -75,6 +75,10 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         }
 
         // custom typing info header bar
+        val nobodyTyping = "nobody is typing"
+
+        channelHeaderSub.text = nobodyTyping
+
         val currentlyTyping = mutableSetOf<String>()
 
         ChatClient

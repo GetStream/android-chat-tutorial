@@ -1,15 +1,13 @@
 package com.example.chattutorial
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.Chat
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
-import io.getstream.chat.android.client.logger.ChatLogLevel
-import io.getstream.chat.android.client.logger.ChatLogger
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,14 +35,19 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             Filters.eq("type", "messaging"),
             Filters.`in`("members", listOf(user.id))
         )
-        val viewModelFactory = ChannelsViewModelFactory(filter, ChannelsViewModel.DEFAULT_SORT)
-        val viewModel = ViewModelProvider(this, viewModelFactory).get(ChannelsViewModelImpl::class.java)
+
+        val viewModel: ChannelsViewModelImpl by viewModels {
+            ChannelsViewModelFactory(
+                filter,
+                ChannelsViewModel.DEFAULT_SORT
+            )
+        }
 
         // step 4 -  connect the ChannelsViewModel to the channelsView, loose coupling make it easy to customize
         viewModel.bindView(channelsView, this)
         channelsView.setOnChannelClickListener { channel ->
             // open the channel activity
-            startActivity(ChannelActivity3.newIntent(this, channel))
+            startActivity(ChannelActivity4.newIntent(this, channel))
         }
     }
 }

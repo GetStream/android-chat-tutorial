@@ -1,5 +1,5 @@
-import com.example.chattutorial.Dependencies
 import com.example.chattutorial.Configuration
+import com.example.chattutorial.Dependencies
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -16,6 +16,7 @@ android {
         ndkVersion Configuration.ndkVersion
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -27,6 +28,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
@@ -44,4 +46,5 @@ dependencies {
     implementation Dependencies.coil
     implementation Dependencies.appCompat
     implementation Dependencies.constraintLayout
+    implementation 'androidx.activity:activity-ktx:1.1.0'
 }

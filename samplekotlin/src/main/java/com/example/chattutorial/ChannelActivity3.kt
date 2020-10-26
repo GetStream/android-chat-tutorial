@@ -50,18 +50,19 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
             }
         }
 
+        // step 4 - handle navigate up state
         messageListViewModel.state.observe(this) {
             when (it) {
                 is MessageListViewModel.State.NavigateUp -> finish()
             }
         }
 
-        // step 4 - let the message input know when we are editing a message
+        // step 5 - let the message input know when we are editing a message
         messageListView.setOnMessageEditHandler {
             messageInputViewModel.editMessage.postValue(it)
         }
 
-        // step 5 - handle back button behaviour correctly when you're in a thread
+        // step 6 - handle back button behaviour correctly when you're in a thread
         channelHeaderView.onBackClick = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }

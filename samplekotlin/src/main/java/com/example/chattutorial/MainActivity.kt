@@ -8,6 +8,7 @@ import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
+import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,8 +18,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         // step 1 - setup the Chat Client
-        Chat.Builder(apiKey = "b67pax5b2wdq", context = applicationContext).build()
-        // TODO: set log level to all
+        Chat.Builder(apiKey = "b67pax5b2wdq", context = applicationContext)
+            .apply { chatLogLevel = ChatLogLevel.ALL }
+            .build()
 
         val user = User("summer-brook-2").apply {
             extraData["name"] = "Paranoid Android"

@@ -45,12 +45,21 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
                 is MessageListViewModel.Mode.Normal -> messageInputViewModel.resetThread()
             }
         }
-        // step 4 - let the message input know when we are editing a message
+
+        // step 4 - handle navigate up state
+        messageListViewModel.state.observe(this) {
+            when (it) {
+                is MessageListViewModel.State.NavigateUp -> finish()
+                else -> Unit
+            }
+        }
+
+        // step 5 - let the message input know when we are editing a message
         messageListView.setOnMessageEditHandler {
             messageInputViewModel.editMessage.postValue(it)
         }
 
-        // step 5 - handle back button behaviour correctly when you're in a thread
+        // step 6 - handle back button behaviour correctly when you're in a thread
         val backButtonHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
@@ -70,7 +79,7 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
         private const val CID_KEY = "key:cid"
 
         fun newIntent(context: Context, channel: Channel) =
-            Intent(context, ChannelActivity::class.java).apply {
+            Intent(context, ChannelActivity2::class.java).apply {
                 putExtra(CID_KEY, channel.cid)
             }
     }

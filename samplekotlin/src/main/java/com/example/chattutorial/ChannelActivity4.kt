@@ -13,6 +13,7 @@ import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.controllers.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
@@ -84,7 +85,10 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         ChatClient
             .instance()
             .channel(cid)
-            .subscribeFor(TypingStartEvent::class.java, TypingStopEvent::class.java) { event ->
+            .subscribeFor(
+                this,
+                TypingStartEvent::class.java, TypingStopEvent::class.java
+            ) { event ->
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.name)
@@ -95,17 +99,6 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
                     else -> nobodyTyping
                 }
             }
-//            .subscribeFor(TypingStartEvent::class.java, TypingStopEvent::class.java) { event ->
-//                when (event) {
-//                    is TypingStartEvent -> currentlyTyping.add(event.user.name)
-//                    is TypingStopEvent -> currentlyTyping.remove(event.user.name)
-//                }
-//
-//                typingHeader.text = when {
-//                    currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
-//                    else -> nobodyTyping
-//                }
-//            }
     }
 
     companion object {

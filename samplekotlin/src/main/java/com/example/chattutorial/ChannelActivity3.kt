@@ -15,6 +15,7 @@ import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.name
 import io.getstream.chat.android.livedata.ChatDomain
+import io.getstream.chat.android.livedata.controller.ChannelController
 import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
 import kotlinx.android.synthetic.main.activity_channel.messageInputView
 import kotlinx.android.synthetic.main.activity_channel.messageListView
@@ -76,22 +77,23 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
 
         typingHeader.text = nobodyTyping
 
-        ChatDomain
-            .instance().useCases.watchChannel(cid, 0)
-            .execute()
-            .data().typing
-            .observe(this) { users ->
-                typingHeader.text = when {
-                    users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
-                    else -> nobodyTyping
-                }
+        // obtain a channel controller
+        val channelController: ChannelController =
+            ChatDomain.instance().useCases.watchChannel(cid, 0).execute().data()
+
+        // observe typing users
+        channelController.typing.observe(this) { users ->
+            typingHeader.text = when {
+                users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
+                else -> nobodyTyping
             }
+        }
     }
 
     companion object {
         private const val CID_KEY = "key:cid"
 
-        fun newIntent(context: Context, channel: Channel) =
+        fun newIntent(context: Context, channel: Channel): Intent =
             Intent(context, ChannelActivity3::class.java).putExtra(CID_KEY, channel.cid)
     }
 }

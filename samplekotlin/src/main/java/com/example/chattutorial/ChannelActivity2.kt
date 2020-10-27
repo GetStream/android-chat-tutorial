@@ -71,7 +71,7 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
     companion object {
         private const val CID_KEY = "key:cid"
 
-        fun newIntent(context: Context, channel: Channel) =
+        fun newIntent(context: Context, channel: Channel): Intent =
             Intent(context, ChannelActivity2::class.java).putExtra(CID_KEY, channel.cid)
     }
 }

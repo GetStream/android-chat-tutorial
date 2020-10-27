@@ -95,12 +95,23 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
                     else -> nobodyTyping
                 }
             }
+//            .subscribeFor(TypingStartEvent::class.java, TypingStopEvent::class.java) { event ->
+//                when (event) {
+//                    is TypingStartEvent -> currentlyTyping.add(event.user.name)
+//                    is TypingStopEvent -> currentlyTyping.remove(event.user.name)
+//                }
+//
+//                typingHeader.text = when {
+//                    currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
+//                    else -> nobodyTyping
+//                }
+//            }
     }
 
     companion object {
         private const val CID_KEY = "key:cid"
 
-        fun newIntent(context: Context, channel: Channel) =
+        fun newIntent(context: Context, channel: Channel): Intent =
             Intent(context, ChannelActivity4::class.java).putExtra(CID_KEY, channel.cid)
     }
 }

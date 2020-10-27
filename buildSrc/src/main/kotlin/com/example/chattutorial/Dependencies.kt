@@ -6,7 +6,7 @@ private const val COIL_VERSION = "1.0.0"
 private const val CONSTRAINT_LAYOUT_VERSION = "2.0.1"
 private const val KOTLIN_VERSION = "1.4.10"
 private const val LIFECYCLE_VIEWMODEL = "2.3.0-beta01"
-private const val STREAM_ANDROID_VERSION = "4.3.1-beta-3"
+private const val STREAM_ANDROID_VERSION = "4.4.0"
 
 
 object Dependencies {

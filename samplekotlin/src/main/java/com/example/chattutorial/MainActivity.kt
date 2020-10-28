@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         )
 
         // step 3 - set the channel list filter and order
+        // this can be read as requiring only channels whose "type" is "messaging" AND   whose "members"
+        // include our "user.id"
         val filter = Filters.and(
             Filters.eq("type", "messaging"),
             Filters.`in`("members", listOf(user.id))

@@ -81,7 +81,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
         typingHeader.text = nobodyTyping
 
         val currentlyTyping = mutableSetOf<String>()
-
+/*
         ChatClient
             .instance()
             .channel(cid)
@@ -98,7 +98,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
                     currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
                     else -> nobodyTyping
                 }
-            }
+            }*/
     }
 
     companion object {

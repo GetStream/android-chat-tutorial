@@ -87,7 +87,7 @@ class ChannelActivity4 : AppCompatActivity(R.layout.activity_channel_4) {
             .channel(cid)
             .subscribeFor(
                 this,
-                TypingStartEvent::class.java, TypingStopEvent::class.java
+                TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)

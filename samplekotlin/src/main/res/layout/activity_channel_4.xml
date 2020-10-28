@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,15 +14,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/channelHeaderSub"
+        android:id="@+id/typingHeader"
         android:layout_width="match_parent"
         android:layout_height="31dp"
         android:background="#CCCCCC"
         android:gravity="center"
-        android:layout_marginBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/channelHeaderView" />
 
     <com.getstream.sdk.chat.view.MessageListView
         android:id="@+id/messageListView"
@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/channelHeaderSub"
+        app:layout_constraintTop_toBottomOf="@+id/typingHeader"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         android:background="#f3f5f8"

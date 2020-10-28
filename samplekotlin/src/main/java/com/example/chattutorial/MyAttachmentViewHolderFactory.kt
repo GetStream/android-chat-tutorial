@@ -1,7 +1,9 @@
 package com.example.chattutorial
 
 import android.view.ViewGroup
-import com.getstream.sdk.chat.adapter.*
+import com.getstream.sdk.chat.adapter.AttachmentListItem
+import com.getstream.sdk.chat.adapter.AttachmentViewHolderFactory
+import com.getstream.sdk.chat.adapter.MessageListItem
 import com.getstream.sdk.chat.adapter.viewholder.attachment.BaseAttachmentViewHolder
 import com.getstream.sdk.chat.view.MessageListViewStyle
 
@@ -10,7 +12,7 @@ class MyAttachmentViewHolderFactory : AttachmentViewHolderFactory() {
     override fun getAttachmentViewType(attachmentItem: AttachmentListItem): Int {
         val imageUrl = attachmentItem.attachment.imageUrl ?: ""
         return when {
-            imageUrl.indexOf("imgur") != -1 -> IMGUR_TYPE
+            imageUrl.contains("imgur") -> IMGUR_TYPE
             else -> super.getAttachmentViewType(attachmentItem)
         }
     }

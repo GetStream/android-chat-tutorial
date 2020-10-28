@@ -3,9 +3,9 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
@@ -13,22 +13,21 @@ import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
-import kotlinx.android.synthetic.main.activity_channel.messageInputView
-import kotlinx.android.synthetic.main.activity_channel.messageListView
-
+import kotlinx.android.synthetic.main.activity_channel.*
 
 class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {"Specifying a channel id is required when starting ChannelActivity"}
+        val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {
+            "Specifying a channel id is required when starting ChannelActivity"
+        }
 
         // step 1 - we create 3 separate ViewModels for the views so it's easy to customize one of the components
-        val viewModelProvider = ViewModelProvider(this, ChannelViewModelFactory(cid))
-        val channelHeaderViewModel = viewModelProvider.get(ChannelHeaderViewModel::class.java)
-        val messageListViewModel = viewModelProvider.get(MessageListViewModel::class.java)
-        val messageInputViewModel = viewModelProvider.get(MessageInputViewModel::class.java)
+        val factory = ChannelViewModelFactory(cid)
+        val channelHeaderViewModel: ChannelHeaderViewModel by viewModels { factory }
+        val messageListViewModel: MessageListViewModel by viewModels { factory }
+        val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // set custom AttachmentViewHolderFactory
         messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
@@ -60,27 +59,19 @@ class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
         }
 
         // step 6 - handle back button behaviour correctly when you're in a thread
-        val backButtonHandler = {
+        channelHeaderView.onBackClick = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        channelHeaderView.onBackClick = { backButtonHandler() }
 
-        onBackPressedDispatcher.addCallback(
-            this,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    backButtonHandler()
-                }
-            }
-        )
+        onBackPressedDispatcher.addCallback(this) {
+            channelHeaderView.onBackClick()
+        }
     }
 
     companion object {
         private const val CID_KEY = "key:cid"
 
-        fun newIntent(context: Context, channel: Channel) =
-            Intent(context, ChannelActivity2::class.java).apply {
-                putExtra(CID_KEY, channel.cid)
-            }
+        fun newIntent(context: Context, channel: Channel): Intent =
+            Intent(context, ChannelActivity2::class.java).putExtra(CID_KEY, channel.cid)
     }
 }

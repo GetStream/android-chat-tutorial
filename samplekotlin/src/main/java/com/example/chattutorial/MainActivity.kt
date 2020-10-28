@@ -1,11 +1,10 @@
 package com.example.chattutorial
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.Chat
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
-import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
 import io.getstream.chat.android.client.logger.ChatLogLevel
@@ -27,19 +26,25 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             extraData["image"] = "https://bit.ly/2TIt8NR"
         }
         // step 2 - Authenticate and connect the user
-        Chat.getInstance().setUser(
+        Chat.instance().setUser(
             user = user,
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
         )
 
         // step 3 - set the channel list filter and order
+        // this can be read as requiring only channels whose "type" is "messaging" AND   whose "members"
+        // include our "user.id"
         val filter = Filters.and(
             Filters.eq("type", "messaging"),
             Filters.`in`("members", listOf(user.id))
         )
-        val viewModelFactory = ChannelsViewModelFactory(filter, ChannelsViewModel.DEFAULT_SORT)
-        val viewModel =
-            ViewModelProvider(this, viewModelFactory).get(ChannelsViewModelImpl::class.java)
+
+        val viewModel: ChannelsViewModel by viewModels {
+            ChannelsViewModelFactory(
+                filter,
+                ChannelsViewModel.DEFAULT_SORT
+            )
+        }
 
         // step 4 -  connect the ChannelsViewModel to the channelsView, loose coupling make it easy to customize
         viewModel.bindView(channelsView, this)

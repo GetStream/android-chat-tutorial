@@ -21,16 +21,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         // step 1 - setup the client for API calls, the chatDomain for offline storage and the UX components
-        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL).build()
-        val domain = ChatDomain.Builder(client).build()
-        val ux = ChatUX.Builder(client, domain).build()
+//        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL).build()
+//        val domain = ChatDomain.Builder(client).build()
+//        val ux = ChatUX.Builder(client, domain).build()
+
+        Chat.Builder("b67pax5b2wdq", applicationContext).apply { offlineEnabled=true }.build()
 
         val user = User("summer-brook-2").apply {
             extraData["name"] = "Paranoid Android"
             extraData["image"] = "https://bit.ly/2TIt8NR"
         }
         // step 2 - Authenticate and connect the user
-        client.setUser(
+        ChatClient.instance().setUser(
             user = user,
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
         )

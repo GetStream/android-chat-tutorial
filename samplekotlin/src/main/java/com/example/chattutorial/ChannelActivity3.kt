@@ -43,7 +43,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
 
-        // step 3 - bind to viewmodel states
+        // step 3 - let the message input know when we open a thread
         messageListViewModel.mode.observe(this) {
             when (it) {
                 is MessageListViewModel.Mode.Thread -> messageInputViewModel.setActiveThread(it.parentMessage)

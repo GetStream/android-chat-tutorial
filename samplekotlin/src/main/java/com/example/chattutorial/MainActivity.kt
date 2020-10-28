@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.getstream.sdk.chat.Chat
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
-import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
 import io.getstream.chat.android.client.logger.ChatLogLevel
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             extraData["image"] = "https://bit.ly/2TIt8NR"
         }
         // step 2 - Authenticate and connect the user
-        Chat.getInstance().setUser(
+        Chat.instance().setUser(
             user = user,
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
         )
@@ -38,7 +37,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             Filters.`in`("members", listOf(user.id))
         )
 
-        val viewModel: ChannelsViewModelImpl by viewModels {
+        val viewModel: ChannelsViewModel by viewModels {
             ChannelsViewModelFactory(
                 filter,
                 ChannelsViewModel.DEFAULT_SORT

@@ -4,9 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.getstream.sdk.chat.Chat
-import com.getstream.sdk.chat.ChatUX
+import com.getstream.sdk.chat.ChatUI
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
-import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelImpl
 import com.getstream.sdk.chat.viewmodel.channels.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
 import io.getstream.chat.android.client.ChatClient
@@ -21,11 +20,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
 
         // step 1 - setup the client for API calls, the chatDomain for offline storage and the UX components
-//        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL).build()
-//        val domain = ChatDomain.Builder(client).build()
-//        val ux = ChatUX.Builder(client, domain).build()
+        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL).build()
+        val domain = ChatDomain.Builder(client, applicationContext).build()
+        val ux = ChatUI.Builder(client, domain, applicationContext).build()
 
-        Chat.Builder("b67pax5b2wdq", applicationContext).apply { offlineEnabled=true }.build()
+        //Chat.Builder("b67pax5b2wdq", applicationContext).apply { offlineEnabled=true }.build()
 
         val user = User("summer-brook-2").apply {
             extraData["name"] = "Paranoid Android"
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         )
         val viewModelFactory = ChannelsViewModelFactory(filter, ChannelsViewModel.DEFAULT_SORT)
         val viewModel =
-            ViewModelProvider(this, viewModelFactory).get(ChannelsViewModelImpl::class.java)
+            ViewModelProvider(this, viewModelFactory).get(ChannelsViewModel::class.java)
 
         // step 4 -  connect the ChannelsViewModel to the channelsView, loose coupling make it easy to customize
         viewModel.bindView(channelsView, this)

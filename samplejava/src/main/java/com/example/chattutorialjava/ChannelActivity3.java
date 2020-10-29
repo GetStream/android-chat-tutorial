@@ -111,6 +111,7 @@ public class ChannelActivity3 extends AppCompatActivity {
         typingHeader.setText(nobodyTyping);
 
         // Obtain a ChannelController
+        // TODO replace getWatchChannel with getChannelController
         ChannelController channelController =
                 ChatDomain.instance().getUseCases()
                         .getWatchChannel().invoke(cid, 0)

@@ -79,6 +79,7 @@ class ChannelActivity3 : AppCompatActivity(R.layout.activity_channel_3) {
         typingHeader.text = nobodyTyping
 
         // Obtain a ChannelController
+        // TODO replace watchChannel with getChannelController
         val channelController: ChannelController =
             ChatDomain.instance().useCases.watchChannel(cid, 0).execute().data()
 

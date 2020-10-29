@@ -4,43 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.getstream.sdk.chat.view.ChannelHeaderView
         android:id="@+id/channelHeaderView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/typingHeader"
         android:layout_width="match_parent"
         android:layout_height="31dp"
         android:background="#CCCCCC"
         android:gravity="center"
-        android:layout_marginBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/channelHeaderView" />
 
     <com.getstream.sdk.chat.view.MessageListView
         android:id="@+id/messageListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#f3f5f8"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/channelHeaderView"
-        app:streamMessageBackgroundColorMine="#70af74"
-        app:streamMessageBackgroundColorTheirs="#FFF"
+        app:layout_constraintTop_toBottomOf="@+id/typingHeader"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        android:background="#f3f5f8"
         app:streamMessageTextColorMine="#FFF"
-        app:streamMessageTextColorTheirs="#000" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:streamMessageBackgroundColorMine="#70af74"
+        app:streamMessageTextColorTheirs="#000"
+        app:streamMessageBackgroundColorTheirs="#FFF"
+        />
 
     <com.getstream.sdk.chat.view.messageinput.MessageInputView
         android:id="@+id/messageInputView"
@@ -49,4 +46,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

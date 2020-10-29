@@ -11,58 +11,61 @@ import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
+import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel.*
+import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
+import kotlinx.android.synthetic.main.activity_channel.messageInputView
+import kotlinx.android.synthetic.main.activity_channel.messageListView
 
 class ChannelActivity2 : AppCompatActivity(R.layout.activity_channel_2) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {
-            "Specifying a channel id is required when starting ChannelActivity"
+            "Specifying a channel id is required when starting ChannelActivity2"
         }
 
-        // step 1 - we create 3 separate ViewModels for the views so it's easy to customize one of the components
+        // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
         val factory = ChannelViewModelFactory(cid)
         val channelHeaderViewModel: ChannelHeaderViewModel by viewModels { factory }
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
-        // set custom AttachmentViewHolderFactory
+        // Set custom AttachmentViewHolderFactory
         messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
 
-        // step 2 = we bind the view and ViewModels. they are loosely coupled so its easy to customize
+        // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
         messageInputViewModel.bindView(messageInputView, this)
 
-        // step 3 - let the message input know when we open a thread
-        messageListViewModel.mode.observe(this) {
-            when (it) {
-                is MessageListViewModel.Mode.Thread -> messageInputViewModel.setActiveThread(it.parentMessage)
-                is MessageListViewModel.Mode.Normal -> messageInputViewModel.resetThread()
+        // Step 3 - Let the message input know when we open a thread
+        messageListViewModel.mode.observe(this) { mode ->
+            when (mode) {
+                is Thread -> messageInputViewModel.setActiveThread(mode.parentMessage)
+                is Normal -> messageInputViewModel.resetThread()
             }
         }
 
-        // step 4 - handle navigate up state
-        messageListViewModel.state.observe(this) {
-            when (it) {
-                is MessageListViewModel.State.NavigateUp -> finish()
-                else -> Unit
+        // Step 4 - Handle navigate up state
+        messageListViewModel.state.observe(this) { state ->
+            if (state is NavigateUp) {
+                finish()
             }
         }
 
-        // step 5 - let the message input know when we are editing a message
+        // Step 5 - Let the message input know when we are editing a message
         messageListView.setOnMessageEditHandler {
             messageInputViewModel.editMessage.postValue(it)
         }
 
-        // step 6 - handle back button behaviour correctly when you're in a thread
+        // Step 6 - Handle back button behaviour correctly when you're in a thread
         channelHeaderView.onBackClick = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-
         onBackPressedDispatcher.addCallback(this) {
             channelHeaderView.onBackClick()
         }

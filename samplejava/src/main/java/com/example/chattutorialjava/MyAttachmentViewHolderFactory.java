@@ -36,4 +36,3 @@ public class MyAttachmentViewHolderFactory extends AttachmentViewHolderFactory {
         return super.createAttachmentViewHolder(parent, viewType, style, messageItem);
     }
 }
-

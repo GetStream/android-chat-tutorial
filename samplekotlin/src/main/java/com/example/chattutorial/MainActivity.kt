@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             extraData["name"] = "Paranoid Android"
             extraData["image"] = "https://bit.ly/2TIt8NR"
         }
-        ChatClient.instance().setUser(
+        client.setUser(
             user = user,
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
         )

@@ -54,8 +54,7 @@ public final class MainActivity extends AppCompatActivity {
         );
         ChannelsViewModelFactory factory = new ChannelsViewModelFactory(
                 filter,
-                ChannelsViewModel.DEFAULT_SORT,
-                30 // TODO remove
+                ChannelsViewModel.DEFAULT_SORT
         );
         ChannelsViewModel channelsViewModel = new ViewModelProvider(this, factory).get(ChannelsViewModel.class);
 

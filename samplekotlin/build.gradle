@@ -1,10 +1,8 @@
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.example.chattutorial"
         minSdkVersion 21
@@ -23,11 +21,16 @@ android {
     }
 
     compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     packagingOptions {
@@ -42,6 +45,6 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0-beta1"
     implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.3"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
     implementation 'androidx.activity:activity-ktx:1.1.0'
 }

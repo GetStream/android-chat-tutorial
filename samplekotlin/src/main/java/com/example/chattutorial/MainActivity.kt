@@ -3,6 +3,7 @@ package com.example.chattutorial
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.chattutorial.databinding.ActivityMainBinding
 import com.getstream.sdk.chat.ChatUI
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
 import com.getstream.sdk.chat.viewmodel.channels.bindView
@@ -13,13 +14,20 @@ import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.livedata.ChatDomain
 
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
-        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL).build()
+        val client =
+            ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL)
+                .build()
         val domain = ChatDomain.Builder(client, applicationContext).build()
         ChatUI.Builder(client, domain, applicationContext).build()
 
@@ -41,11 +49,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             Filters.`in`("members", listOf(user.id))
         )
         val viewModelFactory = ChannelsViewModelFactory(filter, ChannelsViewModel.DEFAULT_SORT)
-        val viewModel: ChannelsViewModel by viewModels {viewModelFactory}
+        val viewModel: ChannelsViewModel by viewModels { viewModelFactory }
 
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
         viewModel.bindView(findViewById(R.id.channelsView), this)
-        channelsView.setOnChannelClickListener { channel ->
+        binding.channelsView.setOnChannelClickListener { channel ->
             startActivity(ChannelActivity4.newIntent(this, channel))
         }
     }

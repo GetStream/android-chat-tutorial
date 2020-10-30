@@ -6,8 +6,7 @@ import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.getstream.sdk.chat.view.ChannelHeaderView
-import com.getstream.sdk.chat.view.MessageListView
+import com.example.chattutorial.databinding.ActivityChannelBinding
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
@@ -19,11 +18,16 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.Navi
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 
+class ChannelActivity : AppCompatActivity() {
 
-class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
+    private lateinit var binding: ActivityChannelBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding = ActivityChannelBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {
             "Specifying a channel id is required when starting ChannelActivity"
         }
@@ -37,11 +41,9 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         // TODO set custom AttachmentViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        val channelHeaderView: ChannelHeaderView = findViewById(R.id.channelHeaderView)
-        val messageListView: MessageListView = findViewById(R.id.messageListView)
-        channelHeaderViewModel.bindView(channelHeaderView, this)
-        messageListViewModel.bindView(messageListView, this)
-        messageInputViewModel.bindView(findViewById(R.id.messageInputView), this)
+        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
+        messageListViewModel.bindView(binding.messageListView, this)
+        messageInputViewModel.bindView(binding.messageInputView, this)
 
         // Step 3 - Let the message input know when we open a thread
         messageListViewModel.mode.observe(this) { mode ->
@@ -52,7 +54,7 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         }
 
         // Step 4 - Let the message input know when we are editing a message
-        messageListView.setOnMessageEditHandler {
+        binding.messageListView.setOnMessageEditHandler {
             messageInputViewModel.editMessage.postValue(it)
         }
 
@@ -64,11 +66,11 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        channelHeaderView.onBackClick = {
+        binding.channelHeaderView.onBackClick = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
         onBackPressedDispatcher.addCallback(this) {
-            channelHeaderView.onBackClick()
+            binding.channelHeaderView.onBackClick()
         }
     }
 

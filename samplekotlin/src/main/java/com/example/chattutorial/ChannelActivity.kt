@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.getstream.sdk.chat.view.ChannelHeaderView
+import com.getstream.sdk.chat.view.MessageListView
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.bindView
@@ -16,9 +18,7 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Threa
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
-import kotlinx.android.synthetic.main.activity_channel.channelHeaderView
-import kotlinx.android.synthetic.main.activity_channel.messageInputView
-import kotlinx.android.synthetic.main.activity_channel.messageListView
+
 
 class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
 
@@ -37,9 +37,11 @@ class ChannelActivity : AppCompatActivity(R.layout.activity_channel) {
         // TODO set custom AttachmentViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
+        val channelHeaderView: ChannelHeaderView = findViewById(R.id.channelHeaderView)
+        val messageListView: MessageListView = findViewById(R.id.messageListView)
         channelHeaderViewModel.bindView(channelHeaderView, this)
         messageListViewModel.bindView(messageListView, this)
-        messageInputViewModel.bindView(messageInputView, this)
+        messageInputViewModel.bindView(findViewById(R.id.messageInputView), this)
 
         // Step 3 - Let the message input know when we open a thread
         messageListViewModel.mode.observe(this) { mode ->

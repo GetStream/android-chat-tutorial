@@ -12,7 +12,7 @@ import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.livedata.ChatDomain
-import kotlinx.android.synthetic.main.activity_main.channelsView
+
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val viewModel: ChannelsViewModel by viewModels {viewModelFactory}
 
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
-        viewModel.bindView(channelsView, this)
+        viewModel.bindView(findViewById(R.id.channelsView), this)
         channelsView.setOnChannelClickListener { channel ->
             startActivity(ChannelActivity4.newIntent(this, channel))
         }

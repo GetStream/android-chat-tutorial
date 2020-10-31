@@ -16,6 +16,9 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import com.getstream.sdk.chat.viewmodel.messages.bindView
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.events.TypingStartEvent
+import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
 
 class ChannelActivity4 : AppCompatActivity() {
@@ -79,14 +82,11 @@ class ChannelActivity4 : AppCompatActivity() {
         binding.typingHeader.text = nobodyTyping
 
         val currentlyTyping = mutableSetOf<String>()
-        // TODO update when new SDK version is out
-/*
+
         ChatClient
             .instance()
             .channel(cid)
-            .subscribeFor(
-                this,
-                TypingStartEvent::class, TypingStopEvent::class
+            .subscribeFor(this, TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)
@@ -97,7 +97,7 @@ class ChannelActivity4 : AppCompatActivity() {
                     currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
                     else -> nobodyTyping
                 }
-            }*/
+            }
     }
 
     companion object {

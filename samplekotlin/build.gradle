@@ -40,7 +40,7 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.4.10"
-    implementation "com.github.getstream:stream-chat-android:4.4.1-alpha"
+    implementation "com.github.getstream:stream-chat-android:1ab9aa8ae2bde84d5e7a61b767b32dd0c33d05e6"
     implementation "io.coil-kt:coil:1.0.0"
 
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0-beta1"

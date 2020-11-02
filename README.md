@@ -7,7 +7,9 @@ The project is pre-configured with a shared [Stream](https://getstream.io) accou
 ## Quick start
 
 1. Clone the repository
-2. Run the _samplekotlin_ or _samplejava_ configuration
+2. Open the project in Android Studio
+3. Run the _samplekotlin_ or _samplejava_ configuration
+4. Make sure to check [Details](#details) section for customizations
 
 ## Details
 

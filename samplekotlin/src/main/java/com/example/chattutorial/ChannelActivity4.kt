@@ -90,6 +90,7 @@ class ChannelActivity4 : AppCompatActivity() {
             .channel(cid)
             .subscribeFor(this, TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
+                @Suppress("NON_EXHAUSTIVE_WHEN_ON_SEALED_CLASS")
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.name)

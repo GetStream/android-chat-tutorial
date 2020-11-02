@@ -3,6 +3,7 @@ package com.example.chattutorialjava;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -23,6 +24,9 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModelBinding;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.User;
@@ -118,15 +122,12 @@ public class ChannelActivity3 extends AppCompatActivity {
                     if (users.isEmpty()) {
                         typingHeader.setText(nobodyTyping);
                     } else {
-                        StringBuilder typingText = new StringBuilder("typing: ");
-                        for (int i = 0; i < users.size(); i++) {
-                            User user = users.get(i);
-                            if (i > 0) {
-                                typingText.append(", ");
-                            }
-                            typingText.append(user.getExtraData().get("name"));
+                        List<String> userNames = new LinkedList<>();
+                        for (User user : users) {
+                            userNames.add((String)user.getExtraData().get("name"));
                         }
-                        typingHeader.setText(typingText.toString());
+                        String typing = "typing: " + TextUtils.join(", ", userNames);
+                        typingHeader.setText(typing);
                     }
                 });
             });

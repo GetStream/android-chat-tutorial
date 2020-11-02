@@ -74,18 +74,17 @@ public class ChannelActivity extends AppCompatActivity {
                 messageInputViewModel.resetThread();
             }
         });
+        // Step 4 - Let the message input know when we are editing a message
+        messageListView.setOnMessageEditHandler(message -> {
+            messageInputViewModel.getEditMessage().postValue(message);
+            return Unit.INSTANCE;
+        });
 
-        // Step 4 - Handle navigate up state
+        // Step 5 - Handle navigate up state
         messageListViewModel.getState().observe(this, state -> {
             if (state instanceof NavigateUp) {
                 finish();
             }
-        });
-
-        // Step 5 - Let the message input know when we are editing a message
-        messageListView.setOnMessageEditHandler(message -> {
-            messageInputViewModel.getEditMessage().postValue(message);
-            return Unit.INSTANCE;
         });
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread

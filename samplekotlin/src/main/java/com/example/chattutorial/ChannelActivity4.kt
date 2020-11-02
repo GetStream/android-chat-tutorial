@@ -86,11 +86,11 @@ class ChannelActivity4 : AppCompatActivity() {
         ChatClient
             .instance()
             .channel(cid)
-            .subscribeFor(this, TypingStartEvent::class, TypingStopEvent::class
+            .subscribeFor(this, TypingStartEvent::class.java, TypingStopEvent::class.java
             ) { event ->
                 when (event) {
-                    is TypingStartEvent -> currentlyTyping.add(event.user.name)
-                    is TypingStopEvent -> currentlyTyping.remove(event.user.name)
+                    is TypingStartEvent -> currentlyTyping.add(event.user.extraData["name"] as String)
+                    is TypingStopEvent -> currentlyTyping.remove(event.user.extraData["name"] as String)
                 }
 
                 binding.typingHeader.text = when {

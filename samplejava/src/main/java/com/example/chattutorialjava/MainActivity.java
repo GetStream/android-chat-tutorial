@@ -39,7 +39,7 @@ public final class MainActivity extends AppCompatActivity {
         user.getExtraData().put("name", "Paranoid Android");
         user.getExtraData().put("image", "https://bit.ly/2TIt8NR");
 
-        ChatClient.instance().setUser(
+        client.setUser(
                 user,
                 "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0",
                 null

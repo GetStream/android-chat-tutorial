@@ -81,7 +81,7 @@ class ChannelActivity4 : AppCompatActivity() {
 
         // Custom typing info header bar
         val nobodyTyping = "nobody is typing"
-        binding.typingHeader.text = nobodyTyping
+        binding.typingHeaderView.text = nobodyTyping
 
         val currentlyTyping = mutableSetOf<String>()
 
@@ -96,7 +96,7 @@ class ChannelActivity4 : AppCompatActivity() {
                     is TypingStopEvent -> currentlyTyping.remove(event.user.extraData["name"] as String)
                 }
 
-                binding.typingHeader.text = when {
+                binding.typingHeaderView.text = when {
                     currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
                     else -> nobodyTyping
                 }

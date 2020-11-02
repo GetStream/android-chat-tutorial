@@ -80,15 +80,17 @@ class ChannelActivity3 : AppCompatActivity() {
         val nobodyTyping = "nobody is typing"
         binding.typingHeader.text = nobodyTyping
 
-        // Obtain a ChannelController
-        val channelController =
-            ChatDomain.instance().useCases.getChannelController(cid).execute().data()
-
-        // Observe typing users
-        channelController.typing.observe(this) { users ->
-            binding.typingHeader.text = when {
-                users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
-                else -> nobodyTyping
+        // Asynchronously obtain a ChannelController
+        ChatDomain.instance().useCases.getChannelController(cid).enqueue {
+            val channelController = it.data()
+            // Get back to UI thread and observe typing users
+            runOnUiThread {
+                channelController.typing.observe(this) { users ->
+                    binding.typingHeader.text = when {
+                        users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
+                        else -> nobodyTyping
+                    }
+                }
             }
         }
     }

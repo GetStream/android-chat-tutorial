@@ -3,7 +3,6 @@ package com.example.chattutorialjava;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -52,7 +51,6 @@ public class ChannelActivity3 extends AppCompatActivity {
 
         // Step 0 - Get View references
         MessageListView messageListView = findViewById(R.id.messageListView);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
         ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
         TextView typingHeader = findViewById(R.id.typingHeader);
@@ -111,26 +109,28 @@ public class ChannelActivity3 extends AppCompatActivity {
         typingHeader.setText(nobodyTyping);
 
         // Obtain a ChannelController
-        ChannelController channelController =
-                ChatDomain.instance().getUseCases()
-                        .getGetChannelController().invoke(cid)
-                        .execute().data();
+        ChatDomain.instance().getUseCases().getGetChannelController().invoke(cid).enqueue((result) -> {
+            ChannelController channelController = result.data();
 
-        // Observe typing users
-        channelController.getTyping().observe(this, users -> {
-            if (users.isEmpty()) {
-                typingHeader.setText(nobodyTyping);
-            } else {
-                StringBuilder typingText = new StringBuilder("typing: ");
-                for (int i = 0; i < users.size(); i++) {
-                    User user = users.get(i);
-                    if (i > 0) {
-                        typingText.append(", ");
+            runOnUiThread(() -> {
+                // Observe typing users
+                channelController.getTyping().observe(this, users -> {
+                    if (users.isEmpty()) {
+                        typingHeader.setText(nobodyTyping);
+                    } else {
+                        StringBuilder typingText = new StringBuilder("typing: ");
+                        for (int i = 0; i < users.size(); i++) {
+                            User user = users.get(i);
+                            if (i > 0) {
+                                typingText.append(", ");
+                            }
+                            typingText.append(user.getExtraData().get("name"));
+                        }
+                        typingHeader.setText(typingText.toString());
                     }
-                    typingText.append(user.getExtraData().get("name"));
-                }
-                typingHeader.setText(typingText.toString());
-            }
+                });
+            });
+            return Unit.INSTANCE;
         });
     }
 }

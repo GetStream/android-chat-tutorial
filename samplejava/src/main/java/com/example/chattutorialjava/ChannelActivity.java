@@ -3,7 +3,6 @@ package com.example.chattutorialjava;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
@@ -48,7 +47,6 @@ public class ChannelActivity extends AppCompatActivity {
 
         // Step 0 - Get View references
         MessageListView messageListView = findViewById(R.id.messageListView);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
         ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
 

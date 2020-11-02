@@ -20,6 +20,7 @@ import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
+import io.getstream.chat.android.client.models.name
 
 class ChannelActivity4 : AppCompatActivity() {
 
@@ -86,11 +87,12 @@ class ChannelActivity4 : AppCompatActivity() {
         ChatClient
             .instance()
             .channel(cid)
-            .subscribeFor(this, TypingStartEvent::class, TypingStopEvent::class
+            .subscribeFor(this, TypingStartEvent::class.java, TypingStopEvent::class.java
             ) { event ->
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.name)
+                    else -> Unit
                 }
 
                 binding.typingHeader.text = when {

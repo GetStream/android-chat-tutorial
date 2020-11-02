@@ -19,8 +19,8 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="@drawable/imgur_logo"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_media_thumb"
-        app:layout_constraintEnd_toEndOf="@+id/iv_media_thumb"
-        app:layout_constraintStart_toStartOf="@+id/iv_media_thumb"
-        app:layout_constraintTop_toTopOf="@+id/iv_media_thumb" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

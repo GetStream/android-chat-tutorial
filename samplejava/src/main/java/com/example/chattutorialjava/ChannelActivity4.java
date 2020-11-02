@@ -3,7 +3,7 @@ package com.example.chattutorialjava;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ProgressBar;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -28,7 +28,11 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModelBinding;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.getstream.chat.android.client.ChatClient;
+import io.getstream.chat.android.client.events.TypingStartEvent;
+import io.getstream.chat.android.client.events.TypingStopEvent;
 import io.getstream.chat.android.client.models.Channel;
+import io.getstream.chat.android.client.models.User;
 import kotlin.Unit;
 
 public class ChannelActivity4 extends AppCompatActivity {
@@ -52,7 +56,6 @@ public class ChannelActivity4 extends AppCompatActivity {
 
         // Step 0 - Get View references
         MessageListView messageListView = findViewById(R.id.messageListView);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
         ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
         TextView typingHeader = findViewById(R.id.typingHeader);
@@ -111,24 +114,28 @@ public class ChannelActivity4 extends AppCompatActivity {
         typingHeader.setText(nobodyTyping);
 
         Set<String> currentlyTyping = new HashSet<>();
-        // TODO update when new SDK version is out
-        /*
         ChatClient
-            .instance()
-            .channel(cid)
-            .subscribeFor(
-                this,
-                TypingStartEvent::class, TypingStopEvent::class
-            ) { event ->
-                when (event) {
-                    is TypingStartEvent -> currentlyTyping.add(event.user.name)
-                    is TypingStopEvent -> currentlyTyping.remove(event.user.name)
-                }
+                .instance()
+                .channel(cid)
+                .subscribeFor(
+                        this,
+                        new Class[]{TypingStartEvent.class, TypingStopEvent.class}, event -> {
+                            if (event instanceof TypingStartEvent) {
+                                User user = ((TypingStartEvent) event).getUser();
+                                String name = (String) user.getExtraData().get("name");
+                                currentlyTyping.add(name);
+                            } else if (event instanceof TypingStopEvent) {
+                                User user = ((TypingStopEvent) event).getUser();
+                                String name = (String) user.getExtraData().get("name");
+                                currentlyTyping.remove(name);
+                            }
 
-                typingHeader.text = when {
-                    currentlyTyping.isNotEmpty() -> currentlyTyping.joinToString(prefix = "typing: ")
-                    else -> nobodyTyping
-                }
-            }*/
+                            String typing = "nobody is typing";
+                            if (!currentlyTyping.isEmpty()) {
+                                typing = "typing: " + TextUtils.join(", ", currentlyTyping);
+                            }
+                            typingHeader.setText(typing);
+                            return Unit.INSTANCE;
+                        });
     }
 }

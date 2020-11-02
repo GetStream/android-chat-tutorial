@@ -3,7 +3,7 @@ package com.example.chattutorialjava;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ProgressBar;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -24,6 +24,9 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModelBinding;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.User;
@@ -52,7 +55,6 @@ public class ChannelActivity3 extends AppCompatActivity {
 
         // Step 0 - Get View references
         MessageListView messageListView = findViewById(R.id.messageListView);
-        ProgressBar progressBar = findViewById(R.id.progressBar);
         ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
         TextView typingHeader = findViewById(R.id.typingHeader);
@@ -111,26 +113,25 @@ public class ChannelActivity3 extends AppCompatActivity {
         typingHeader.setText(nobodyTyping);
 
         // Obtain a ChannelController
-        ChannelController channelController =
-                ChatDomain.instance().getUseCases()
-                        .getGetChannelController().invoke(cid)
-                        .execute().data();
+        ChatDomain.instance().getUseCases().getGetChannelController().invoke(cid).enqueue((result) -> {
+            ChannelController channelController = result.data();
 
-        // Observe typing users
-        channelController.getTyping().observe(this, users -> {
-            if (users.isEmpty()) {
-                typingHeader.setText(nobodyTyping);
-            } else {
-                StringBuilder typingText = new StringBuilder("typing: ");
-                for (int i = 0; i < users.size(); i++) {
-                    User user = users.get(i);
-                    if (i > 0) {
-                        typingText.append(", ");
+            runOnUiThread(() -> {
+                // Observe typing users
+                channelController.getTyping().observe(this, users -> {
+                    if (users.isEmpty()) {
+                        typingHeader.setText(nobodyTyping);
+                    } else {
+                        List<String> userNames = new LinkedList<>();
+                        for (User user : users) {
+                            userNames.add((String)user.getExtraData().get("name"));
+                        }
+                        String typing = "typing: " + TextUtils.join(", ", userNames);
+                        typingHeader.setText(typing);
                     }
-                    typingText.append(user.getExtraData().get("name"));
-                }
-                typingHeader.setText(typingText.toString());
-            }
+                });
+            });
+            return Unit.INSTANCE;
         });
     }
 }

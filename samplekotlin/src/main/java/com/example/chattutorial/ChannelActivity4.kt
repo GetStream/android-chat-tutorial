@@ -17,9 +17,11 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Threa
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.controllers.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
+import io.getstream.chat.android.client.models.name
 
 class ChannelActivity4 : AppCompatActivity() {
 
@@ -88,6 +90,7 @@ class ChannelActivity4 : AppCompatActivity() {
             .channel(cid)
             .subscribeFor(this, TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
+                @Suppress("NON_EXHAUSTIVE_WHEN_ON_SEALED_CLASS")
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.name)

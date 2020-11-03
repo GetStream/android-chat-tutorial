@@ -57,7 +57,6 @@ public class ChannelActivity3 extends AppCompatActivity {
         MessageListView messageListView = findViewById(R.id.messageListView);
         ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
-        TextView typingHeader = findViewById(R.id.typingHeader);
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
         ChannelViewModelFactory factory = new ChannelViewModelFactory(cid);
@@ -109,8 +108,9 @@ public class ChannelActivity3 extends AppCompatActivity {
         });
 
         // Custom typing info header bar
+        TextView typingHeaderView = findViewById(R.id.typingHeaderView);
         String nobodyTyping = "nobody is typing";
-        typingHeader.setText(nobodyTyping);
+        typingHeaderView.setText(nobodyTyping);
 
         // Obtain a ChannelController
         ChatDomain.instance().getUseCases().getGetChannelController().invoke(cid).enqueue((result) -> {
@@ -120,14 +120,14 @@ public class ChannelActivity3 extends AppCompatActivity {
                 // Observe typing users
                 channelController.getTyping().observe(this, users -> {
                     if (users.isEmpty()) {
-                        typingHeader.setText(nobodyTyping);
+                        typingHeaderView.setText(nobodyTyping);
                     } else {
                         List<String> userNames = new LinkedList<>();
                         for (User user : users) {
                             userNames.add((String)user.getExtraData().get("name"));
                         }
                         String typing = "typing: " + TextUtils.join(", ", userNames);
-                        typingHeader.setText(typing);
+                        typingHeaderView.setText(typing);
                     }
                 });
             });

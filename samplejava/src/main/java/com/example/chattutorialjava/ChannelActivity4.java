@@ -58,7 +58,6 @@ public class ChannelActivity4 extends AppCompatActivity {
         MessageListView messageListView = findViewById(R.id.messageListView);
         ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
-        TextView typingHeader = findViewById(R.id.typingHeader);
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
         ChannelViewModelFactory factory = new ChannelViewModelFactory(cid);
@@ -110,8 +109,9 @@ public class ChannelActivity4 extends AppCompatActivity {
         });
 
         // Custom typing info header bar
+        TextView typingHeaderView = findViewById(R.id.typingHeaderView);
         String nobodyTyping = "nobody is typing";
-        typingHeader.setText(nobodyTyping);
+        typingHeaderView.setText(nobodyTyping);
 
         Set<String> currentlyTyping = new HashSet<>();
         ChatClient
@@ -134,7 +134,7 @@ public class ChannelActivity4 extends AppCompatActivity {
                             if (!currentlyTyping.isEmpty()) {
                                 typing = "typing: " + TextUtils.join(", ", currentlyTyping);
                             }
-                            typingHeader.setText(typing);
+                            typingHeaderView.setText(typing);
                             return Unit.INSTANCE;
                         });
     }

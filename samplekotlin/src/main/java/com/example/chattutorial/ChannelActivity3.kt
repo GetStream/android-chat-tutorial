@@ -81,13 +81,16 @@ class ChannelActivity3 : AppCompatActivity() {
         binding.typingHeaderView.text = nobodyTyping
 
         // Obtain a ChannelController
-        val channelController = ChatDomain.instance().useCases.getChannelController(cid).execute().data()
+        ChatDomain.instance().useCases.getChannelController(cid).enqueue { channelControllerResult ->
+            if (channelControllerResult.isSuccess) {
 
-        // Observe typing users
-        channelController.typing.observe(this) { users ->
-            binding.typingHeaderView.text = when {
-                users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
-                else -> nobodyTyping
+                // Observe typing users
+                channelControllerResult.data().typing.observe(this) { users ->
+                    binding.typingHeaderView.text = when {
+                        users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
+                        else -> nobodyTyping
+                    }
+                }
             }
         }
     }

@@ -116,20 +116,18 @@ public class ChannelActivity3 extends AppCompatActivity {
         ChatDomain.instance().getUseCases().getGetChannelController().invoke(cid).enqueue((result) -> {
             ChannelController channelController = result.data();
 
-            runOnUiThread(() -> {
-                // Observe typing users
-                channelController.getTyping().observe(this, users -> {
-                    if (users.isEmpty()) {
-                        typingHeaderView.setText(nobodyTyping);
-                    } else {
-                        List<String> userNames = new LinkedList<>();
-                        for (User user : users) {
-                            userNames.add((String)user.getExtraData().get("name"));
-                        }
-                        String typing = "typing: " + TextUtils.join(", ", userNames);
-                        typingHeaderView.setText(typing);
+            // Observe typing users
+            channelController.getTyping().observe(this, users -> {
+                if (users.isEmpty()) {
+                    typingHeaderView.setText(nobodyTyping);
+                } else {
+                    List<String> userNames = new LinkedList<>();
+                    for (User user : users) {
+                        userNames.add((String) user.getExtraData().get("name"));
                     }
-                });
+                    String typing = "typing: " + TextUtils.join(", ", userNames);
+                    typingHeaderView.setText(typing);
+                }
             });
             return Unit.INSTANCE;
         });

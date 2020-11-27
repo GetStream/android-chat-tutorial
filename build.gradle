@@ -15,8 +15,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-        // add jitpack here:
-        maven { url 'https://jitpack.io' }
     }
 }
 

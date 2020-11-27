@@ -85,9 +85,9 @@ class ChannelActivity3 : AppCompatActivity() {
             if (channelControllerResult.isSuccess) {
 
                 // Observe typing users
-                channelControllerResult.data().typing.observe(this) { users ->
+                channelControllerResult.data().typing.observe(this) { typingState ->
                     binding.typingHeaderView.text = when {
-                        users.isNotEmpty() -> users.joinToString(prefix = "typing: ") { user -> user.name }
+                        typingState.users.isNotEmpty() -> typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
                         else -> nobodyTyping
                     }
                 }

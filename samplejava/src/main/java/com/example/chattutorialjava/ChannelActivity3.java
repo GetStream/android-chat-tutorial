@@ -117,12 +117,12 @@ public class ChannelActivity3 extends AppCompatActivity {
             ChannelController channelController = result.data();
 
             // Observe typing users
-            channelController.getTyping().observe(this, users -> {
-                if (users.isEmpty()) {
+            channelController.getTyping().observe(this, typingState -> {
+                if (typingState.getUsers().isEmpty()) {
                     typingHeaderView.setText(nobodyTyping);
                 } else {
                     List<String> userNames = new LinkedList<>();
-                    for (User user : users) {
+                    for (User user : typingState.getUsers()) {
                         userNames.add((String) user.getExtraData().get("name"));
                     }
                     String typing = "typing: " + TextUtils.join(", ", userNames);

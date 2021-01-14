@@ -31,17 +31,17 @@ if (new File(rootDir, '../stream-chat-android/.composite').exists()) {
         dependencySubstitution {
             // project spec is validated, if you get it wrong you get an error
             // module spec is not validated, if you get it wrong you just dont get a local version of the module
-            substitute(module("com.github.getstream:stream-chat-android:")).with(project(":stream-chat-android"))
+            substitute(module("io.getstream:stream-chat-android-ui-components:")).with(project(":stream-chat-android-ui-components"))
         }
         dependencySubstitution {
             // project spec is validated, if you get it wrong you get an error
             // module spec is not validated, if you get it wrong you just dont get a local version of the module
-            substitute(module("com.github.getstream:stream-chat-android-client:")).with(project(":stream-chat-android-client"))
+            substitute(module("io.getstream:stream-chat-android-client:")).with(project(":stream-chat-android-client"))
         }
         dependencySubstitution {
             // project spec is validated, if you get it wrong you get an error
             // module spec is not validated, if you get it wrong you just dont get a local version of the module
-            substitute(module("com.github.getstream:stream-chat-android-offline:")).with(project(":stream-chat-android-offline"))
+            substitute(module("io.getstream:stream-chat-android-offline:")).with(project(":stream-chat-android-offline"))
         }
     }
 }

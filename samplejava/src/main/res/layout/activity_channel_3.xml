@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.getstream.sdk.chat.view.ChannelHeaderView
+    <io.getstream.chat.android.ui.messages.header.MessagesHeaderView
         android:id="@+id/channelHeaderView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,24 +22,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/channelHeaderView" />
 
-    <com.getstream.sdk.chat.view.MessageListView
+    <io.getstream.chat.android.ui.messages.view.MessageListView
         android:id="@+id/messageListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#f3f5f8"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typingHeaderView"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        android:background="#f3f5f8"
-        app:streamMessageTextColorMine="#FFF"
-        app:streamMessageBackgroundColorMine="#70af74"
-        app:streamMessageTextColorTheirs="#000"
-        app:streamMessageBackgroundColorTheirs="#FFF"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/typingHeaderView" />
 
-    <com.getstream.sdk.chat.view.messageinput.MessageInputView
+    <io.getstream.chat.android.ui.textinput.MessageInputView
         android:id="@+id/messageInputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

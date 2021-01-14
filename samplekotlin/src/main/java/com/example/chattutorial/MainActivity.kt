@@ -6,13 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityMainBinding
 import com.getstream.sdk.chat.ChatUI
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
-import com.getstream.sdk.chat.viewmodel.channels.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.livedata.ChatDomain
+import io.getstream.chat.android.ui.channel.list.viewmodel.bindView
 
 class MainActivity : AppCompatActivity() {
 
@@ -52,9 +52,9 @@ class MainActivity : AppCompatActivity() {
         val viewModel: ChannelsViewModel by viewModels { viewModelFactory }
 
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
-        viewModel.bindView(findViewById(R.id.channelsView), this)
-        binding.channelsView.setOnChannelClickListener { channel ->
-            startActivity(ChannelActivity4.newIntent(this, channel))
+        viewModel.bindView(binding.channelsView, this)
+        binding.channelsView.setChannelItemClickListener { channel ->
+            startActivity(ChannelActivity2.newIntent(this, channel))
         }
     }
 }

@@ -9,16 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel3Binding
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
-import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
-import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.name
 import io.getstream.chat.android.livedata.ChatDomain
+import io.getstream.chat.android.ui.messages.header.bindView
+import io.getstream.chat.android.ui.messages.view.bindView
+import io.getstream.chat.android.ui.textinput.bindView
 
 class ChannelActivity3 : AppCompatActivity() {
 
@@ -41,7 +42,7 @@ class ChannelActivity3 : AppCompatActivity() {
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // Set custom AttachmentViewHolderFactory
-        binding.messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+//        binding.messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         channelHeaderViewModel.bindView(binding.channelHeaderView, this)
@@ -69,11 +70,12 @@ class ChannelActivity3 : AppCompatActivity() {
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        binding.channelHeaderView.onBackClick = {
+        val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        binding.channelHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
-            binding.channelHeaderView.onBackClick()
+            backHandler()
         }
 
         // Custom typing info header bar

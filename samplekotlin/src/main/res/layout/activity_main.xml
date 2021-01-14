@@ -4,16 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.getstream.sdk.chat.view.channels.ChannelsView
+    <io.getstream.chat.android.ui.channel.list.ChannelsView
         android:id="@+id/channelsView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:streamChannelPreviewLayout="@layout/stream_item_channel"
-        app:streamReadStateAvatarHeight="15dp"
-        app:streamReadStateAvatarWidth="15dp"
-        app:streamReadStateTextSize="9sp"
-        app:streamShowReadState="true" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

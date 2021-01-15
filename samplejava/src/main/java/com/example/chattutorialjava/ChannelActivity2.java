@@ -9,21 +9,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.getstream.sdk.chat.view.ChannelHeaderView;
-import com.getstream.sdk.chat.view.MessageListView;
-import com.getstream.sdk.chat.view.messageinput.MessageInputView;
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel;
-import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModelBinding;
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel;
-import com.getstream.sdk.chat.viewmodel.MessageInputViewModelBinding;
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModelBinding;
 
 import io.getstream.chat.android.client.models.Channel;
+import io.getstream.chat.android.ui.messages.header.ChannelHeaderViewModelBinding;
+import io.getstream.chat.android.ui.messages.header.MessagesHeaderView;
+import io.getstream.chat.android.ui.messages.view.MessageListView;
+import io.getstream.chat.android.ui.messages.view.MessageListViewModelBinding;
+import io.getstream.chat.android.ui.textinput.MessageInputView;
+import io.getstream.chat.android.ui.textinput.MessageInputViewModelBinding;
 import kotlin.Unit;
 
 public class ChannelActivity2 extends AppCompatActivity {
@@ -47,7 +47,7 @@ public class ChannelActivity2 extends AppCompatActivity {
 
         // Step 0 - Get View references
         MessageListView messageListView = findViewById(R.id.messageListView);
-        ChannelHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
+        MessagesHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
         MessageInputView messageInputView = findViewById(R.id.messageInputView);
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
@@ -58,7 +58,7 @@ public class ChannelActivity2 extends AppCompatActivity {
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
         // Set custom AttachmentViewHolderFactory
-        messageListView.setAttachmentViewHolderFactory(new MyAttachmentViewHolderFactory());
+//        messageListView.setAttachmentViewHolderFactory(new MyAttachmentViewHolderFactory());
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         ChannelHeaderViewModelBinding.bind(channelHeaderViewModel, channelHeaderView, this);
@@ -88,14 +88,14 @@ public class ChannelActivity2 extends AppCompatActivity {
         });
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        channelHeaderView.setOnBackClick(() -> {
+        MessagesHeaderView.OnClickListener backHandler = () -> {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
-            return Unit.INSTANCE;
-        });
+        };
+        channelHeaderView.setBackButtonClickListener(backHandler);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                channelHeaderView.getOnBackClick().invoke();
+                backHandler.onClick();
             }
         });
 

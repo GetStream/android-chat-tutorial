@@ -6,9 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.getstream.sdk.chat.ChatUI;
-import com.getstream.sdk.chat.view.channels.ChannelsView;
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel;
-import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelBinding;
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory;
 
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +16,8 @@ import io.getstream.chat.android.client.models.Filters;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.client.utils.FilterObject;
 import io.getstream.chat.android.livedata.ChatDomain;
-import kotlin.Unit;
+import io.getstream.chat.android.ui.channel.list.ChannelsView;
+import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelsViewModelBinding;
 
 import static java.util.Collections.singletonList;
 
@@ -61,10 +60,7 @@ public final class MainActivity extends AppCompatActivity {
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
         ChannelsView channelsView = findViewById(R.id.channelsView);
         ChannelsViewModelBinding.bind(channelsViewModel, channelsView, this);
-        channelsView.setOnChannelClickListener((channel -> {
-            startActivity(ChannelActivity4.newIntent(this, channel));
-            return Unit.INSTANCE;
-        }));
+        channelsView.setChannelItemClickListener((channel -> startActivity(ChannelActivity4.newIntent(this, channel))));
     }
 }
 

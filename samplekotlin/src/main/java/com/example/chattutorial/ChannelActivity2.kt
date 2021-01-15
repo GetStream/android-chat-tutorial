@@ -47,7 +47,7 @@ class ChannelActivity2 : AppCompatActivity() {
         binding.messageListView.setMessageViewHolderFactory(
             object : MessageListItemViewHolderFactory() {
                 val IMGUR = 999
-                override fun getViewType(item: MessageListItem): Int {
+                override fun getItemViewType(item: MessageListItem): Int {
                     return when (item) {
                         is MessageListItem.MessageItem -> {
                             item.message
@@ -56,10 +56,10 @@ class ChannelActivity2 : AppCompatActivity() {
                                 ?.imageUrl
                                 ?.contains("imgur")
                                 ?.let { IMGUR }
-                                ?: super.getViewType(item)
+                                ?: super.getItemViewType(item)
                         }
 
-                        else -> super.getViewType(item)
+                        else -> super.getItemViewType(item)
                     }
                 }
 
@@ -68,13 +68,9 @@ class ChannelActivity2 : AppCompatActivity() {
                     viewType: Int
                 ): BaseMessageItemViewHolder<out MessageListItem> {
                     return when (viewType) {
-                        IMGUR -> createImgurViewHolder(parentView)
+                        IMGUR -> ImgurAttachmentViewHolder(parentView)
                         else -> super.createViewHolder(parentView, viewType)
                     }
-                }
-
-                fun createImgurViewHolder(parent: ViewGroup): BaseMessageItemViewHolder<out MessageListItem> {
-                    return ImgurAttachmentViewHolder(parent)
                 }
             }
         )

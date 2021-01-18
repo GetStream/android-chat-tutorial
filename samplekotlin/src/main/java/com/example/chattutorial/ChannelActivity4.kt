@@ -43,7 +43,7 @@ class ChannelActivity4 : AppCompatActivity() {
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // Set custom AttachmentViewHolderFactory
-//        binding.messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+        binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         channelHeaderViewModel.bindView(binding.channelHeaderView, this)
@@ -88,7 +88,8 @@ class ChannelActivity4 : AppCompatActivity() {
         ChatClient
             .instance()
             .channel(cid)
-            .subscribeFor(this, TypingStartEvent::class.java, TypingStopEvent::class.java
+            .subscribeFor(
+                this, TypingStartEvent::class.java, TypingStopEvent::class.java
             ) { event ->
                 @Suppress("NON_EXHAUSTIVE_WHEN_ON_SEALED_CLASS")
                 when (event) {

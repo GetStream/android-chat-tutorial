@@ -3,12 +3,10 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel2Binding
-import com.getstream.sdk.chat.adapter.MessageListItem
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
@@ -17,8 +15,6 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.ui.messages.adapter.BaseMessageItemViewHolder
-import io.getstream.chat.android.ui.messages.adapter.MessageListItemViewHolderFactory
 import io.getstream.chat.android.ui.messages.header.bindView
 import io.getstream.chat.android.ui.messages.view.bindView
 import io.getstream.chat.android.ui.textinput.bindView
@@ -44,36 +40,7 @@ class ChannelActivity2 : AppCompatActivity() {
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // Set view holder factory for Imgur attachments
-        binding.messageListView.setMessageViewHolderFactory(
-            object : MessageListItemViewHolderFactory() {
-                val IMGUR = 999
-                override fun getItemViewType(item: MessageListItem): Int {
-                    return when (item) {
-                        is MessageListItem.MessageItem -> {
-                            item.message
-                                .attachments
-                                .firstOrNull()
-                                ?.imageUrl
-                                ?.contains("imgur")
-                                ?.let { IMGUR }
-                                ?: super.getItemViewType(item)
-                        }
-
-                        else -> super.getItemViewType(item)
-                    }
-                }
-
-                override fun createViewHolder(
-                    parentView: ViewGroup,
-                    viewType: Int
-                ): BaseMessageItemViewHolder<out MessageListItem> {
-                    return when (viewType) {
-                        IMGUR -> ImgurAttachmentViewHolder(parentView)
-                        else -> super.createViewHolder(parentView, viewType)
-                    }
-                }
-            }
-        )
+        binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         channelHeaderViewModel.bindView(binding.channelHeaderView, this)

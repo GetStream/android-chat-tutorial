@@ -58,7 +58,7 @@ public class ChannelActivity2 extends AppCompatActivity {
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
         // Set custom AttachmentViewHolderFactory
-//        messageListView.setAttachmentViewHolderFactory(new MyAttachmentViewHolderFactory());
+        messageListView.setMessageViewHolderFactory(new ImgurAttachmentViewHolderFactory());
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         ChannelHeaderViewModelBinding.bind(channelHeaderViewModel, channelHeaderView, this);

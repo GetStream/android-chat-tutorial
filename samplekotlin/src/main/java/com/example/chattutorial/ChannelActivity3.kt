@@ -42,7 +42,7 @@ class ChannelActivity3 : AppCompatActivity() {
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // Set custom AttachmentViewHolderFactory
-//        binding.messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+        binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         channelHeaderViewModel.bindView(binding.channelHeaderView, this)

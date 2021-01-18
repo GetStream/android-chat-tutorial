@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-import com.example.chattutorialjava.databinding.ViewHolderImgurAttachmentBinding;
+import com.example.common.databinding.ViewHolderImgurAttachmentBinding;
 import com.getstream.sdk.chat.adapter.MessageListItem;
 import com.google.android.material.shape.ShapeAppearanceModel;
 

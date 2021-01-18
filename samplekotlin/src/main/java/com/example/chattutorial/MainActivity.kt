@@ -3,7 +3,7 @@ package com.example.chattutorial
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.example.chattutorial.databinding.ActivityMainBinding
+import com.example.common.databinding.ActivityMainBinding
 import com.getstream.sdk.chat.ChatUI
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory

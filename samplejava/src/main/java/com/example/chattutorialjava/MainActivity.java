@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.chattutorialjava.databinding.ActivityMainBinding;
+import com.example.common.databinding.ActivityMainBinding;
 import com.getstream.sdk.chat.ChatUI;
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel;
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory;

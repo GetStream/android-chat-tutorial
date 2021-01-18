@@ -27,24 +27,16 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    buildFeatures {
-        viewBinding true
-    }
-
     packagingOptions {
         exclude 'META-INF/*.kotlin_module'
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "io.getstream:stream-chat-android-ui-components:4.5.0"
-    implementation 'io.coil-kt:coil:1.1.1'
-
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-rc01'
-    implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
-    implementation 'androidx.activity:activity-ktx:1.1.0'
-    implementation "com.google.android.material:material:1.2.1"
+    implementation project(path: ':common')
 }

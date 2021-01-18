@@ -1,16 +1,20 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
 
 android {
     compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
     defaultConfig {
-        applicationId "com.example.chattutorial"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        ndkVersion "21.3.6528147"
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -19,18 +23,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-
-    packagingOptions {
-        exclude 'META-INF/*.kotlin_module'
+        jvmTarget = '1.8'
     }
 
     buildFeatures {
@@ -39,6 +37,15 @@ android {
 }
 
 dependencies {
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation project(path: ':common')
+    api "io.getstream:stream-chat-android-ui-components:4.5.0"
+    api 'io.coil-kt:coil:1.1.1'
+    api 'androidx.core:core-ktx:1.3.2'
+    api "androidx.recyclerview:recyclerview:1.1.0"
+    api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0-rc01'
+    api "androidx.appcompat:appcompat:1.2.0"
+    api "androidx.constraintlayout:constraintlayout:2.0.4"
+    api 'androidx.activity:activity-ktx:1.1.0'
+    api "com.google.android.material:material:1.2.1"
 }

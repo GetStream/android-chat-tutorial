@@ -26,6 +26,7 @@ class ChannelActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Step 0 - inflate binding
         binding = ActivityChannelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,7 +43,7 @@ class ChannelActivity : AppCompatActivity() {
         // TODO set custom AttachmentViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
+        channelHeaderViewModel.bindView(binding.messagesHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
@@ -71,7 +72,7 @@ class ChannelActivity : AppCompatActivity() {
         val handleBackPressed = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        binding.channelHeaderView.setBackButtonClickListener(handleBackPressed)
+        binding.messagesHeaderView.setBackButtonClickListener(handleBackPressed)
         onBackPressedDispatcher.addCallback(this) {
             handleBackPressed()
         }

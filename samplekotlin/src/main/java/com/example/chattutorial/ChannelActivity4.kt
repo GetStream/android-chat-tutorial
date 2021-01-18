@@ -29,6 +29,7 @@ class ChannelActivity4 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Step 0 - inflate binding
         binding = ActivityChannel4Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -46,7 +47,7 @@ class ChannelActivity4 : AppCompatActivity() {
         binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
+        channelHeaderViewModel.bindView(binding.messagesHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
@@ -74,7 +75,7 @@ class ChannelActivity4 : AppCompatActivity() {
         val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        binding.channelHeaderView.setBackButtonClickListener(backHandler)
+        binding.messagesHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
             backHandler()
         }

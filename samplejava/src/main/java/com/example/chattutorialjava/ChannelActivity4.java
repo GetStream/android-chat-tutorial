@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.chattutorialjava.databinding.ActivityChannel4Binding;
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel;
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel;
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory;
@@ -29,9 +30,7 @@ import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.ui.messages.header.ChannelHeaderViewModelBinding;
 import io.getstream.chat.android.ui.messages.header.MessagesHeaderView;
-import io.getstream.chat.android.ui.messages.view.MessageListView;
 import io.getstream.chat.android.ui.messages.view.MessageListViewModelBinding;
-import io.getstream.chat.android.ui.textinput.MessageInputView;
 import io.getstream.chat.android.ui.textinput.MessageInputViewModelBinding;
 import kotlin.Unit;
 
@@ -48,16 +47,15 @@ public class ChannelActivity4 extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel_4);
+
+        // Step 0 - inflate binding
+        ActivityChannel4Binding binding = ActivityChannel4Binding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         String cid = getIntent().getStringExtra(CID_KEY);
         if (cid == null) {
             throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity4");
         }
-
-        // Step 0 - Get View references
-        MessageListView messageListView = findViewById(R.id.messageListView);
-        MessagesHeaderView channelHeaderView = findViewById(R.id.channelHeaderView);
-        MessageInputView messageInputView = findViewById(R.id.messageInputView);
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
         ChannelViewModelFactory factory = new ChannelViewModelFactory(cid);
@@ -67,12 +65,12 @@ public class ChannelActivity4 extends AppCompatActivity {
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
         // Set custom AttachmentViewHolderFactory
-        messageListView.setMessageViewHolderFactory(new ImgurAttachmentViewHolderFactory());
+        binding.messageListView.setMessageViewHolderFactory(new ImgurAttachmentViewHolderFactory());
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        ChannelHeaderViewModelBinding.bind(channelHeaderViewModel, channelHeaderView, this);
-        MessageListViewModelBinding.bind(messageListViewModel, messageListView, this);
-        MessageInputViewModelBinding.bind(messageInputViewModel, messageInputView, this);
+        ChannelHeaderViewModelBinding.bind(channelHeaderViewModel, binding.messagesHeaderView, this);
+        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
+        MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
         // Step 3 - Let the message input know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
@@ -91,7 +89,7 @@ public class ChannelActivity4 extends AppCompatActivity {
         });
 
         // Step 5 - Let the message input know when we are editing a message
-        messageListView.setOnMessageEditHandler(message -> {
+        binding.messageListView.setOnMessageEditHandler(message -> {
             messageInputViewModel.getEditMessage().postValue(message);
             return Unit.INSTANCE;
         });
@@ -100,7 +98,9 @@ public class ChannelActivity4 extends AppCompatActivity {
         MessagesHeaderView.OnClickListener backHandler = () -> {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
         };
-        channelHeaderView.setBackButtonClickListener(backHandler);
+
+        binding.messagesHeaderView.setBackButtonClickListener(backHandler);
+
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -114,8 +114,7 @@ public class ChannelActivity4 extends AppCompatActivity {
         typingHeaderView.setText(nobodyTyping);
 
         Set<String> currentlyTyping = new HashSet<>();
-        ChatClient
-                .instance()
+        ChatClient.instance()
                 .channel(cid)
                 .subscribeFor(
                         this,

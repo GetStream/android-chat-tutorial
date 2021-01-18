@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.chattutorialjava.databinding.ActivityMainBinding;
 import com.getstream.sdk.chat.ChatUI;
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel;
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory;
@@ -16,7 +17,6 @@ import io.getstream.chat.android.client.models.Filters;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.client.utils.FilterObject;
 import io.getstream.chat.android.livedata.ChatDomain;
-import io.getstream.chat.android.ui.channel.list.ChannelsView;
 import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelsViewModelBinding;
 
 import static java.util.Collections.singletonList;
@@ -25,7 +25,10 @@ public final class MainActivity extends AppCompatActivity {
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        // Step 0 - inflate binding
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
         ChatClient client = new ChatClient.Builder("b67pax5b2wdq", getApplicationContext()).build();
@@ -51,16 +54,20 @@ public final class MainActivity extends AppCompatActivity {
                 Filters.eq("type", "messaging"),
                 Filters.in("members", singletonList(user.getId()))
         );
+
         ChannelsViewModelFactory factory = new ChannelsViewModelFactory(
                 filter,
                 ChannelsViewModel.DEFAULT_SORT
         );
-        ChannelsViewModel channelsViewModel = new ViewModelProvider(this, factory).get(ChannelsViewModel.class);
+
+        ChannelsViewModel channelsViewModel =
+                new ViewModelProvider(this, factory).get(ChannelsViewModel.class);
 
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
-        ChannelsView channelsView = findViewById(R.id.channelsView);
-        ChannelsViewModelBinding.bind(channelsViewModel, channelsView, this);
-        channelsView.setChannelItemClickListener((channel -> startActivity(ChannelActivity4.newIntent(this, channel))));
+        ChannelsViewModelBinding.bind(channelsViewModel, binding.channelsView, this);
+        binding.channelsView.setChannelItemClickListener(
+                channel -> startActivity(ChannelActivity4.newIntent(this, channel))
+        );
     }
 }
 

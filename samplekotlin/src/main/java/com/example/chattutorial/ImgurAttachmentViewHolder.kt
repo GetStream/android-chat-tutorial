@@ -26,7 +26,7 @@ class ImgurAttachmentViewHolder(
         }
     }
 
-    override fun bindData(data: MessageListItem.MessageItem, diff: MessageListItemPayloadDiff?) {
+    override fun bindData(data: MessageListItem.MessageItem, isThread: Boolean, diff: MessageListItemPayloadDiff?) {
         data.message.attachments.firstOrNull()?.imageUrl?.let { url ->
             binding.ivMediaThumb.apply {
                 load(url) {

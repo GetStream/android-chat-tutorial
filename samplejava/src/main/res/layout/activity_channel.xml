@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <io.getstream.chat.android.ui.messages.header.MessagesHeaderView
-        android:id="@+id/messages_header_view"
-        android:layout_width="match_parent"
+        android:id="@+id/messagesHeaderView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,11 +19,11 @@
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messages_header_view" />
+        app:layout_constraintTop_toBottomOf="@+id/messagesHeaderView" />
 
     <io.getstream.chat.android.ui.textinput.MessageInputView
         android:id="@+id/messageInputView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

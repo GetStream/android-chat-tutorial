@@ -8,17 +8,12 @@ import io.getstream.chat.android.ui.messages.adapter.MessageListItemViewHolderFa
 class ImgurAttachmentViewHolderFactory : MessageListItemViewHolderFactory() {
 
     override fun getItemViewType(item: MessageListItem): Int {
-        val isImgur = when (item) {
-            is MessageListItem.MessageItem -> {
-                item.message
-                    .attachments
-                    .firstOrNull()
-                    ?.imageUrl
-                    ?.contains("imgur") == true
-            }
-
-            else -> false
-        }
+        val isImgur = (item as? MessageListItem.MessageItem)
+            ?.message
+            ?.attachments
+            ?.firstOrNull()
+            ?.imageUrl
+            ?.contains("imgur") == true
 
         return if (isImgur) IMGUR else super.getItemViewType(item)
     }

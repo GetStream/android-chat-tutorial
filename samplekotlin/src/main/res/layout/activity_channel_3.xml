@@ -6,7 +6,7 @@
 
     <io.getstream.chat.android.ui.messages.header.MessagesHeaderView
         android:id="@+id/messagesHeaderView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/typingHeaderView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="31dp"
         android:background="#CCCCCC"
         android:gravity="center"
@@ -34,7 +34,7 @@
 
     <io.getstream.chat.android.ui.textinput.MessageInputView
         android:id="@+id/messageInputView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -39,12 +39,7 @@ android {
 }
 
 dependencies {
-<<<<<<< Updated upstream
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "io.getstream:stream-chat-android-ui-components:4.5.1"
-=======
-    implementation "io.getstream:stream-chat-android-ui-components:4.5.0"
->>>>>>> Stashed changes
     implementation 'io.coil-kt:coil:1.1.1'
 
     implementation "androidx.recyclerview:recyclerview:1.1.0"

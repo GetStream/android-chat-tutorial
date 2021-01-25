@@ -19,34 +19,9 @@ class ImgurAttachmentViewHolderFactory extends MessageListItemViewHolderFactory 
 
     @Override
     public int getItemViewType(@NotNull MessageListItem item) {
-
-        boolean isMessageItem = item instanceof MessageListItem.MessageItem;
-        if (!isMessageItem) {
-            return super.getItemViewType(item);
-        }
-
-        Message message = ((MessageListItem.MessageItem) item).getMessage();
-        List<Attachment> attachments = message.getAttachments();
-
-        if (attachments == null || attachments.isEmpty()) {
-            return super.getItemViewType(item);
-        }
-
-        Attachment attachment = attachments.get(0);
-        if (attachment == null) {
-            return super.getItemViewType(item);
-        }
-
-        String imageUrl = attachment.getImageUrl();
-        if (imageUrl == null) {
-            return super.getItemViewType(item);
-        }
-
-        boolean isImgur = imageUrl.contains("imgur");
-        if (isImgur) {
+        if (hasImgurImage(item)) {
             return IMGUR;
         }
-
         return super.getItemViewType(item);
     }
 
@@ -55,5 +30,29 @@ class ImgurAttachmentViewHolderFactory extends MessageListItemViewHolderFactory 
     public BaseMessageItemViewHolder<? extends MessageListItem> createViewHolder(@NotNull ViewGroup parentView, int viewType) {
         boolean isImgur = viewType == IMGUR;
         return isImgur ? ImgurAttachmentViewHolder.create(parentView) : super.createViewHolder(parentView, viewType);
+    }
+
+    private boolean hasImgurImage(MessageListItem item) {
+        if (!(item instanceof MessageListItem.MessageItem)) {
+            return false;
+        }
+
+        Message message = ((MessageListItem.MessageItem) item).getMessage();
+        List<Attachment> attachments = message.getAttachments();
+        if (attachments == null || attachments.isEmpty()) {
+            return false;
+        }
+
+        Attachment attachment = attachments.get(0);
+        if (attachment == null) {
+            return false;
+        }
+
+        String imageUrl = attachment.getImageUrl();
+        if (imageUrl == null) {
+            return false;
+        }
+
+        return imageUrl.contains("imgur");
     }
 }

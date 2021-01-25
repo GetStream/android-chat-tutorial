@@ -54,7 +54,6 @@ class ImgurAttachmentViewHolder extends BaseMessageItemViewHolder<MessageListIte
     @Override
     public void bindData(
             @NotNull MessageListItem.MessageItem data,
-            boolean isThread,
             @Nullable MessageListItemPayloadDiff diff
     ) {
         List<Attachment> attachments = data.getMessage().getAttachments();

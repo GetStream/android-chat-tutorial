@@ -73,7 +73,6 @@ public class ChannelActivity extends AppCompatActivity {
         // Step 4 - Let the message input know when we are editing a message
         binding.messageListView.setOnMessageEditHandler(message -> {
             messageInputViewModel.getEditMessage().postValue(message);
-            return Unit.INSTANCE;
         });
 
         // Step 5 - Handle navigate up state

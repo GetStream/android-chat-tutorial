@@ -91,7 +91,6 @@ public class ChannelActivity4 extends AppCompatActivity {
         // Step 5 - Let the message input know when we are editing a message
         binding.messageListView.setOnMessageEditHandler(message -> {
             messageInputViewModel.getEditMessage().postValue(message);
-            return Unit.INSTANCE;
         });
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread

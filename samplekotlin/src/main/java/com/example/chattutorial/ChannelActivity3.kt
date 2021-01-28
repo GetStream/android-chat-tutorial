@@ -66,8 +66,8 @@ class ChannelActivity3 : AppCompatActivity() {
         }
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler {
-            messageInputViewModel.editMessage.postValue(it)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageInputViewModel.editMessage.postValue(message)
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
@@ -84,18 +84,22 @@ class ChannelActivity3 : AppCompatActivity() {
         binding.typingHeaderView.text = nobodyTyping
 
         // Obtain a ChannelController
-        ChatDomain.instance().useCases.getChannelController(cid).enqueue { channelControllerResult ->
-            if (channelControllerResult.isSuccess) {
+        ChatDomain.instance().useCases.getChannelController(cid)
+            .enqueue { channelControllerResult ->
+                if (channelControllerResult.isSuccess) {
+                    // Observe typing users
+                    channelControllerResult.data().typing.observe(this) { typingState ->
+                        binding.typingHeaderView.text = when {
 
-                // Observe typing users
-                channelControllerResult.data().typing.observe(this) { typingState ->
-                    binding.typingHeaderView.text = when {
-                        typingState.users.isNotEmpty() -> typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
-                        else -> nobodyTyping
+                            typingState.users.isNotEmpty() -> {
+                                typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
+                            }
+
+                            else -> nobodyTyping
+                        }
                     }
                 }
             }
-        }
     }
 
     companion object {

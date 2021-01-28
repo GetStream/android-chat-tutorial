@@ -19,15 +19,15 @@ class ImgurAttachmentViewHolderFactory extends MessageListItemViewHolderFactory 
 
     @Override
     public int getItemViewType(@NotNull MessageListItem item) {
-        if (hasImgurImage(item)) {
-            return IMGUR;
-        }
-        return super.getItemViewType(item);
+        return hasImgurImage(item) ? IMGUR : super.getItemViewType(item);
     }
 
     @NotNull
     @Override
-    public BaseMessageItemViewHolder<? extends MessageListItem> createViewHolder(@NotNull ViewGroup parentView, int viewType) {
+    public BaseMessageItemViewHolder<? extends MessageListItem> createViewHolder(
+            @NotNull ViewGroup parentView,
+            int viewType
+    ) {
         boolean isImgur = viewType == IMGUR;
         return isImgur ? ImgurAttachmentViewHolder.create(parentView) : super.createViewHolder(parentView, viewType);
     }
@@ -39,7 +39,7 @@ class ImgurAttachmentViewHolderFactory extends MessageListItemViewHolderFactory 
 
         Message message = ((MessageListItem.MessageItem) item).getMessage();
         List<Attachment> attachments = message.getAttachments();
-        if (attachments == null || attachments.isEmpty()) {
+        if (attachments.isEmpty()) {
             return false;
         }
 

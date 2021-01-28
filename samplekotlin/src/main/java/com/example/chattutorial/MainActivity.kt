@@ -26,11 +26,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
-        val client =
-            ChatClient.Builder("b67pax5b2wdq", applicationContext).logLevel(ChatLogLevel.ALL)
-                .build()
-        val domain = ChatDomain.Builder(client, applicationContext).build()
-        ChatUI.Builder(client, domain, applicationContext).build()
+        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext)
+            .logLevel(ChatLogLevel.ALL)
+            .build()
+        ChatDomain.Builder(client, applicationContext).build()
+        ChatUI.Builder(applicationContext).build()
 
         // Step 2 - Authenticate and connect the user
         val user = User("summer-brook-2").apply {

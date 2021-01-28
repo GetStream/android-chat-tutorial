@@ -64,8 +64,8 @@ class ChannelActivity2 : AppCompatActivity() {
         }
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler {
-            messageInputViewModel.editMessage.postValue(it)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageInputViewModel.editMessage.postValue(message)
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread

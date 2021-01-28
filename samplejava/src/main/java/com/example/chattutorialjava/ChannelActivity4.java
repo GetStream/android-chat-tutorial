@@ -89,7 +89,7 @@ public class ChannelActivity4 extends AppCompatActivity {
         });
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler(message -> {
+        binding.messageListView.setMessageEditHandler(message -> {
             messageInputViewModel.getEditMessage().postValue(message);
         });
 
@@ -112,12 +112,14 @@ public class ChannelActivity4 extends AppCompatActivity {
         String nobodyTyping = "nobody is typing";
         typingHeaderView.setText(nobodyTyping);
 
+        // Observe raw events through the low-level client
         Set<String> currentlyTyping = new HashSet<>();
         ChatClient.instance()
                 .channel(cid)
                 .subscribeFor(
                         this,
-                        new Class[]{TypingStartEvent.class, TypingStopEvent.class}, event -> {
+                        new Class[]{TypingStartEvent.class, TypingStopEvent.class},
+                        event -> {
                             if (event instanceof TypingStartEvent) {
                                 User user = ((TypingStartEvent) event).getUser();
                                 String name = (String) user.getExtraData().get("name");
@@ -132,8 +134,9 @@ public class ChannelActivity4 extends AppCompatActivity {
                             if (!currentlyTyping.isEmpty()) {
                                 typing = "typing: " + TextUtils.join(", ", currentlyTyping);
                             }
+
                             typingHeaderView.setText(typing);
-                            return Unit.INSTANCE;
-                        });
+                        }
+                );
     }
 }

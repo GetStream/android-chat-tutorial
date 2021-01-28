@@ -88,7 +88,7 @@ public class ChannelActivity3 extends AppCompatActivity {
         });
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler(message -> {
+        binding.messageListView.setMessageEditHandler(message -> {
             messageInputViewModel.getEditMessage().postValue(message);
         });
 
@@ -130,7 +130,6 @@ public class ChannelActivity3 extends AppCompatActivity {
                             typingHeaderView.setText(typing);
                         }
                     });
-                    return Unit.INSTANCE;
                 });
     }
 }

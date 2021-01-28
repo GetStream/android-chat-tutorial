@@ -68,8 +68,8 @@ class ChannelActivity4 : AppCompatActivity() {
         }
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler {
-            messageInputViewModel.editMessage.postValue(it)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageInputViewModel.editMessage.postValue(message)
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
@@ -87,16 +87,17 @@ class ChannelActivity4 : AppCompatActivity() {
 
         val currentlyTyping = mutableSetOf<String>()
 
+        // Observe raw events through the low-level client
         ChatClient
             .instance()
             .channel(cid)
             .subscribeFor(
                 this, TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
-                @Suppress("NON_EXHAUSTIVE_WHEN_ON_SEALED_CLASS")
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.extraData["name"] as String)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.extraData["name"] as String)
+                    else -> Unit
                 }
 
                 binding.typingHeaderView.text = when {

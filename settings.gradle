@@ -27,7 +27,6 @@ if (new File(rootDir, '../stream-chat-android/.composite').exists()) {
         // module spec is not validated, if you get it wrong you just dont get a local version of the module
         // project spec is validated, if you get it wrong you get an error
         dependencySubstitution {
-
             substitute(module("io.getstream:stream-chat-android-ui-components:")).with(project(":stream-chat-android-ui-components"))
         }
         dependencySubstitution {

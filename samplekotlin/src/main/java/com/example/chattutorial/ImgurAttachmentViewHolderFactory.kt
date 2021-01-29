@@ -29,6 +29,6 @@ class ImgurAttachmentViewHolderFactory : MessageListItemViewHolderFactory() {
     }
 
     companion object {
-        private const val IMGUR = 999
+        private const val IMGUR = 0
     }
 }

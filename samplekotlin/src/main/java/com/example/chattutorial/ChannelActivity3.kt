@@ -84,7 +84,10 @@ class ChannelActivity3 : AppCompatActivity() {
         binding.typingHeaderView.text = nobodyTyping
 
         // Obtain a ChannelController
-        ChatDomain.instance().useCases.getChannelController(cid)
+        ChatDomain
+            .instance()
+            .useCases
+            .getChannelController(cid)
             .enqueue { channelControllerResult ->
                 if (channelControllerResult.isSuccess) {
                     // Observe typing users

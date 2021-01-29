@@ -3,16 +3,17 @@ package com.example.chattutorial
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.constraintlayout.widget.ConstraintSet
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import coil.load
-import com.example.chattutorial.databinding.ViewHolderImgurAttachmentBinding
+import com.example.chattutorial.databinding.ListItemAttachmentImgurBinding
 import com.getstream.sdk.chat.adapter.MessageListItem
 import io.getstream.chat.android.ui.messages.adapter.BaseMessageItemViewHolder
 import io.getstream.chat.android.ui.messages.adapter.MessageListItemPayloadDiff
 
 class ImgurAttachmentViewHolder(
     parent: ViewGroup,
-    private val binding: ViewHolderImgurAttachmentBinding = ViewHolderImgurAttachmentBinding.inflate(
+    private val binding: ListItemAttachmentImgurBinding = ListItemAttachmentImgurBinding.inflate(
         LayoutInflater.from(parent.context), parent, false
     )
 ) : BaseMessageItemViewHolder<MessageListItem.MessageItem>(binding.root) {
@@ -34,32 +35,11 @@ class ImgurAttachmentViewHolder(
                     crossfade(true)
                     placeholder(R.drawable.stream_ui_picture_placeholder)
                 }
-            }
 
-            align(data)
-        }
-    }
-
-    private fun align(data: MessageListItem.MessageItem) {
-        ConstraintSet().apply {
-            with(binding) {
-                clone(root)
-                val pinnedPosition = getPinnedPosition(data.isMine)
-                val clearedPosition = getPinnedPosition(!data.isMine)
-                val imageViewId = ivMediaThumb.id
-                clear(imageViewId, clearedPosition)
-                connect(
-                    imageViewId,
-                    pinnedPosition,
-                    ConstraintSet.PARENT_ID,
-                    pinnedPosition,
-                    root.resources.getDimension(R.dimen.stream_ui_spacing_small).toInt()
-                )
-                applyTo(root)
+                updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    horizontalBias = if (data.isMine) 1f else 0f
+                }
             }
         }
     }
-
-    private fun getPinnedPosition(isMine: Boolean) =
-        if (isMine) ConstraintSet.END else ConstraintSet.START
 }

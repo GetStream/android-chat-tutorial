@@ -15,7 +15,7 @@ import io.getstream.chat.android.ui.messages.adapter.MessageListItemViewHolderFa
 
 class ImgurAttachmentViewHolderFactory extends MessageListItemViewHolderFactory {
 
-    private static final Integer IMGUR = 999;
+    private static final Integer IMGUR = 0;
 
     @Override
     public int getItemViewType(@NotNull MessageListItem item) {

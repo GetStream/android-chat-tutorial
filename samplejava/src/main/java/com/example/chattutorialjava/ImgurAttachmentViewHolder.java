@@ -6,9 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
-import com.example.chattutorialjava.databinding.ViewHolderImgurAttachmentBinding;
+import com.example.chattutorialjava.databinding.ListItemAttachmentImgurBinding;
 import com.getstream.sdk.chat.adapter.MessageListItem;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
@@ -25,15 +24,15 @@ import io.getstream.chat.android.ui.messages.adapter.MessageListItemPayloadDiff;
 
 class ImgurAttachmentViewHolder extends BaseMessageItemViewHolder<MessageListItem.MessageItem> {
 
-    ViewHolderImgurAttachmentBinding binding;
+    ListItemAttachmentImgurBinding binding;
 
     public static ImgurAttachmentViewHolder create(ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ViewHolderImgurAttachmentBinding binding = ViewHolderImgurAttachmentBinding.inflate(inflater, parent, false);
+        ListItemAttachmentImgurBinding binding = ListItemAttachmentImgurBinding.inflate(inflater, parent, false);
         return new ImgurAttachmentViewHolder(binding);
     }
 
-    private ImgurAttachmentViewHolder(@NotNull ViewHolderImgurAttachmentBinding binding) {
+    private ImgurAttachmentViewHolder(@NotNull ListItemAttachmentImgurBinding binding) {
         super(binding.getRoot());
 
         float cornerRadius = binding.getRoot()
@@ -63,33 +62,15 @@ class ImgurAttachmentViewHolder extends BaseMessageItemViewHolder<MessageListIte
         ImageRequest imageRequest = new ImageRequest.Builder(context)
                 .data(imageUrl)
                 .allowHardware(false)
+                .crossfade(true)
+                .placeholder(R.drawable.stream_ui_picture_placeholder)
                 .target(binding.ivMediaThumb)
                 .build();
 
         Coil.imageLoader(context).enqueue(imageRequest);
 
-        align(data);
-    }
-
-    private void align(MessageListItem.MessageItem data) {
-        ConstraintSet set = new ConstraintSet();
-        ConstraintLayout root = binding.getRoot();
-        set.clone(root);
-        Integer pinnedPosition = getPinnedPosition(data.isMine());
-        Integer clearedPosition = getPinnedPosition(!data.isMine());
-        int imageViewId = binding.ivMediaThumb.getId();
-        set.clear(imageViewId, clearedPosition);
-        set.connect(
-                imageViewId,
-                pinnedPosition,
-                ConstraintSet.PARENT_ID,
-                pinnedPosition,
-                (int) root.getResources().getDimension(R.dimen.stream_ui_spacing_small)
-        );
-        set.applyTo(root);
-    }
-
-    private Integer getPinnedPosition(Boolean isMine) {
-        return isMine ? ConstraintSet.END : ConstraintSet.START;
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) binding.ivMediaThumb.getLayoutParams();
+        params.horizontalBias = data.isMine() ? 1f : 0f;
+        binding.ivMediaThumb.setLayoutParams(params);
     }
 }

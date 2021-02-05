@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
         viewModel.bindView(binding.channelsView, this)
         binding.channelsView.setChannelItemClickListener { channel ->
-            startActivity(ChannelActivity4.newIntent(this, channel))
+            startActivity(ChannelActivity2.newIntent(this, channel))
         }
     }
 }

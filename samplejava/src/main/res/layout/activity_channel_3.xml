@@ -30,7 +30,11 @@
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typingHeaderView" />
+        app:layout_constraintTop_toBottomOf="@+id/typingHeaderView"
+        app:streamUiMessageBackgroundColorMine="#70AF74"
+        app:streamUiMessageBackgroundColorTheirs="#FFF"
+        app:streamUiMessageTextColorMine="#FFF"
+        app:streamUiMessageTextColorTheirs="#000" />
 
     <io.getstream.chat.android.ui.textinput.MessageInputView
         android:id="@+id/messageInputView"

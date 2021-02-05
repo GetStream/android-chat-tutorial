@@ -37,10 +37,10 @@ class MainActivity : AppCompatActivity() {
             extraData["name"] = "Paranoid Android"
             extraData["image"] = "https://bit.ly/2TIt8NR"
         }
-        client.setUser(
+        client.connectUser(
             user = user,
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
-        )
+        ).enqueue()
 
         // Step 3 - Set the channel list filter and order
         // This can be read as requiring only channels whose "type" is "messaging" AND
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
         viewModel.bindView(binding.channelsView, this)
         binding.channelsView.setChannelItemClickListener { channel ->
-            startActivity(ChannelActivity2.newIntent(this, channel))
+            startActivity(ChannelActivity4.newIntent(this, channel))
         }
     }
 }

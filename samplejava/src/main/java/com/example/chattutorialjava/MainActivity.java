@@ -41,11 +41,10 @@ public final class MainActivity extends AppCompatActivity {
         user.getExtraData().put("name", "Paranoid Android");
         user.getExtraData().put("image", "https://bit.ly/2TIt8NR");
 
-        client.setUser(
+        client.connectUser(
                 user,
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0",
-                null
-        );
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
+        ).enqueue();
 
         // Step 3 - Set the channel list filter and order
         // This can be read as requiring only channels whose "type" is "messaging" AND

@@ -5,10 +5,9 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.chattutorialjava.databinding.ActivityMainBinding;
 import com.getstream.sdk.chat.ChatUI;
-import com.getstream.sdk.chat.view.channels.ChannelsView;
 import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel;
-import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModelBinding;
 import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory;
 
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +17,7 @@ import io.getstream.chat.android.client.models.Filters;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.client.utils.FilterObject;
 import io.getstream.chat.android.livedata.ChatDomain;
-import kotlin.Unit;
+import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelsViewModelBinding;
 
 import static java.util.Collections.singletonList;
 
@@ -26,12 +25,15 @@ public final class MainActivity extends AppCompatActivity {
 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        // Step 0 - inflate binding
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
         ChatClient client = new ChatClient.Builder("b67pax5b2wdq", getApplicationContext()).build();
-        ChatDomain domain = new ChatDomain.Builder(client, getApplicationContext()).build();
-        new ChatUI.Builder(client, domain, getApplicationContext()).build();
+        new ChatDomain.Builder(client, getApplicationContext()).build();
+        new ChatUI.Builder(getApplicationContext()).build();
 
         // Step 2 - Authenticate and connect the user
         User user = new User();
@@ -39,11 +41,10 @@ public final class MainActivity extends AppCompatActivity {
         user.getExtraData().put("name", "Paranoid Android");
         user.getExtraData().put("image", "https://bit.ly/2TIt8NR");
 
-        client.setUser(
+        client.connectUser(
                 user,
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0",
-                null
-        );
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
+        ).enqueue();
 
         // Step 3 - Set the channel list filter and order
         // This can be read as requiring only channels whose "type" is "messaging" AND
@@ -52,19 +53,20 @@ public final class MainActivity extends AppCompatActivity {
                 Filters.eq("type", "messaging"),
                 Filters.in("members", singletonList(user.getId()))
         );
+
         ChannelsViewModelFactory factory = new ChannelsViewModelFactory(
                 filter,
                 ChannelsViewModel.DEFAULT_SORT
         );
-        ChannelsViewModel channelsViewModel = new ViewModelProvider(this, factory).get(ChannelsViewModel.class);
+
+        ChannelsViewModel channelsViewModel =
+                new ViewModelProvider(this, factory).get(ChannelsViewModel.class);
 
         // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
-        ChannelsView channelsView = findViewById(R.id.channelsView);
-        ChannelsViewModelBinding.bind(channelsViewModel, channelsView, this);
-        channelsView.setOnChannelClickListener((channel -> {
+        ChannelsViewModelBinding.bind(channelsViewModel, binding.channelsView, this);
+        binding.channelsView.setChannelItemClickListener(channel -> {
             startActivity(ChannelActivity4.newIntent(this, channel));
-            return Unit.INSTANCE;
-        }));
+        });
     }
 }
 

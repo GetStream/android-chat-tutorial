@@ -3,45 +3,37 @@ rootProject.name='android-chat-tutorial'
 
 
 /*
- compositeBuild allow you to easily work on multiple projects at once
- you can use the debugger and edit code as if it was a single project
- this replaces the need to use mavenLocal publish commands and edit versions
- android studio also supports this gradle feature
- to work you need to have the client, livedata and main repo in the same top level folder, ie
- folder
- - stream-chat-android-client
- - stream-chat-android-livedata
+ Composite builds allow you to easily work on multiple projects at once.
+ To include the SDK repository as a composite build for the tutorial (so that
+ the version of the SDK currently in the repository can be used here), they need
+  to be in the same top level folder:
+ - android-chat-tutorial
  - stream-chat-android
- add/remove the project .composite file to enable/disable (this file should is added to the gitignore)
- Enabling composite builds:
- open the stream-chat-android project
- > touch ../stream-chat-android-livedata/.composite
- > rerun the gradle sync in your editor
- > the livedata folder will show up in your stream-chat-android project
- Disabling composite builds
- open the stream-chat-android project
- > rm ../stream-chat-android-livedata/.composite
- > rerun the gradle sync in your editor
- > the livedata folder will no longer show up in your stream-chat-android project
- */
 
+ Add / remove the project .composite file in the root of the SDK project to
+ enable / disable composite builds.
+
+ Enabling composite builds:
+ > touch ../stream-chat-android/.composite
+ > Run Gradle sync
+
+ Disabling composite builds
+ > rm ../stream-chat-android/.composite
+ > Run Gradle sync
+ */
 if (new File(rootDir, '../stream-chat-android/.composite').exists()) {
 
     includeBuild("../stream-chat-android") {
+        // module spec is not validated, if you get it wrong you just dont get a local version of the module
+        // project spec is validated, if you get it wrong you get an error
         dependencySubstitution {
-            // project spec is validated, if you get it wrong you get an error
-            // module spec is not validated, if you get it wrong you just dont get a local version of the module
-            substitute(module("com.github.getstream:stream-chat-android:")).with(project(":stream-chat-android"))
+            substitute(module("io.getstream:stream-chat-android-ui-components:")).with(project(":stream-chat-android-ui-components"))
         }
         dependencySubstitution {
-            // project spec is validated, if you get it wrong you get an error
-            // module spec is not validated, if you get it wrong you just dont get a local version of the module
-            substitute(module("com.github.getstream:stream-chat-android-client:")).with(project(":stream-chat-android-client"))
+            substitute(module("io.getstream:stream-chat-android-client:")).with(project(":stream-chat-android-client"))
         }
         dependencySubstitution {
-            // project spec is validated, if you get it wrong you get an error
-            // module spec is not validated, if you get it wrong you just dont get a local version of the module
-            substitute(module("com.github.getstream:stream-chat-android-offline:")).with(project(":stream-chat-android-offline"))
+            substitute(module("io.getstream:stream-chat-android-offline:")).with(project(":stream-chat-android-offline"))
         }
     }
 }

@@ -9,14 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannelBinding
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
-import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
-import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
+import io.getstream.chat.android.ui.messages.header.bindView
+import io.getstream.chat.android.ui.messages.view.bindView
+import io.getstream.chat.android.ui.textinput.bindView
 
 class ChannelActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class ChannelActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Step 0 - inflate binding
         binding = ActivityChannelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -41,7 +43,7 @@ class ChannelActivity : AppCompatActivity() {
         // TODO set custom AttachmentViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
+        channelHeaderViewModel.bindView(binding.messagesHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
@@ -55,8 +57,8 @@ class ChannelActivity : AppCompatActivity() {
         }
 
         // Step 4 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler {
-            messageInputViewModel.editMessage.postValue(it)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageInputViewModel.editMessage.postValue(message)
         }
 
         // Step 5 - Handle navigate up state
@@ -67,11 +69,12 @@ class ChannelActivity : AppCompatActivity() {
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        binding.channelHeaderView.onBackClick = {
+        val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        binding.messagesHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
-            binding.channelHeaderView.onBackClick()
+            backHandler()
         }
     }
 

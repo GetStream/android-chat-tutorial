@@ -9,17 +9,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel4Binding
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
-import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
-import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.channel.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
+import io.getstream.chat.android.ui.messages.header.bindView
+import io.getstream.chat.android.ui.messages.view.bindView
+import io.getstream.chat.android.ui.textinput.bindView
 
 class ChannelActivity4 : AppCompatActivity() {
 
@@ -28,6 +30,7 @@ class ChannelActivity4 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Step 0 - inflate binding
         binding = ActivityChannel4Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -42,10 +45,10 @@ class ChannelActivity4 : AppCompatActivity() {
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // Set custom AttachmentViewHolderFactory
-        binding.messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+        binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
+        channelHeaderViewModel.bindView(binding.messagesHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
@@ -65,16 +68,17 @@ class ChannelActivity4 : AppCompatActivity() {
         }
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler {
-            messageInputViewModel.editMessage.postValue(it)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageInputViewModel.editMessage.postValue(message)
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        binding.channelHeaderView.onBackClick = {
+        val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        binding.messagesHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
-            binding.channelHeaderView.onBackClick()
+            backHandler()
         }
 
         // Custom typing info header bar
@@ -83,15 +87,17 @@ class ChannelActivity4 : AppCompatActivity() {
 
         val currentlyTyping = mutableSetOf<String>()
 
+        // Observe raw events through the low-level client
         ChatClient
             .instance()
             .channel(cid)
-            .subscribeFor(this, TypingStartEvent::class.java, TypingStopEvent::class.java
+            .subscribeFor(
+                this, TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
-                @Suppress("NON_EXHAUSTIVE_WHEN_ON_SEALED_CLASS")
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.extraData["name"] as String)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.extraData["name"] as String)
+                    else -> Unit
                 }
 
                 binding.typingHeaderView.text = when {

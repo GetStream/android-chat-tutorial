@@ -9,16 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel3Binding
 import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
-import com.getstream.sdk.chat.viewmodel.bindView
 import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
-import com.getstream.sdk.chat.viewmodel.messages.bindView
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.name
 import io.getstream.chat.android.livedata.ChatDomain
+import io.getstream.chat.android.ui.messages.header.bindView
+import io.getstream.chat.android.ui.messages.view.bindView
+import io.getstream.chat.android.ui.textinput.bindView
 
 class ChannelActivity3 : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class ChannelActivity3 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Step 0 - inflate binding
         binding = ActivityChannel3Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -41,10 +43,10 @@ class ChannelActivity3 : AppCompatActivity() {
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
         // Set custom AttachmentViewHolderFactory
-        binding.messageListView.setAttachmentViewHolderFactory(MyAttachmentViewHolderFactory())
+        binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
+        channelHeaderViewModel.bindView(binding.messagesHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
@@ -64,16 +66,17 @@ class ChannelActivity3 : AppCompatActivity() {
         }
 
         // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setOnMessageEditHandler {
-            messageInputViewModel.editMessage.postValue(it)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageInputViewModel.editMessage.postValue(message)
         }
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        binding.channelHeaderView.onBackClick = {
+        val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+        binding.messagesHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
-            binding.channelHeaderView.onBackClick()
+            backHandler()
         }
 
         // Custom typing info header bar
@@ -81,18 +84,25 @@ class ChannelActivity3 : AppCompatActivity() {
         binding.typingHeaderView.text = nobodyTyping
 
         // Obtain a ChannelController
-        ChatDomain.instance().useCases.getChannelController(cid).enqueue { channelControllerResult ->
-            if (channelControllerResult.isSuccess) {
+        ChatDomain
+            .instance()
+            .useCases
+            .getChannelController(cid)
+            .enqueue { channelControllerResult ->
+                if (channelControllerResult.isSuccess) {
+                    // Observe typing users
+                    channelControllerResult.data().typing.observe(this) { typingState ->
+                        binding.typingHeaderView.text = when {
 
-                // Observe typing users
-                channelControllerResult.data().typing.observe(this) { typingState ->
-                    binding.typingHeaderView.text = when {
-                        typingState.users.isNotEmpty() -> typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
-                        else -> nobodyTyping
+                            typingState.users.isNotEmpty() -> {
+                                typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
+                            }
+
+                            else -> nobodyTyping
+                        }
                     }
                 }
             }
-        }
     }
 
     companion object {

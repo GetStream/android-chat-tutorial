@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.getstream.sdk.chat.view.ChannelHeaderView
-        android:id="@+id/channelHeaderView"
+    <io.getstream.chat.android.ui.messages.header.MessagesHeaderView
+        android:id="@+id/messagesHeaderView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,26 +20,23 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/channelHeaderView" />
+        app:layout_constraintTop_toBottomOf="@+id/messagesHeaderView" />
 
-    <com.getstream.sdk.chat.view.MessageListView
+    <io.getstream.chat.android.ui.messages.view.MessageListView
         android:id="@+id/messageListView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
+        android:background="#f3f5f8"
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/typingHeaderView"
-        android:background="#f3f5f8"
-        app:streamMessageTextColorMine="#FFF"
-        app:streamMessageBackgroundColorMine="#70af74"
-        app:streamMessageTextColorTheirs="#000"
-        app:streamMessageBackgroundColorTheirs="#FFF"
-        />
+        app:streamUiMessageBackgroundColorMine="#70AF74"
+        app:streamUiMessageBackgroundColorTheirs="#FFF"
+        app:streamUiMessageTextColorMine="#FFF"
+        app:streamUiMessageTextColorTheirs="#000" />
 
-    <com.getstream.sdk.chat.view.messageinput.MessageInputView
+    <io.getstream.chat.android.ui.textinput.MessageInputView
         android:id="@+id/messageInputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

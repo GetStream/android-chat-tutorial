@@ -20,7 +20,7 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.getstream.chat.android.client.models.Channel;
@@ -31,7 +31,6 @@ import io.getstream.chat.android.ui.messages.header.ChannelHeaderViewModelBindin
 import io.getstream.chat.android.ui.messages.header.MessagesHeaderView;
 import io.getstream.chat.android.ui.messages.view.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.textinput.MessageInputViewModelBinding;
-import kotlin.Unit;
 
 public class ChannelActivity3 extends AppCompatActivity {
 
@@ -119,11 +118,12 @@ public class ChannelActivity3 extends AppCompatActivity {
 
                     // Observe typing users
                     channelController.getTyping().observe(this, typingState -> {
-                        if (typingState.getUsers().isEmpty()) {
+                        final List<User> users = typingState.getUsers();
+                        if (users.isEmpty()) {
                             typingHeaderView.setText(nobodyTyping);
                         } else {
-                            List<String> userNames = new LinkedList<>();
-                            for (User user : typingState.getUsers()) {
+                            List<String> userNames = new ArrayList<>(users.size());
+                            for (User user : users) {
                                 userNames.add((String) user.getExtraData().get("name"));
                             }
                             String typing = "typing: " + TextUtils.join(", ", userNames);

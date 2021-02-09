@@ -33,10 +33,13 @@ class MainActivity : AppCompatActivity() {
         ChatUI.Builder(applicationContext).build()
 
         // Step 2 - Authenticate and connect the user
-        val user = User("summer-brook-2").apply {
-            extraData["name"] = "Paranoid Android"
-            extraData["image"] = "https://bit.ly/2TIt8NR"
-        }
+        val user = User(
+            id = "summer-brook-2",
+            extraData = mutableMapOf(
+                "name" to "Paranoid Android",
+                "image" to "https://bit.ly/2TIt8NR",
+            ),
+        )
         client.connectUser(
             user = user,
             token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"

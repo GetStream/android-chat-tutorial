@@ -19,6 +19,7 @@ import io.getstream.chat.android.client.channel.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
 import io.getstream.chat.android.client.models.Channel
+import io.getstream.chat.android.client.models.name
 import io.getstream.chat.android.ui.messages.header.bindView
 import io.getstream.chat.android.ui.messages.view.bindView
 import io.getstream.chat.android.ui.textinput.bindView
@@ -95,9 +96,8 @@ class ChannelActivity4 : AppCompatActivity() {
                 this, TypingStartEvent::class, TypingStopEvent::class
             ) { event ->
                 when (event) {
-                    is TypingStartEvent -> currentlyTyping.add(event.user.extraData["name"] as String)
-                    is TypingStopEvent -> currentlyTyping.remove(event.user.extraData["name"] as String)
-                    else -> Unit
+                    is TypingStartEvent -> currentlyTyping.add(event.user.name)
+                    is TypingStopEvent -> currentlyTyping.remove(event.user.name)
                 }
 
                 binding.typingHeaderView.text = when {

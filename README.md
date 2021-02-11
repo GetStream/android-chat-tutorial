@@ -21,7 +21,7 @@ The sample apps consist of two screens:
 Each module contains multiple `ChannelActivity` implementations, which correspond to the steps of the tutorial. You can easily swap them by changing the `setOnChannelClickListener` located in `MainActivity`:
 
 ```kotlin
-channelsView.setOnChannelClickListener { channel ->
+channelListView.setOnChannelClickListener { channel ->
     // open the channel activity
     startActivity(ChannelActivity.newIntent(this, channel))
 }
@@ -31,5 +31,5 @@ Currently, you can choose from four different `ChannelActivity` implementations:
 <!-- TODO: Add links when the new version of the Android Tutorial is published -->
 * `ChannelActivity` - a basic _Message List_ implementation
 * `ChannelActivity2` - includes a new _MessageListView_ style and custom attachment type
-* `ChannelActivity3` - includes a custom _Channel Header_ component created with the [LiveData&Offline](https://github.com/GetStream/stream-chat-android-livedata) library
-* `ChannelActivity4` - includes a custom _Channel Header_ component created with the [Low-Level Client](https://github.com/GetStream/stream-chat-android-client) library
+* `ChannelActivity3` - includes a custom _Typing Header_ component created with the [LiveData&Offline](https://github.com/GetStream/stream-chat-android-livedata) library
+* `ChannelActivity4` - includes a custom _Typing Header_ component created with the [Low-Level Client](https://github.com/GetStream/stream-chat-android-client) library

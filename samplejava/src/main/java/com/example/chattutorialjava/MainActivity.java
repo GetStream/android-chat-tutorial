@@ -7,8 +7,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chattutorialjava.databinding.ActivityMainBinding;
 import com.getstream.sdk.chat.ChatUI;
-import com.getstream.sdk.chat.viewmodel.channels.ChannelsViewModel;
-import com.getstream.sdk.chat.viewmodel.factory.ChannelsViewModelFactory;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +15,9 @@ import io.getstream.chat.android.client.models.Filters;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.client.utils.FilterObject;
 import io.getstream.chat.android.livedata.ChatDomain;
-import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelsViewModelBinding;
+import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModel;
+import io.getstream.chat.android.ui.channel.list.viewmodel.ChannelListViewModelBinding;
+import io.getstream.chat.android.ui.channel.list.viewmodel.factory.ChannelListViewModelFactory;
 
 import static java.util.Collections.singletonList;
 
@@ -54,19 +54,18 @@ public final class MainActivity extends AppCompatActivity {
                 Filters.in("members", singletonList(user.getId()))
         );
 
-        ChannelsViewModelFactory factory = new ChannelsViewModelFactory(
+        ChannelListViewModelFactory factory = new ChannelListViewModelFactory(
                 filter,
-                ChannelsViewModel.DEFAULT_SORT
+                ChannelListViewModel.DEFAULT_SORT
         );
 
-        ChannelsViewModel channelsViewModel =
-                new ViewModelProvider(this, factory).get(ChannelsViewModel.class);
+        ChannelListViewModel channelsViewModel =
+                new ViewModelProvider(this, factory).get(ChannelListViewModel.class);
 
-        // Step 4 - Connect the ChannelsViewModel to the ChannelsView, loose coupling makes it easy to customize
-        ChannelsViewModelBinding.bind(channelsViewModel, binding.channelsView, this);
-        binding.channelsView.setChannelItemClickListener(channel -> {
+        // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose coupling makes it easy to customize
+        ChannelListViewModelBinding.bind(channelsViewModel, binding.channelListView, this);
+        binding.channelListView.setChannelItemClickListener(channel -> {
             startActivity(ChannelActivity4.newIntent(this, channel));
         });
     }
 }
-

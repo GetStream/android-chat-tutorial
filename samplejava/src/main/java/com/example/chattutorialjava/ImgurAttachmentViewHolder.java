@@ -19,8 +19,8 @@ import java.util.List;
 import coil.Coil;
 import coil.request.ImageRequest;
 import io.getstream.chat.android.client.models.Attachment;
-import io.getstream.chat.android.ui.messages.adapter.BaseMessageItemViewHolder;
-import io.getstream.chat.android.ui.messages.adapter.MessageListItemPayloadDiff;
+import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder;
+import io.getstream.chat.android.ui.message.list.adapter.MessageListItemPayloadDiff;
 
 class ImgurAttachmentViewHolder extends BaseMessageItemViewHolder<MessageListItem.MessageItem> {
 

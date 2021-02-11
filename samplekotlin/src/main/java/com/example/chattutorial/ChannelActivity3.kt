@@ -3,13 +3,10 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel3Binding
-import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
-import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
@@ -17,9 +14,11 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.Navi
 import io.getstream.chat.android.client.models.Channel
 import io.getstream.chat.android.client.models.name
 import io.getstream.chat.android.livedata.ChatDomain
-import io.getstream.chat.android.ui.messages.header.bindView
-import io.getstream.chat.android.ui.messages.view.bindView
-import io.getstream.chat.android.ui.textinput.bindView
+import io.getstream.chat.android.ui.message.input.bindView
+import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
+import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
+import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
+import io.getstream.chat.android.ui.message.view.bindView
 
 class ChannelActivity3 : AppCompatActivity() {
 
@@ -37,8 +36,8 @@ class ChannelActivity3 : AppCompatActivity() {
         }
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
-        val factory = ChannelViewModelFactory(cid)
-        val channelHeaderViewModel: ChannelHeaderViewModel by viewModels { factory }
+        val factory = MessageListViewModelFactory(cid)
+        val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { factory }
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
@@ -46,7 +45,7 @@ class ChannelActivity3 : AppCompatActivity() {
         binding.messageListView.setMessageViewHolderFactory(ImgurAttachmentViewHolderFactory())
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        channelHeaderViewModel.bindView(binding.messagesHeaderView, this)
+        messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
@@ -74,7 +73,7 @@ class ChannelActivity3 : AppCompatActivity() {
         val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        binding.messagesHeaderView.setBackButtonClickListener(backHandler)
+        binding.messageListHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
             backHandler()
         }

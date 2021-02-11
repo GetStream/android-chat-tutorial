@@ -8,8 +8,8 @@ import androidx.core.view.updateLayoutParams
 import coil.load
 import com.example.chattutorial.databinding.ListItemAttachmentImgurBinding
 import com.getstream.sdk.chat.adapter.MessageListItem
-import io.getstream.chat.android.ui.messages.adapter.BaseMessageItemViewHolder
-import io.getstream.chat.android.ui.messages.adapter.MessageListItemPayloadDiff
+import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder
+import io.getstream.chat.android.ui.message.list.adapter.MessageListItemPayloadDiff
 
 class ImgurAttachmentViewHolder(
     parent: ViewGroup,

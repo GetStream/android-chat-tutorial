@@ -23,7 +23,6 @@ import io.getstream.chat.android.ui.messages.header.ChannelHeaderViewModelBindin
 import io.getstream.chat.android.ui.messages.header.MessagesHeaderView;
 import io.getstream.chat.android.ui.messages.view.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.textinput.MessageInputViewModelBinding;
-import kotlin.Unit;
 
 public class ChannelActivity extends AppCompatActivity {
 

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <io.getstream.chat.android.ui.channel.list.ChannelsView
-        android:id="@+id/channelsView"
+    <io.getstream.chat.android.ui.channel.list.ChannelListView
+        android:id="@+id/channelListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

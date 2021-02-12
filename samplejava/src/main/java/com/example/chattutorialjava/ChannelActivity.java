@@ -10,19 +10,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chattutorialjava.databinding.ActivityChannelBinding;
-import com.getstream.sdk.chat.viewmodel.ChannelHeaderViewModel;
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel;
-import com.getstream.sdk.chat.viewmodel.factory.ChannelViewModelFactory;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
 import io.getstream.chat.android.client.models.Channel;
-import io.getstream.chat.android.ui.messages.header.ChannelHeaderViewModelBinding;
-import io.getstream.chat.android.ui.messages.header.MessagesHeaderView;
-import io.getstream.chat.android.ui.messages.view.MessageListViewModelBinding;
-import io.getstream.chat.android.ui.textinput.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.input.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
+import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
+import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
+import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
+import io.getstream.chat.android.ui.message.view.MessageListViewModelBinding;
 
 public class ChannelActivity extends AppCompatActivity {
 
@@ -48,16 +48,16 @@ public class ChannelActivity extends AppCompatActivity {
         }
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
-        ChannelViewModelFactory factory = new ChannelViewModelFactory(cid);
+        MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
         ViewModelProvider provider = new ViewModelProvider(this, factory);
-        ChannelHeaderViewModel channelHeaderViewModel = provider.get(ChannelHeaderViewModel.class);
+        MessageListHeaderViewModel channelHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
         // TODO set custom Imgur attachment View Holder Factory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        ChannelHeaderViewModelBinding.bind(channelHeaderViewModel, binding.messagesHeaderView, this);
+        MessageListHeaderViewModelBinding.bind(channelHeaderViewModel, binding.messageListHeaderView, this);
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
@@ -83,11 +83,11 @@ public class ChannelActivity extends AppCompatActivity {
         });
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        MessagesHeaderView.OnClickListener backHandler = () -> {
+        MessageListHeaderView.OnClickListener backHandler = () -> {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
         };
 
-        binding.messagesHeaderView.setBackButtonClickListener(backHandler);
+        binding.messageListHeaderView.setBackButtonClickListener(backHandler);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override

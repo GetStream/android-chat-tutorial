@@ -2,8 +2,8 @@ package com.example.chattutorial
 
 import android.view.ViewGroup
 import com.getstream.sdk.chat.adapter.MessageListItem
-import io.getstream.chat.android.ui.messages.adapter.BaseMessageItemViewHolder
-import io.getstream.chat.android.ui.messages.adapter.MessageListItemViewHolderFactory
+import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder
+import io.getstream.chat.android.ui.message.list.adapter.MessageListItemViewHolderFactory
 
 class ImgurAttachmentViewHolderFactory : MessageListItemViewHolderFactory() {
 

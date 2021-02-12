@@ -3,6 +3,7 @@ package com.example.chattutorial
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel3Binding

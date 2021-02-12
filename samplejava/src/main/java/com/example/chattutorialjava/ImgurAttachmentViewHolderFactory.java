@@ -10,8 +10,8 @@ import java.util.List;
 
 import io.getstream.chat.android.client.models.Attachment;
 import io.getstream.chat.android.client.models.Message;
-import io.getstream.chat.android.ui.messages.adapter.BaseMessageItemViewHolder;
-import io.getstream.chat.android.ui.messages.adapter.MessageListItemViewHolderFactory;
+import io.getstream.chat.android.ui.message.list.adapter.BaseMessageItemViewHolder;
+import io.getstream.chat.android.ui.message.list.adapter.MessageListItemViewHolderFactory;
 
 class ImgurAttachmentViewHolderFactory extends MessageListItemViewHolderFactory {
 

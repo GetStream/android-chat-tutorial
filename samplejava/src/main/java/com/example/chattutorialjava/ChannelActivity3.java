@@ -25,12 +25,12 @@ import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.livedata.ChatDomain;
 import io.getstream.chat.android.livedata.controller.ChannelController;
-import io.getstream.chat.android.ui.message.input.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
 import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
+import io.getstream.chat.android.ui.message.list.viewmodel.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
-import io.getstream.chat.android.ui.message.view.MessageListViewModelBinding;
 
 public class ChannelActivity3 extends AppCompatActivity {
 

@@ -37,13 +37,13 @@ public final class MainActivity extends AppCompatActivity {
 
         // Step 2 - Authenticate and connect the user
         User user = new User();
-        user.setId("summer-brook-2");
-        user.getExtraData().put("name", "Paranoid Android");
+        user.setId("tutorial-droid");
+        user.getExtraData().put("name", "Tutorial Droid");
         user.getExtraData().put("image", "https://bit.ly/2TIt8NR");
 
         client.connectUser(
                 user,
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.NhEr0hP9W9nwqV7ZkdShxvi02C5PR7SJE7Cs4y7kyqg"
         ).enqueue();
 
         // Step 3 - Set the channel list filter and order

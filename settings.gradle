@@ -1,2 +1,39 @@
 include ':samplejava', ':samplekotlin'
+rootProject.name='android-chat-tutorial'
 
+
+/*
+ Composite builds allow you to easily work on multiple projects at once.
+ To include the SDK repository as a composite build for the tutorial (so that
+ the version of the SDK currently in the repository can be used here), they need
+  to be in the same top level folder:
+ - android-chat-tutorial
+ - stream-chat-android
+
+ Add / remove the project .composite file in the root of the SDK project to
+ enable / disable composite builds.
+
+ Enabling composite builds:
+ > touch ../stream-chat-android/.composite
+ > Run Gradle sync
+
+ Disabling composite builds
+ > rm ../stream-chat-android/.composite
+ > Run Gradle sync
+ */
+if (new File(rootDir, '../stream-chat-android/.composite').exists()) {
+
+    includeBuild("../stream-chat-android") {
+        // module spec is not validated, if you get it wrong you just dont get a local version of the module
+        // project spec is validated, if you get it wrong you get an error
+        dependencySubstitution {
+            substitute(module("io.getstream:stream-chat-android-ui-components:")).with(project(":stream-chat-android-ui-components"))
+        }
+        dependencySubstitution {
+            substitute(module("io.getstream:stream-chat-android-client:")).with(project(":stream-chat-android-client"))
+        }
+        dependencySubstitution {
+            substitute(module("io.getstream:stream-chat-android-offline:")).with(project(":stream-chat-android-offline"))
+        }
+    }
+}

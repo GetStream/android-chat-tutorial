@@ -26,9 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
-        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext)
-                .logLevel(ChatLogLevel.ALL)
-                .build()
+        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).build()
         ChatDomain.Builder(client, applicationContext).build()
         ChatUI.Builder(applicationContext).build()
 

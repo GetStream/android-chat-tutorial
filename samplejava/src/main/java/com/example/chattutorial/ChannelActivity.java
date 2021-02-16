@@ -1,4 +1,4 @@
-package com.example.chattutorialjava;
+package com.example.chattutorial;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.chattutorialjava.databinding.ActivityChannel2Binding;
+import com.example.chattutorial.databinding.ActivityChannelBinding;
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal;
@@ -24,12 +24,12 @@ import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHea
 import io.getstream.chat.android.ui.message.list.viewmodel.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
 
-public class ChannelActivity2 extends AppCompatActivity {
+public class ChannelActivity extends AppCompatActivity {
 
     private final static String CID_KEY = "key:cid";
 
     public static Intent newIntent(Context context, Channel channel) {
-        final Intent intent = new Intent(context, ChannelActivity2.class);
+        final Intent intent = new Intent(context, ChannelActivity.class);
         intent.putExtra(CID_KEY, channel.getCid());
         return intent;
     }
@@ -39,12 +39,12 @@ public class ChannelActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Step 0 - inflate binding
-        ActivityChannel2Binding binding = ActivityChannel2Binding.inflate(getLayoutInflater());
+        ActivityChannelBinding binding = ActivityChannelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         String cid = getIntent().getStringExtra(CID_KEY);
         if (cid == null) {
-            throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity2");
+            throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity");
         }
 
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
@@ -54,8 +54,7 @@ public class ChannelActivity2 extends AppCompatActivity {
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
-        // Set view holder factory for Imgur attachments
-        binding.messageListView.setMessageViewHolderFactory(new ImgurAttachmentViewHolderFactory());
+        // TODO set custom Imgur ViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         MessageListHeaderViewModelBinding.bind(channelHeaderViewModel, binding.messageListHeaderView, this);
@@ -71,16 +70,16 @@ public class ChannelActivity2 extends AppCompatActivity {
             }
         });
 
-        // Step 4 - Handle navigate up state
+        // Step 4 - Let the message input know when we are editing a message
+        binding.messageListView.setMessageEditHandler(message -> {
+            messageInputViewModel.getEditMessage().postValue(message);
+        });
+
+        // Step 5 - Handle navigate up state
         messageListViewModel.getState().observe(this, state -> {
             if (state instanceof NavigateUp) {
                 finish();
             }
-        });
-
-        // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(message -> {
-            messageInputViewModel.getEditMessage().postValue(message);
         });
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread

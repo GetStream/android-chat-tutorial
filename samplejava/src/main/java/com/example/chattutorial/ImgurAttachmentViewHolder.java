@@ -1,4 +1,4 @@
-package com.example.chattutorialjava;
+package com.example.chattutorial;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.example.chattutorialjava.databinding.ListItemAttachmentImgurBinding;
+import com.example.chattutorial.databinding.ListItemAttachmentImgurBinding;
 import com.getstream.sdk.chat.adapter.MessageListItem;
 import com.google.android.material.shape.ShapeAppearanceModel;
 

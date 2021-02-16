@@ -1,11 +1,11 @@
-package com.example.chattutorialjava;
+package com.example.chattutorial;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.chattutorialjava.databinding.ActivityMainBinding;
+import com.example.chattutorial.databinding.ActivityMainBinding;
 import com.getstream.sdk.chat.ChatUI;
 
 import org.jetbrains.annotations.Nullable;

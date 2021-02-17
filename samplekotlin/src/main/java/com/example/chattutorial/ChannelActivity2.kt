@@ -57,7 +57,7 @@ class ChannelActivity2 : AppCompatActivity() {
                     messageListHeaderViewModel.setActiveThread(mode.parentMessage)
                 }
                 is Normal -> {
-                    messageListHeaderViewModel.setActiveThread(null)
+                    messageListHeaderViewModel.resetThread()
                     messageInputViewModel.resetThread()
                 }
             }

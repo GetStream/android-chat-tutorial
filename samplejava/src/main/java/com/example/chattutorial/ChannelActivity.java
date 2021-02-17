@@ -69,7 +69,7 @@ public class ChannelActivity extends AppCompatActivity {
                 messageListHeaderViewModel.setActiveThread(parentMessage);
                 messageInputViewModel.setActiveThread(parentMessage);
             } else if (mode instanceof Normal) {
-                messageListHeaderViewModel.setActiveThread(null);
+                messageListHeaderViewModel.resetThread();
                 messageInputViewModel.resetThread();
             }
         });

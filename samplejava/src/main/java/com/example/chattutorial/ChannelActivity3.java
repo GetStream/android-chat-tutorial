@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.getstream.chat.android.client.models.Channel;
+import io.getstream.chat.android.client.models.Message;
 import io.getstream.chat.android.client.models.User;
 import io.getstream.chat.android.livedata.ChatDomain;
 import io.getstream.chat.android.livedata.controller.ChannelController;
@@ -58,7 +59,7 @@ public class ChannelActivity3 extends AppCompatActivity {
         // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
         MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
         ViewModelProvider provider = new ViewModelProvider(this, factory);
-        MessageListHeaderViewModel channelHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
+        MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
@@ -66,15 +67,18 @@ public class ChannelActivity3 extends AppCompatActivity {
         binding.messageListView.setMessageViewHolderFactory(new ImgurAttachmentViewHolderFactory());
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        MessageListHeaderViewModelBinding.bind(channelHeaderViewModel, binding.messageListHeaderView, this);
+        MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
-        // Step 3 - Let the message input know when we open a thread
+        // Step 3 - Let both message list header and message input know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
             if (mode instanceof Thread) {
-                messageInputViewModel.setActiveThread(((Thread) mode).getParentMessage());
+                Message parentMessage = ((Thread) mode).getParentMessage();
+                messageListHeaderViewModel.setActiveThread(parentMessage);
+                messageInputViewModel.setActiveThread(parentMessage);
             } else if (mode instanceof Normal) {
+                messageListHeaderViewModel.setActiveThread(null);
                 messageInputViewModel.resetThread();
             }
         });

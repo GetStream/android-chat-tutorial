@@ -58,10 +58,10 @@ class ChannelActivity4 : AppCompatActivity() {
         messageListViewModel.mode.observe(this) { mode ->
             when (mode) {
                 is Thread -> {
-                    messageInputViewModel.setActiveThread(mode.parentMessage)
                     messageListHeaderViewModel.setActiveThread(mode.parentMessage)
+                    messageInputViewModel.setActiveThread(mode.parentMessage)
                 }
-                is Normal -> {
+                Normal -> {
                     messageListHeaderViewModel.resetThread()
                     messageInputViewModel.resetThread()
                 }

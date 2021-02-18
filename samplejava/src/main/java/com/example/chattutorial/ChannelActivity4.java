@@ -1,4 +1,4 @@
-package com.example.chattutorialjava;
+package com.example.chattutorial;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.chattutorialjava.databinding.ActivityChannel4Binding;
+import com.example.chattutorial.databinding.ActivityChannel4Binding;
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal;
@@ -26,12 +26,12 @@ import io.getstream.chat.android.client.events.TypingStartEvent;
 import io.getstream.chat.android.client.events.TypingStopEvent;
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.User;
-import io.getstream.chat.android.ui.message.input.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
 import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
+import io.getstream.chat.android.ui.message.list.viewmodel.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
-import io.getstream.chat.android.ui.message.view.MessageListViewModelBinding;
 
 public class ChannelActivity4 extends AppCompatActivity {
 

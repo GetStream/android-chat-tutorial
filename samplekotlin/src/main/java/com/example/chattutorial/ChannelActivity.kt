@@ -13,11 +13,11 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.ui.message.input.bindView
+import io.getstream.chat.android.ui.message.input.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
 import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
+import io.getstream.chat.android.ui.message.list.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
-import io.getstream.chat.android.ui.message.view.bindView
 
 class ChannelActivity : AppCompatActivity() {
 
@@ -40,7 +40,7 @@ class ChannelActivity : AppCompatActivity() {
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
-        // TODO set custom AttachmentViewHolderFactory
+        // TODO set custom Imgur ViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)

@@ -26,31 +26,29 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
-        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext)
-            .logLevel(ChatLogLevel.ALL)
-            .build()
+        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).build()
         ChatDomain.Builder(client, applicationContext).build()
         ChatUI.Builder(applicationContext).build()
 
         // Step 2 - Authenticate and connect the user
         val user = User(
-            id = "summer-brook-2",
-            extraData = mutableMapOf(
-                "name" to "Paranoid Android",
-                "image" to "https://bit.ly/2TIt8NR",
-            ),
+                id = "tutorial-droid",
+                extraData = mutableMapOf(
+                        "name" to "Tutorial Droid",
+                        "image" to "https://bit.ly/2TIt8NR",
+                ),
         )
         client.connectUser(
-            user = user,
-            token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoic3VtbWVyLWJyb29rLTIifQ.CzyOx8kgrc61qVbzWvhV1WD3KPEo5ZFZH-326hIdKz0"
+                user = user,
+                token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.NhEr0hP9W9nwqV7ZkdShxvi02C5PR7SJE7Cs4y7kyqg"
         ).enqueue()
 
         // Step 3 - Set the channel list filter and order
         // This can be read as requiring only channels whose "type" is "messaging" AND
         // whose "members" include our "user.id"
         val filter = Filters.and(
-            Filters.eq("type", "messaging"),
-            Filters.`in`("members", listOf(user.id))
+                Filters.eq("type", "messaging"),
+                Filters.`in`("members", listOf(user.id))
         )
         val viewModelFactory = ChannelListViewModelFactory(filter, ChannelListViewModel.DEFAULT_SORT)
         val viewModel: ChannelListViewModel by viewModels { viewModelFactory }

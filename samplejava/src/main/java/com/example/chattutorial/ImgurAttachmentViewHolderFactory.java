@@ -1,4 +1,4 @@
-package com.example.chattutorialjava;
+package com.example.chattutorial;
 
 import android.view.ViewGroup;
 

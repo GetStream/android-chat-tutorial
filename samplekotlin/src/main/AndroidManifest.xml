@@ -16,18 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChannelActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity android:name=".ChannelActivity2"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity android:name=".ChannelActivity3"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity android:name=".ChannelActivity4"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+        <activity android:name=".ChannelActivity" />
+        <activity android:name=".ChannelActivity2" />
+        <activity android:name=".ChannelActivity3" />
+        <activity android:name=".ChannelActivity4" />
     </application>
 
 </manifest>

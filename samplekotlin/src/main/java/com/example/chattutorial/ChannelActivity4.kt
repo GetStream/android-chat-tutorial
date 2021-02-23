@@ -39,7 +39,8 @@ class ChannelActivity4 : AppCompatActivity() {
             "Specifying a channel id is required when starting ChannelActivity"
         }
 
-        // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
+        // Step 1 - Create three separate ViewModels for the views so it's easy
+        //          to customize them individually
         val factory = MessageListViewModelFactory(cid)
         val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { factory }
         val messageListViewModel: MessageListViewModel by viewModels { factory }
@@ -53,8 +54,8 @@ class ChannelActivity4 : AppCompatActivity() {
         messageListViewModel.bindView(binding.messageListView, this)
         messageInputViewModel.bindView(binding.messageInputView, this)
 
-        // Step 3 - Let both message list header and message input know when we open a thread
-        // Note: the .observe support was added in kotlin 1.4, upgrade kotlin to support this syntax
+        // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
+        // Note: the observe syntax used here requires Kotlin 1.4
         messageListViewModel.mode.observe(this) { mode ->
             when (mode) {
                 is Thread -> {

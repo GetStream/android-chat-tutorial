@@ -57,7 +57,8 @@ public class ChannelActivity4 extends AppCompatActivity {
             throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity4");
         }
 
-        // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
+        // Step 1 - Create three separate ViewModels for the views so it's easy
+        //          to customize them individually
         MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
         ViewModelProvider provider = new ViewModelProvider(this, factory);
         MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);

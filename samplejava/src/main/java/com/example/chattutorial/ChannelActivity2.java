@@ -48,7 +48,8 @@ public class ChannelActivity2 extends AppCompatActivity {
             throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity2");
         }
 
-        // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
+        // Step 1 - Create three separate ViewModels for the views so it's easy
+        //          to customize them individually
         MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
         ViewModelProvider provider = new ViewModelProvider(this, factory);
         MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
@@ -63,7 +64,7 @@ public class ChannelActivity2 extends AppCompatActivity {
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
-        // Step 3 - Let both message list header and message input know when we open a thread
+        // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
             if (mode instanceof Thread) {
                 Message parentMessage = ((Thread) mode).getParentMessage();

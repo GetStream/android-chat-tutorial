@@ -25,7 +25,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
+        // Step 1 - Set up the client for API calls, the domain for offline storage
+        //          and the UI components
         val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).build()
         ChatDomain.Builder(client, applicationContext).build()
         ChatUI.Builder(applicationContext).build()
@@ -53,7 +54,9 @@ class MainActivity : AppCompatActivity() {
         val viewModelFactory = ChannelListViewModelFactory(filter, ChannelListViewModel.DEFAULT_SORT)
         val viewModel: ChannelListViewModel by viewModels { viewModelFactory }
 
-        // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose coupling makes it easy to customize
+        // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose
+        //          coupling makes it easy to customize
+        // Note: the listener syntax used here requires Kotlin 1.4
         viewModel.bindView(binding.channelListView, this)
         binding.channelListView.setChannelItemClickListener { channel ->
             startActivity(ChannelActivity4.newIntent(this, channel))

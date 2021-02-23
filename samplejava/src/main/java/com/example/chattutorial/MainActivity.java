@@ -30,7 +30,8 @@ public final class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Step 1 - Set up the client for API calls, the domain for offline storage and the UI components
+        // Step 1 - Set up the client for API calls, the domain for offline storage
+        //          and the UI components
         ChatClient client = new ChatClient.Builder("b67pax5b2wdq", getApplicationContext()).build();
         new ChatDomain.Builder(client, getApplicationContext()).build();
         new ChatUI.Builder(getApplicationContext()).build();
@@ -62,7 +63,8 @@ public final class MainActivity extends AppCompatActivity {
         ChannelListViewModel channelsViewModel =
                 new ViewModelProvider(this, factory).get(ChannelListViewModel.class);
 
-        // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose coupling makes it easy to customize
+        // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose
+        //          coupling makes it easy to customize
         ChannelListViewModelBinding.bind(channelsViewModel, binding.channelListView, this);
         binding.channelListView.setChannelItemClickListener(channel -> {
             startActivity(ChannelActivity4.newIntent(this, channel));

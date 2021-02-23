@@ -17,6 +17,7 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Threa
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
 import io.getstream.chat.android.client.models.Channel;
+import io.getstream.chat.android.client.models.Message;
 import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
 import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
@@ -47,25 +48,29 @@ public class ChannelActivity extends AppCompatActivity {
             throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity");
         }
 
-        // Step 1 - Create 3 separate ViewModels for the views so it's easy to customize one of the components
+        // Step 1 - Create three separate ViewModels for the views so it's easy
+        //          to customize them individually
         MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
         ViewModelProvider provider = new ViewModelProvider(this, factory);
-        MessageListHeaderViewModel channelHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
+        MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
         // TODO set custom Imgur ViewHolderFactory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        MessageListHeaderViewModelBinding.bind(channelHeaderViewModel, binding.messageListHeaderView, this);
+        MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
-        // Step 3 - Let the message input know when we open a thread
+        // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
             if (mode instanceof Thread) {
-                messageInputViewModel.setActiveThread(((Thread) mode).getParentMessage());
+                Message parentMessage = ((Thread) mode).getParentMessage();
+                messageListHeaderViewModel.setActiveThread(parentMessage);
+                messageInputViewModel.setActiveThread(parentMessage);
             } else if (mode instanceof Normal) {
+                messageListHeaderViewModel.resetThread();
                 messageInputViewModel.resetThread();
             }
         });

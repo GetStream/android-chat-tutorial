@@ -50,7 +50,14 @@ class ChannelActivity : AppCompatActivity() {
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
-        messageInputViewModel.bindView(binding.messageInputView, this)
+
+        binding.sendButton.setOnClickListener {
+            val currentInputText = binding.messageInput.text.toString()
+            if (currentInputText.isNotEmpty()) {
+                messageInputViewModel.sendMessage(messageText = currentInputText)
+                binding.messageInput.setText("")
+            }
+        }
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
         // Note: the observe syntax used here requires Kotlin 1.4

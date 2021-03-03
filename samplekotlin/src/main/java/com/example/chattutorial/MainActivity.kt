@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         // Note: the listener syntax used here requires Kotlin 1.4
         viewModel.bindView(binding.channelListView, this)
         binding.channelListView.setChannelItemClickListener { channel ->
-            startActivity(ChannelActivity4.newIntent(this, channel))
+            startActivity(ChannelActivity.newIntent(this, channel))
         }
     }
 }

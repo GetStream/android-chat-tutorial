@@ -1,4 +1,4 @@
-package com.example.chattutorial
+ package com.example.chattutorial
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,7 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannelBinding
+import com.getstream.sdk.chat.adapter.MessageListItem
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
@@ -41,7 +42,10 @@ class ChannelActivity : AppCompatActivity() {
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
-        // TODO set custom Imgur ViewHolderFactory
+        binding.messageListView.setMessageViewHolderFactory(CustomMessageViewHolderFactory())
+        binding.messageListView.setMessageListItemPredicate { messageListItem ->
+            messageListItem is MessageListItem.MessageItem
+        }
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)

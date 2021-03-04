@@ -41,7 +41,7 @@ class ChannelActivity : AppCompatActivity() {
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
-        // TODO set custom Imgur ViewHolderFactory
+        // TODO set custom Imgur attachment factory
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)

@@ -25,16 +25,12 @@
 
     <io.getstream.chat.android.ui.message.list.MessageListView
         android:id="@+id/messageListView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/messageInputView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typingHeaderView"
-        app:streamUiMessageBackgroundColorMine="#70AF74"
-        app:streamUiMessageBackgroundColorTheirs="#FFF"
-        app:streamUiMessageTextColorMine="#FFF"
-        app:streamUiMessageTextColorTheirs="#000" />
+        app:layout_constraintTop_toBottomOf="@+id/typingHeaderView" />
 
     <io.getstream.chat.android.ui.message.input.MessageInputView
         android:id="@+id/messageInputView"

@@ -67,4 +67,3 @@ public class ImgurAttachmentViewFactory extends AttachmentViewFactory {
         return binding.getRoot();
     }
 }
-

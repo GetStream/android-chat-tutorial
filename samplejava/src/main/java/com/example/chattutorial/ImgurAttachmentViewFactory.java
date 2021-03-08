@@ -1,13 +1,11 @@
 package com.example.chattutorial;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.getstream.sdk.chat.adapter.MessageListItem;
 import com.example.chattutorial.databinding.AttachmentImgurBinding;
+import com.getstream.sdk.chat.adapter.MessageListItem;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
 import org.jetbrains.annotations.NotNull;

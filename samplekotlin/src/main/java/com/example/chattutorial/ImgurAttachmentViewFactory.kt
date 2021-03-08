@@ -1,6 +1,5 @@
 package com.example.chattutorial
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,10 +14,10 @@ import io.getstream.chat.android.ui.message.list.internal.MessageListItemStyle
 class ImgurAttachmentViewFactory : AttachmentViewFactory() {
 
     override fun createAttachmentView(
-            data: MessageListItem.MessageItem,
-            listeners: MessageListListenerContainer,
-            style: MessageListItemStyle,
-            parent: ViewGroup,
+        data: MessageListItem.MessageItem,
+        listeners: MessageListListenerContainer,
+        style: MessageListItemStyle,
+        parent: ViewGroup,
     ): View {
         val imgurAttachment = data.message.attachments.firstOrNull { it.isImgurAttachment() }
         return when {
@@ -31,13 +30,13 @@ class ImgurAttachmentViewFactory : AttachmentViewFactory() {
 
     private fun createImgurAttachmentView(imgurAttachment: Attachment, parent: ViewGroup): View {
         val binding = AttachmentImgurBinding
-                .inflate(LayoutInflater.from(parent.context), null, false)
+            .inflate(LayoutInflater.from(parent.context), null, false)
 
         binding.ivMediaThumb.apply {
             shapeAppearanceModel = shapeAppearanceModel
-                    .toBuilder()
-                    .setAllCornerSizes(resources.getDimension(R.dimen.stream_ui_selected_attachment_corner_radius))
-                    .build()
+                .toBuilder()
+                .setAllCornerSizes(resources.getDimension(R.dimen.stream_ui_selected_attachment_corner_radius))
+                .build()
             load(imgurAttachment.imageUrl) {
                 allowHardware(false)
                 crossfade(true)

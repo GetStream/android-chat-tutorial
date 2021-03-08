@@ -18,7 +18,7 @@ class ImgurAttachmentViewFactory : AttachmentViewFactory() {
             data: MessageListItem.MessageItem,
             listeners: MessageListListenerContainer,
             style: MessageListItemStyle,
-            parent: View,
+            parent: ViewGroup,
     ): View {
         val imgurAttachment = data.message.attachments.firstOrNull { it.isImgurAttachment() }
         return when {

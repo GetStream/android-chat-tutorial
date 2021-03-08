@@ -26,7 +26,7 @@ public class ImgurAttachmentViewFactory extends AttachmentViewFactory {
     public View createAttachmentView(@NotNull MessageListItem.MessageItem data,
                                      @NotNull MessageListListenerContainer listeners,
                                      @NotNull MessageListItemStyle style,
-                                     @NotNull View parent) {
+                                     @NotNull ViewGroup parent) {
         Attachment imgurAttachment = null;
         for (Attachment attachment : data.getMessage().getAttachments()) {
             String imageUrl = attachment.getImageUrl();

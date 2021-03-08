@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import coil.load
-import com.example.chattutorial.databinding.ListItemAttachmentImgurBinding
+import com.example.chattutorial.databinding.AttachmentImgurBinding
 import com.getstream.sdk.chat.adapter.MessageListItem
 import io.getstream.chat.android.client.models.Attachment
 import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerContainer
@@ -30,7 +30,7 @@ class ImgurAttachmentViewFactory : AttachmentViewFactory() {
     private fun Attachment.isImgurAttachment(): Boolean = imageUrl?.contains("imgur") == true
 
     private fun createImgurAttachmentView(imgurAttachment: Attachment, parent: ViewGroup): View {
-        val binding = ListItemAttachmentImgurBinding
+        val binding = AttachmentImgurBinding
                 .inflate(LayoutInflater.from(parent.context), null, false)
 
         binding.ivMediaThumb.apply {

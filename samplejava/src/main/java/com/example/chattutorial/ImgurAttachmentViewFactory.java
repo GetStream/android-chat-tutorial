@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.getstream.sdk.chat.adapter.MessageListItem;
-import com.example.chattutorial.databinding.ListItemAttachmentImgurBinding;
+import com.example.chattutorial.databinding.AttachmentImgurBinding;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public class ImgurAttachmentViewFactory extends AttachmentViewFactory {
     }
 
     private View createImgurAttachmentView(Attachment imgurAttachment, ViewGroup parent) {
-        ListItemAttachmentImgurBinding binding = ListItemAttachmentImgurBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        AttachmentImgurBinding binding = AttachmentImgurBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
 
         float cornerRadius = binding.getRoot()
                 .getResources()

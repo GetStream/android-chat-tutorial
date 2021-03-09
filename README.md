@@ -1,6 +1,6 @@
 # Android Chat Tutorial Sample
 
-This repository allows you to check the result after completing each step described in the [Android Chat Tutorial](https://getstream.io/tutorials/android-chat/#kotlin). It contains samples written in both **Kotlin** (_samplekotlin_ module) and **Java** (_samplejava_ module). For more Android Chat examples, see the [Github repo for UX/Views and its Sample app](https://github.com/GetStream/stream-chat-android).
+This repository allows you to check the result after completing each step described in the [Android Chat Tutorial](https://getstream.io/tutorials/android-chat/#kotlin). It contains samples written in both **Kotlin** (_samplekotlin_ module) and **Java** (_samplejava_ module). For more Android Chat examples, see the [Github repo for the SDK](https://github.com/GetStream/stream-chat-android) and the [UI Components sample app](https://github.com/GetStream/stream-chat-android/tree/main/stream-chat-android-ui-components-sample) in it.
 
 The project is pre-configured with a shared [Stream](https://getstream.io) account for testing purposes. You can learn more about Stream Chat [here](https://getstream.io/chat/), and then sign up for an account and obtain your own keys [here](https://getstream.io/chat/trial).
 
@@ -28,8 +28,7 @@ channelListView.setOnChannelClickListener { channel ->
 ```
 
 Currently, you can choose from four different `ChannelActivity` implementations:
-<!-- TODO: Add links when the new version of the Android Tutorial is published -->
+
 * `ChannelActivity` - a basic _Message List_ implementation
 * `ChannelActivity2` - includes a new _MessageListView_ style and custom attachment type
-* `ChannelActivity3` - includes a custom _Typing Header_ component created with the [LiveData&Offline](https://github.com/GetStream/stream-chat-android-livedata) library
-* `ChannelActivity4` - includes a custom _Typing Header_ component created with the [Low-Level Client](https://github.com/GetStream/stream-chat-android-client) library
+* `ChannelActivity4` - includes a custom _Typing Header_ component created with the [Low-Level Client](https://github.com/GetStream/stream-chat-android/tree/main/stream-chat-android-client) library

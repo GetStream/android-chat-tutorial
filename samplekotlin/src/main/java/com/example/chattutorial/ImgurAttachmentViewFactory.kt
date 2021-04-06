@@ -9,7 +9,7 @@ import com.getstream.sdk.chat.adapter.MessageListItem
 import io.getstream.chat.android.client.models.Attachment
 import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerContainer
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentViewFactory
-import io.getstream.chat.android.ui.message.list.internal.MessageListItemStyle
+import io.getstream.chat.android.ui.message.list.MessageListItemStyle
 
 class ImgurAttachmentViewFactory : AttachmentViewFactory() {
 

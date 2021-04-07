@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chattutorial.databinding.ActivityMainBinding;
-import com.getstream.sdk.chat.ChatUI;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -30,11 +29,9 @@ public final class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Step 1 - Set up the client for API calls, the domain for offline storage
-        //          and the UI components
+        // Step 1 - Set up the client for API calls and the domain for offline storage
         ChatClient client = new ChatClient.Builder("b67pax5b2wdq", getApplicationContext()).build();
         new ChatDomain.Builder(client, getApplicationContext()).build();
-        new ChatUI.Builder(getApplicationContext()).build();
 
         // Step 2 - Authenticate and connect the user
         User user = new User();

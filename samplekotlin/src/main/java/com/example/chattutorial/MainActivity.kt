@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityMainBinding
-import com.getstream.sdk.chat.ChatUI
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
@@ -24,11 +23,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Step 1 - Set up the client for API calls, the domain for offline storage
-        //          and the UI components
+        // Step 1 - Set up the client for API calls and the domain for offline storage
         val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).build()
         ChatDomain.Builder(client, applicationContext).build()
-        ChatUI.Builder(applicationContext).build()
 
         // Step 2 - Authenticate and connect the user
         val user = User(

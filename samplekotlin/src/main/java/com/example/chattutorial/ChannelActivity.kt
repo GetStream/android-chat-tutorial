@@ -64,9 +64,7 @@ class ChannelActivity : AppCompatActivity() {
         }
 
         // Step 4 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler { message ->
-            messageInputViewModel.editMessage.postValue(message)
-        }
+        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
 
         // Step 5 - Handle navigate up state
         messageListViewModel.state.observe(this) { state ->

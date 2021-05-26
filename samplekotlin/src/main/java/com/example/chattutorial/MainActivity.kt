@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity() {
 
         // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose
         //          coupling makes it easy to customize
-        // Note: the listener syntax used here requires Kotlin 1.4
         viewModel.bindView(binding.channelListView, this)
         binding.channelListView.setChannelItemClickListener { channel ->
             startActivity(ChannelActivity4.newIntent(this, channel))

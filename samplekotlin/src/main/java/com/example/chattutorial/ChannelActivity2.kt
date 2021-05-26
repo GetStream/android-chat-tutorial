@@ -50,7 +50,6 @@ class ChannelActivity2 : AppCompatActivity() {
         messageInputViewModel.bindView(binding.messageInputView, this)
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
-        // Note: the observe syntax used here requires Kotlin 1.4
         messageListViewModel.mode.observe(this) { mode ->
             when (mode) {
                 is Thread -> {

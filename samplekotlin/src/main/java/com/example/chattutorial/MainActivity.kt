@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityMainBinding
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.logger.ChatLogLevel
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.client.models.User
 import io.getstream.chat.android.livedata.ChatDomain
@@ -24,7 +25,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Step 1 - Set up the client for API calls and the domain for offline storage
-        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext).build()
+        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext)
+            .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod
+            .build()
         ChatDomain.Builder(client, applicationContext).build()
 
         // Step 2 - Authenticate and connect the user

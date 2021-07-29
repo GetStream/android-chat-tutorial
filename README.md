@@ -2,6 +2,8 @@
 
 This repository allows you to check the result after completing each step described in the [Android Chat Tutorial](https://getstream.io/tutorials/android-chat/#kotlin). It contains samples written in both **Kotlin** (_samplekotlin_ module) and **Java** (_samplejava_ module). For more Android Chat examples, see the [Github repo for the SDK](https://github.com/GetStream/stream-chat-android) and the [UI Components sample app](https://github.com/GetStream/stream-chat-android/tree/main/stream-chat-android-ui-components-sample) in it.
 
+> Already all-in on Jetpack Compose? Check out the [tutorial repo of our Compose UI components](https://github.com/GetStream/compose-chat-tutorial) instead.
+
 The project is pre-configured with a shared [Stream](https://getstream.io) account for testing purposes. You can learn more about Stream Chat [here](https://getstream.io/chat/), and then sign up for an account and obtain your own keys [here](https://getstream.io/chat/trial).
 
 ## Quick start

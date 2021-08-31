@@ -63,15 +63,15 @@ class ChannelActivity2 : AppCompatActivity() {
             }
         }
 
-        // Step 4 - Handle navigate up state
+        // Step 4 - Let the message input know when we are editing a message
+        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
+
+        // Step 5 - Handle navigate up state
         messageListViewModel.state.observe(this) { state ->
             if (state is NavigateUp) {
                 finish()
             }
         }
-
-        // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
         val backHandler = {

@@ -1,6 +1,14 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+}
+
 include ':samplejava', ':samplekotlin'
 rootProject.name='android-chat-tutorial'
-
 
 /*
  Composite builds allow you to easily work on multiple projects at once.

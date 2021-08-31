@@ -66,8 +66,8 @@ public final class MainActivity extends AppCompatActivity {
         // Step 4 - Connect the ChannelListViewModel to the ChannelListView, loose
         //          coupling makes it easy to customize
         ChannelListViewModelBinding.bind(channelsViewModel, binding.channelListView, this);
-        binding.channelListView.setChannelItemClickListener(channel -> {
-            startActivity(ChannelActivity4.newIntent(this, channel));
-        });
+        binding.channelListView.setChannelItemClickListener(
+                channel -> startActivity(ChannelActivity4.newIntent(this, channel))
+        );
     }
 }

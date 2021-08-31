@@ -89,9 +89,7 @@ public class ChannelActivity extends AppCompatActivity {
         MessageListHeaderView.OnClickListener backHandler = () -> {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
         };
-
         binding.messageListHeaderView.setBackButtonClickListener(backHandler);
-
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

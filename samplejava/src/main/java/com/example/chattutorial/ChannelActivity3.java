@@ -124,7 +124,7 @@ public class ChannelActivity3 extends AppCompatActivity {
                         } else {
                             List<String> userNames = new LinkedList<>();
                             for (User user : typingState.getUsers()) {
-                                userNames.add((String) user.getExtraData().get("name"));
+                                userNames.add(user.getName());
                             }
                             String typing = "typing: " + TextUtils.join(", ", userNames);
                             typingHeaderView.setText(typing);

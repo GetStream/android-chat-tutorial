@@ -73,7 +73,7 @@ public class ChannelActivity4 extends AppCompatActivity {
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
-        // Step 3 - Let both message list header and message input know when we open a thread
+        // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
             if (mode instanceof Thread) {
                 Message parentMessage = ((Thread) mode).getParentMessage();
@@ -85,23 +85,21 @@ public class ChannelActivity4 extends AppCompatActivity {
             }
         });
 
-        // Step 4 - Handle navigate up state
+        // Step 4 - Let the message input know when we are editing a message
+        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit);
+
+        // Step 5 - Handle navigate up state
         messageListViewModel.getState().observe(this, state -> {
             if (state instanceof NavigateUp) {
                 finish();
             }
         });
 
-        // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit);
-
         // Step 6 - Handle back button behaviour correctly when you're in a thread
         MessageListHeaderView.OnClickListener backHandler = () -> {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
         };
-
         binding.messageListHeaderView.setBackButtonClickListener(backHandler);
-
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

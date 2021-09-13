@@ -18,7 +18,7 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.getstream.chat.android.client.models.Channel;
@@ -84,15 +84,15 @@ public class ChannelActivity3 extends AppCompatActivity {
             }
         });
 
-        // Step 4 - Handle navigate up state
+        // Step 4 - Let the message input know when we are editing a message
+        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit);
+
+        // Step 5 - Handle navigate up state
         messageListViewModel.getState().observe(this, state -> {
             if (state instanceof NavigateUp) {
                 finish();
             }
         });
-
-        // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit);
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
         MessageListHeaderView.OnClickListener backHandler = () -> {
@@ -119,12 +119,11 @@ public class ChannelActivity3 extends AppCompatActivity {
 
                     // Observe typing users
                     channelController.getTyping().observe(this, typingState -> {
-                        final List<User> users = typingState.getUsers();
-                        if (users.isEmpty()) {
+                        if (typingState.getUsers().isEmpty()) {
                             typingHeaderView.setText(nobodyTyping);
                         } else {
-                            List<String> userNames = new ArrayList<>(users.size());
-                            for (User user : users) {
+                            List<String> userNames = new LinkedList<>();
+                            for (User user : typingState.getUsers()) {
                                 userNames.add((String) user.getExtraData().get("name"));
                             }
                             String typing = "typing: " + TextUtils.join(", ", userNames);

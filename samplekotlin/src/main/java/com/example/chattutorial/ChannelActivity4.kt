@@ -36,7 +36,7 @@ class ChannelActivity4 : AppCompatActivity() {
         setContentView(binding.root)
 
         val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {
-            "Specifying a channel id is required when starting ChannelActivity"
+            "Specifying a channel id is required when starting ChannelActivity4"
         }
 
         // Step 1 - Create three separate ViewModels for the views so it's easy
@@ -68,15 +68,15 @@ class ChannelActivity4 : AppCompatActivity() {
             }
         }
 
-        // Step 4 - Handle navigate up state
+        // Step 4 - Let the message input know when we are editing a message
+        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
+
+        // Step 5 - Handle navigate up state
         messageListViewModel.state.observe(this) { state ->
             if (state is NavigateUp) {
                 finish()
             }
         }
-
-        // Step 5 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
         val backHandler = {
@@ -103,6 +103,7 @@ class ChannelActivity4 : AppCompatActivity() {
                 when (event) {
                     is TypingStartEvent -> currentlyTyping.add(event.user.name)
                     is TypingStopEvent -> currentlyTyping.remove(event.user.name)
+                    else -> {}
                 }
 
                 binding.typingHeaderView.text = when {

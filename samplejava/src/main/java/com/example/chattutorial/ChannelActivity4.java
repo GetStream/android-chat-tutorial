@@ -122,12 +122,10 @@ public class ChannelActivity4 extends AppCompatActivity {
                         event -> {
                             if (event instanceof TypingStartEvent) {
                                 User user = ((TypingStartEvent) event).getUser();
-                                String name = (String) user.getExtraData().get("name");
-                                currentlyTyping.add(name);
+                                currentlyTyping.add(user.getName());
                             } else if (event instanceof TypingStopEvent) {
                                 User user = ((TypingStopEvent) event).getUser();
-                                String name = (String) user.getExtraData().get("name");
-                                currentlyTyping.remove(name);
+                                currentlyTyping.remove(user.getName());
                             }
 
                             String typing = "nobody is typing";

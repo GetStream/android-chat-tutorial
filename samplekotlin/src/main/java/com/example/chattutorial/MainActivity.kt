@@ -31,13 +31,10 @@ class MainActivity : AppCompatActivity() {
         ChatDomain.Builder(client, applicationContext).build()
 
         // Step 2 - Authenticate and connect the user
-        val user = User(
-            id = "tutorial-droid",
-            extraData = mutableMapOf(
-                "name" to "Tutorial Droid",
-                "image" to "https://bit.ly/2TIt8NR",
-            ),
-        )
+        val user = User(id = "tutorial-droid").apply {
+            name = "Tutorial Droid"
+            image = "https://bit.ly/2TIt8NR"
+        }
         client.connectUser(
             user = user,
             token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.NhEr0hP9W9nwqV7ZkdShxvi02C5PR7SJE7Cs4y7kyqg"

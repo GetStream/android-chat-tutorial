@@ -15,7 +15,7 @@ class ImgurAttachmentViewFactory : AttachmentViewFactory() {
 
     override fun createAttachmentView(
         data: MessageListItem.MessageItem,
-        listeners: MessageListListenerContainer,
+        listeners: MessageListListenerContainer?,
         style: MessageListItemStyle,
         parent: ViewGroup,
     ): View {

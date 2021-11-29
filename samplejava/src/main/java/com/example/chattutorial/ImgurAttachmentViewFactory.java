@@ -9,20 +9,21 @@ import com.getstream.sdk.chat.adapter.MessageListItem;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import coil.Coil;
 import coil.request.ImageRequest;
 import io.getstream.chat.android.client.models.Attachment;
+import io.getstream.chat.android.ui.message.list.MessageListItemStyle;
 import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerContainer;
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentViewFactory;
-import io.getstream.chat.android.ui.message.list.MessageListItemStyle;
 
 public class ImgurAttachmentViewFactory extends AttachmentViewFactory {
 
     @NotNull
     @Override
     public View createAttachmentView(@NotNull MessageListItem.MessageItem data,
-                                     @NotNull MessageListListenerContainer listeners,
+                                     @Nullable MessageListListenerContainer listeners,
                                      @NotNull MessageListItemStyle style,
                                      @NotNull ViewGroup parent) {
         Attachment imgurAttachment = null;

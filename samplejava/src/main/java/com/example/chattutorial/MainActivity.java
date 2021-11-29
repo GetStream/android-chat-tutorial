@@ -39,8 +39,8 @@ public final class MainActivity extends AppCompatActivity {
         // Step 2 - Authenticate and connect the user
         User user = new User();
         user.setId("tutorial-droid");
-        user.getExtraData().put("name", "Tutorial Droid");
-        user.getExtraData().put("image", "https://bit.ly/2TIt8NR");
+        user.setName("Tutorial Droid");
+        user.setImage("https://bit.ly/2TIt8NR");
 
         client.connectUser(
                 user,

@@ -27,4 +27,5 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_media_thumb"
         app:layout_constraintStart_toStartOf="@id/iv_media_thumb"
         app:layout_constraintTop_toTopOf="@id/iv_media_thumb" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

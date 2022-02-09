@@ -22,7 +22,7 @@ android {
 
 dependencies {
     // Add new dependencies
-    implementation "io.getstream:stream-chat-android-ui-components:4.25.0"
+    implementation "io.getstream:stream-chat-android-ui-components:4.28.0"
     implementation "com.google.android.material:material:1.4.0"
     implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "io.coil-kt:coil:1.4.0"

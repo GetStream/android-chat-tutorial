@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             appContext = applicationContext,
         )
 
-        // Step 2 - Set up the client for API calls and the domain for offline storage
+        // Step 2 - Set up the client for API calls with the plugin for offline storage
         val client = ChatClient.Builder("b67pax5b2wdq", applicationContext)
             .withPlugin(offlinePluginFactory)
             .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod

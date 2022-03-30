@@ -6,19 +6,23 @@ import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.chattutorial.databinding.ActivityChannel3Binding
 import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
+import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.livedata.ChatDomain
+import io.getstream.chat.android.offline.extensions.globalState
 import io.getstream.chat.android.ui.message.input.viewmodel.bindView
+import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
 import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
+import kotlinx.coroutines.flow.collect
 
 class ChannelActivity3 : AppCompatActivity() {
 
@@ -42,8 +46,10 @@ class ChannelActivity3 : AppCompatActivity() {
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
-        // Set view factory for Imgur attachments
-        binding.messageListView.setAttachmentViewFactory(ImgurAttachmentViewFactory())
+        // Set a view factory manager for Imgur attachments
+        val imgurAttachmentViewFactory = ImgurAttachmentFactory()
+        val attachmentViewFactory = AttachmentFactoryManager(listOf(imgurAttachmentViewFactory))
+        binding.messageListView.setAttachmentFactoryManager(attachmentViewFactory)
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)
@@ -87,25 +93,15 @@ class ChannelActivity3 : AppCompatActivity() {
         val nobodyTyping = "nobody is typing"
         binding.typingHeaderView.text = nobodyTyping
 
-        // Obtain a ChannelController
-        ChatDomain
-            .instance()
-            .getChannelController(cid)
-            .enqueue { channelControllerResult ->
-                if (channelControllerResult.isSuccess) {
-                    // Observe typing users
-                    channelControllerResult.data().typing.observe(this) { typingState ->
-                        binding.typingHeaderView.text = when {
-
-                            typingState.users.isNotEmpty() -> {
-                                typingState.users.joinToString(prefix = "typing: ") { user -> user.name }
-                            }
-
-                            else -> nobodyTyping
-                        }
-                    }
+        // Observe typing events and update typing header depending on its state.
+        lifecycleScope.launchWhenStarted {
+            ChatClient.instance().globalState.typingUpdates.collect {
+                binding.typingHeaderView.text = when {
+                    it.users.isNotEmpty() -> it.users.joinToString(prefix = "typing: ") { user -> user.name }
+                    else -> nobodyTyping
                 }
             }
+        }
     }
 
     companion object {

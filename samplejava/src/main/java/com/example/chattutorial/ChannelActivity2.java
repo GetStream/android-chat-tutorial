@@ -16,9 +16,13 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.Message;
 import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager;
 import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
@@ -56,12 +60,18 @@ public class ChannelActivity2 extends AppCompatActivity {
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
-        // Set view factory for Imgur attachments
-        binding.messageListView.setAttachmentViewFactory(new ImgurAttachmentViewFactory());
+        // Set view factory manager for Imgur attachments
+        ImgurAttachmentViewFactory imgurAttachmentViewFactory = new ImgurAttachmentViewFactory();
+
+        List<ImgurAttachmentViewFactory> imgurAttachmentViewFactories = new ArrayList<ImgurAttachmentViewFactory>();
+        imgurAttachmentViewFactories.add(imgurAttachmentViewFactory);
+
+        AttachmentFactoryManager attachmentFactoryManager = new AttachmentFactoryManager(imgurAttachmentViewFactories);
+        binding.messageListView.setAttachmentFactoryManager(attachmentFactoryManager);
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
-        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
+        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this, true);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread

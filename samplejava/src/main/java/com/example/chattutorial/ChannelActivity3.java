@@ -18,15 +18,13 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.Message;
-import io.getstream.chat.android.client.models.User;
-import io.getstream.chat.android.livedata.ChatDomain;
-import io.getstream.chat.android.livedata.controller.ChannelController;
 import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager;
 import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
@@ -64,12 +62,18 @@ public class ChannelActivity3 extends AppCompatActivity {
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
-        // Set view factory for Imgur attachments
-        binding.messageListView.setAttachmentViewFactory(new ImgurAttachmentViewFactory());
+        // Set view factory manager for Imgur attachments
+        ImgurAttachmentViewFactory imgurAttachmentViewFactory = new ImgurAttachmentViewFactory();
+
+        List<ImgurAttachmentViewFactory> imgurAttachmentViewFactories = new ArrayList<ImgurAttachmentViewFactory>();
+        imgurAttachmentViewFactories.add(imgurAttachmentViewFactory);
+
+        AttachmentFactoryManager attachmentFactoryManager = new AttachmentFactoryManager(imgurAttachmentViewFactories);
+        binding.messageListView.setAttachmentFactoryManager(attachmentFactoryManager);
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
-        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
+        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this, true);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
@@ -111,25 +115,7 @@ public class ChannelActivity3 extends AppCompatActivity {
         String nobodyTyping = "nobody is typing";
         typingHeaderView.setText(nobodyTyping);
 
-        // Obtain a ChannelController
-        ChatDomain.instance()
-                .getChannelController(cid)
-                .enqueue((result) -> {
-                    ChannelController channelController = result.data();
-
-                    // Observe typing users
-                    channelController.getTyping().observe(this, typingState -> {
-                        if (typingState.getUsers().isEmpty()) {
-                            typingHeaderView.setText(nobodyTyping);
-                        } else {
-                            List<String> userNames = new LinkedList<>();
-                            for (User user : typingState.getUsers()) {
-                                userNames.add(user.getName());
-                            }
-                            String typing = "typing: " + TextUtils.join(", ", userNames);
-                            typingHeaderView.setText(typing);
-                        }
-                    });
-                });
+        //TODO implemet an OP based solution here once the Core team introduces extensions for StateFlow
+        // based values
     }
 }

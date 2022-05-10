@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -22,9 +22,9 @@ android {
 
 dependencies {
     // Add new dependencies
-    implementation "io.getstream:stream-chat-android-ui-components:5.0.1"
+    implementation "io.getstream:stream-chat-android-ui-components:5.1.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
-    implementation "com.google.android.material:material:1.5.0"
+    implementation "com.google.android.material:material:1.6.0"
     implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "io.coil-kt:coil:1.4.0"
 }

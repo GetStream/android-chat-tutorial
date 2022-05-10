@@ -60,7 +60,7 @@ public class ChannelActivity extends AppCompatActivity {
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
-        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
+        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this, true);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread

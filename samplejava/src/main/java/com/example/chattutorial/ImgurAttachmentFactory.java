@@ -19,29 +19,37 @@ import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerCont
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactory;
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.InnerAttachmentViewHolder;
 
-public class ImgurAttachmentViewFactory implements AttachmentFactory {
+/** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. **/
+public class ImgurAttachmentFactory implements AttachmentFactory {
 
 
+    // 1. Check whether the message contains an Imgur attachment
     @Override
     public boolean canHandle(@NonNull Message message) {
         return containsImgurAttachments(message) != null;
     }
 
+    // 2. Create the ViewHolder that will be used to display the Imgur logo
+    // over Imgur attachments
     @NonNull
     @Override
-    public InnerAttachmentViewHolder createViewHolder(@NonNull Message message, @Nullable MessageListListenerContainer messageListListenerContainer, @NonNull ViewGroup viewGroup) {
+    public InnerAttachmentViewHolder createViewHolder(
+            @NonNull Message message,
+            @Nullable MessageListListenerContainer listeners,
+            @NonNull ViewGroup parent
+    ) {
         Attachment imgurAttachment = containsImgurAttachments(message);
 
-        AttachmentImgurBinding attachmentImgurBinding = AttachmentImgurBinding.inflate(LayoutInflater.from(viewGroup.getContext()), null, false);
+        AttachmentImgurBinding attachmentImgurBinding = AttachmentImgurBinding.inflate(LayoutInflater.from(parent.getContext()), null, false);
 
         return new ImgurAttachmentViewHolder(attachmentImgurBinding, imgurAttachment);
     }
 
     private Attachment containsImgurAttachments(@NotNull Message message) {
         for (int i = 0; i < message.getAttachments().size(); i++) {
-            boolean containsAttachments = message.getAttachments().get(i).getImageUrl().contains("imgur");
+            String imageUrl = message.getAttachments().get(i).getImageUrl();
 
-            if (containsAttachments) {
+            if (imageUrl != null && imageUrl.contains("imgur")) {
                 return message.getAttachments().get(i);
             }
         }

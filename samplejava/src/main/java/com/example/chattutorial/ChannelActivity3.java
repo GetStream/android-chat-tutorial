@@ -3,7 +3,6 @@ package com.example.chattutorial;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -63,10 +62,10 @@ public class ChannelActivity3 extends AppCompatActivity {
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
         // Set view factory manager for Imgur attachments
-        ImgurAttachmentViewFactory imgurAttachmentViewFactory = new ImgurAttachmentViewFactory();
+        ImgurAttachmentFactory imgurAttachmentFactory = new ImgurAttachmentFactory();
 
-        List<ImgurAttachmentViewFactory> imgurAttachmentViewFactories = new ArrayList<ImgurAttachmentViewFactory>();
-        imgurAttachmentViewFactories.add(imgurAttachmentViewFactory);
+        List<ImgurAttachmentFactory> imgurAttachmentViewFactories = new ArrayList<ImgurAttachmentFactory>();
+        imgurAttachmentViewFactories.add(imgurAttachmentFactory);
 
         AttachmentFactoryManager attachmentFactoryManager = new AttachmentFactoryManager(imgurAttachmentViewFactories);
         binding.messageListView.setAttachmentFactoryManager(attachmentFactoryManager);

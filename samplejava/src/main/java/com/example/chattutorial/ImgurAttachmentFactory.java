@@ -19,7 +19,9 @@ import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerCont
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactory;
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.InnerAttachmentViewHolder;
 
-/** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. **/
+/**
+ * A custom attachment factory to show an imgur logo if the attachment URL is an imgur image.
+ **/
 public class ImgurAttachmentFactory implements AttachmentFactory {
 
 
@@ -57,10 +59,10 @@ public class ImgurAttachmentFactory implements AttachmentFactory {
         return null;
     }
 
-    private class ImgurAttachmentViewHolder extends InnerAttachmentViewHolder {
+    private static class ImgurAttachmentViewHolder extends InnerAttachmentViewHolder {
 
         public ImgurAttachmentViewHolder(AttachmentImgurBinding binding,
-                                         Attachment imgurAttachment) {
+                                         @Nullable Attachment imgurAttachment) {
             super(binding.getRoot());
 
             ShapeAppearanceModel shapeAppearanceModel = binding.ivMediaThumb.getShapeAppearanceModel()
@@ -70,14 +72,16 @@ public class ImgurAttachmentFactory implements AttachmentFactory {
 
             binding.ivMediaThumb.setShapeAppearanceModel(shapeAppearanceModel);
 
-            ImageRequest imageRequest = new ImageRequest.Builder(binding.getRoot().getContext())
-                    .data(imgurAttachment.getImageUrl())
-                    .allowHardware(false)
-                    .crossfade(true)
-                    .placeholder(R.drawable.stream_ui_picture_placeholder)
-                    .target(binding.ivMediaThumb)
-                    .build();
-            Coil.imageLoader(binding.getRoot().getContext()).enqueue(imageRequest);
+            if (imgurAttachment != null) {
+                ImageRequest imageRequest = new ImageRequest.Builder(binding.getRoot().getContext())
+                        .data(imgurAttachment.getImageUrl())
+                        .allowHardware(false)
+                        .crossfade(true)
+                        .placeholder(R.drawable.stream_ui_picture_placeholder)
+                        .target(binding.ivMediaThumb)
+                        .build();
+                Coil.imageLoader(binding.getRoot().getContext()).enqueue(imageRequest);
+            }
         }
     }
 }

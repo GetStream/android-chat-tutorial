@@ -19,9 +19,7 @@ import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerCont
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactory;
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.InnerAttachmentViewHolder;
 
-/**
- * A custom attachment factory to show an imgur logo if the attachment URL is an imgur image.
- **/
+/** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. **/
 public class ImgurAttachmentFactory implements AttachmentFactory {
 
 

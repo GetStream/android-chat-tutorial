@@ -30,10 +30,11 @@ android {
 
 dependencies {
     // Add new dependencies
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
-
     implementation "io.getstream:stream-chat-android-ui-components:5.2.0"
     implementation "com.google.android.material:material:1.6.0"
     implementation "androidx.activity:activity-ktx:1.4.0"
     implementation "io.coil-kt:coil:1.4.0"
+
+    // We use the ktx dependency for transforming StateFlow into LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
 }

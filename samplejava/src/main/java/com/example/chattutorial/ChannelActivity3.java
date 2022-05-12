@@ -143,6 +143,8 @@ public class ChannelActivity3 extends AppCompatActivity {
         });
     }
 
+    // Helper method that transforms typing updates into a string
+    // containing typing member's names
     @NonNull
     private String joinTypingUpdatesToUserNames(@NonNull TypingEvent typingEvent) {
         StringBuilder joinedString = new StringBuilder();

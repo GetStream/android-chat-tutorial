@@ -42,7 +42,7 @@ class ChannelActivity2 : AppCompatActivity() {
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageInputViewModel: MessageInputViewModel by viewModels { factory }
 
-        // Set view factory manager for Imgur attachments
+        // Set a view factory manager for Imgur attachments
         val imgurAttachmentViewFactory = ImgurAttachmentFactory()
         val attachmentViewFactory = AttachmentFactoryManager(listOf(imgurAttachmentViewFactory))
         binding.messageListView.setAttachmentFactoryManager(attachmentViewFactory)

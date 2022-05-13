@@ -68,7 +68,7 @@ public class ChannelActivity4 extends AppCompatActivity {
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
-        // Set view factory manager for Imgur attachments
+        // Set a view factory manager for Imgur attachments
         ImgurAttachmentFactory imgurAttachmentFactory = new ImgurAttachmentFactory();
 
         List<ImgurAttachmentFactory> imgurAttachmentViewFactories = new ArrayList<ImgurAttachmentFactory>();

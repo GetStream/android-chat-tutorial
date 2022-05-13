@@ -13,13 +13,13 @@ import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.I
 /** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. */
 class ImgurAttachmentFactory : AttachmentFactory {
 
-    // 1. Check whether the message contains an Imgur attachment
+    // Step 1 - Check whether the message contains an Imgur attachment
     override fun canHandle(message: Message): Boolean {
         val imgurAttachment = message.attachments.firstOrNull { it.isImgurAttachment() }
         return imgurAttachment != null
     }
 
-    // 2. Create the ViewHolder that will be used to display the Imgur logo
+    // Step 2 - Create the ViewHolder that will be used to display the Imgur logo
     // over Imgur attachments
     override fun createViewHolder(
         message: Message,
@@ -47,12 +47,12 @@ class ImgurAttachmentFactory : AttachmentFactory {
             binding.ivMediaThumb.apply {
                 shapeAppearanceModel = shapeAppearanceModel
                     .toBuilder()
-                    .setAllCornerSizes(resources.getDimension(R.dimen.stream_ui_selected_attachment_corner_radius))
+                    .setAllCornerSizes(resources.getDimension(io.getstream.chat.android.ui.R.dimen.stream_ui_selected_attachment_corner_radius))
                     .build()
                 load(imgurAttachment.imageUrl) {
                     allowHardware(false)
                     crossfade(true)
-                    placeholder(R.drawable.stream_ui_picture_placeholder)
+                    placeholder(io.getstream.chat.android.ui.R.drawable.stream_ui_picture_placeholder)
                 }
             }
         }

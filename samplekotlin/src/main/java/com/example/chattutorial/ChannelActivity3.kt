@@ -15,14 +15,15 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Threa
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.offline.extensions.globalState
+import io.getstream.chat.android.offline.extensions.watchChannelAsState
 import io.getstream.chat.android.ui.message.input.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
 import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.bindView
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 
 class ChannelActivity3 : AppCompatActivity() {
 
@@ -95,7 +96,10 @@ class ChannelActivity3 : AppCompatActivity() {
 
         // Observe typing events and update typing header depending on its state.
         lifecycleScope.launchWhenStarted {
-            ChatClient.instance().globalState.typingUpdates.collect {
+            ChatClient.instance().watchChannelAsState(cid, 30)
+                .filterNotNull()
+                .flatMapLatest { it.typing }
+                .collect {
                 binding.typingHeaderView.text = when {
                     it.users.isNotEmpty() -> it.users.joinToString(prefix = "typing: ") { user -> user.name }
                     else -> nobodyTyping

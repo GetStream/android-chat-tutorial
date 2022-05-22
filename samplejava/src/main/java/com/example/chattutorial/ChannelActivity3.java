@@ -3,12 +3,14 @@ package com.example.chattutorial;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.FlowLiveDataConversions;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chattutorial.databinding.ActivityChannel3Binding;
@@ -18,20 +20,25 @@ import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Norma
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
 import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+import io.getstream.chat.android.client.ChatClient;
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.Message;
-import io.getstream.chat.android.client.models.User;
-import io.getstream.chat.android.livedata.ChatDomain;
-import io.getstream.chat.android.livedata.controller.ChannelController;
+import io.getstream.chat.android.client.models.TypingEvent;
+import io.getstream.chat.android.offline.extensions.ChatClientExtensions;
+import io.getstream.chat.android.offline.plugin.state.channel.ChannelState;
 import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
+import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager;
 import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.flow.Flow;
+import kotlinx.coroutines.flow.FlowKt;
 
 public class ChannelActivity3 extends AppCompatActivity {
 
@@ -64,12 +71,18 @@ public class ChannelActivity3 extends AppCompatActivity {
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
 
-        // Set view factory for Imgur attachments
-        binding.messageListView.setAttachmentViewFactory(new ImgurAttachmentViewFactory());
+        // Set a view factory manager for Imgur attachments
+        ImgurAttachmentFactory imgurAttachmentFactory = new ImgurAttachmentFactory();
+
+        List<ImgurAttachmentFactory> imgurAttachmentViewFactories = new ArrayList<ImgurAttachmentFactory>();
+        imgurAttachmentViewFactories.add(imgurAttachmentFactory);
+
+        AttachmentFactoryManager attachmentFactoryManager = new AttachmentFactoryManager(imgurAttachmentViewFactories);
+        binding.messageListView.setAttachmentFactoryManager(attachmentFactoryManager);
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
-        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
+        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this, true);
         MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
@@ -107,29 +120,43 @@ public class ChannelActivity3 extends AppCompatActivity {
         });
 
         // Custom typing info header bar
-        TextView typingHeaderView = findViewById(R.id.typingHeaderView);
         String nobodyTyping = "nobody is typing";
-        typingHeaderView.setText(nobodyTyping);
+        binding.typingHeaderView.setText(nobodyTyping);
 
-        // Obtain a ChannelController
-        ChatDomain.instance()
-                .getChannelController(cid)
-                .enqueue((result) -> {
-                    ChannelController channelController = result.data();
+        // Observe typing events and update typing header depending on its state.
+        Flow<ChannelState> channelStateFlow = ChatClientExtensions.watchChannelAsState(ChatClient.instance(), cid, 30);
+        LiveData<TypingEvent> typingEventLiveData = Transformations.switchMap(
+                FlowLiveDataConversions.asLiveData(channelStateFlow),
+                channelState -> FlowLiveDataConversions.asLiveData(channelState.getTyping())
+        );
 
-                    // Observe typing users
-                    channelController.getTyping().observe(this, typingState -> {
-                        if (typingState.getUsers().isEmpty()) {
-                            typingHeaderView.setText(nobodyTyping);
-                        } else {
-                            List<String> userNames = new LinkedList<>();
-                            for (User user : typingState.getUsers()) {
-                                userNames.add(user.getName());
-                            }
-                            String typing = "typing: " + TextUtils.join(", ", userNames);
-                            typingHeaderView.setText(typing);
-                        }
-                    });
-                });
+        typingEventLiveData.observe(this, typingEvent -> {
+            String headerText;
+
+            if (typingEvent.getUsers().size() != 0) {
+                headerText = "typing: " + joinTypingUpdatesToUserNames(typingEvent);
+            } else {
+                headerText = nobodyTyping;
+            }
+
+            binding.typingHeaderView.setText(headerText);
+        });
+    }
+
+    // Helper method that transforms typing updates into a string
+    // containing typing member's names
+    @NonNull
+    private String joinTypingUpdatesToUserNames(@NonNull TypingEvent typingEvent) {
+        StringBuilder joinedString = new StringBuilder();
+
+        for (int i = 0; i < typingEvent.getUsers().size(); i++) {
+            if (i < typingEvent.getUsers().size() - 1) {
+                joinedString.append(typingEvent.getUsers().get(i).getName()).append(", ");
+            } else {
+                joinedString.append(typingEvent.getUsers().get(i).getName());
+            }
+        }
+
+        return joinedString.toString();
     }
 }

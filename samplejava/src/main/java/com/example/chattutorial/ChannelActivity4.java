@@ -62,7 +62,9 @@ public class ChannelActivity4 extends AppCompatActivity {
 
         // Step 1 - Create three separate ViewModels for the views so it's easy
         //          to customize them individually
-        MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
+        ViewModelProvider.Factory factory = new MessageListViewModelFactory.Builder()
+                .cid(cid)
+                .build();
         ViewModelProvider provider = new ViewModelProvider(this, factory);
         MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);

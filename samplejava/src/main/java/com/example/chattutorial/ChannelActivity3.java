@@ -8,7 +8,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.FlowLiveDataConversions;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
@@ -24,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.getstream.chat.android.client.ChatClient;
+import io.getstream.chat.android.client.extensions.FlowExtensions;
 import io.getstream.chat.android.client.models.Channel;
 import io.getstream.chat.android.client.models.Message;
 import io.getstream.chat.android.client.models.TypingEvent;
@@ -36,9 +36,7 @@ import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHea
 import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.MessageListViewModelBinding;
 import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
-import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.flow.Flow;
-import kotlinx.coroutines.flow.FlowKt;
 
 public class ChannelActivity3 extends AppCompatActivity {
 
@@ -65,7 +63,9 @@ public class ChannelActivity3 extends AppCompatActivity {
 
         // Step 1 - Create three separate ViewModels for the views so it's easy
         //          to customize them individually
-        MessageListViewModelFactory factory = new MessageListViewModelFactory(cid);
+        ViewModelProvider.Factory factory = new MessageListViewModelFactory.Builder()
+                .cid(cid)
+                .build();
         ViewModelProvider provider = new ViewModelProvider(this, factory);
         MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
@@ -126,8 +126,8 @@ public class ChannelActivity3 extends AppCompatActivity {
         // Observe typing events and update typing header depending on its state.
         Flow<ChannelState> channelStateFlow = ChatClientExtensions.watchChannelAsState(ChatClient.instance(), cid, 30);
         LiveData<TypingEvent> typingEventLiveData = Transformations.switchMap(
-                FlowLiveDataConversions.asLiveData(channelStateFlow),
-                channelState -> FlowLiveDataConversions.asLiveData(channelState.getTyping())
+                FlowExtensions.asLiveData(channelStateFlow),
+                channelState -> FlowExtensions.asLiveData(channelState.getTyping())
         );
 
         typingEventLiveData.observe(this, typingEvent -> {

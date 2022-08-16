@@ -68,10 +68,10 @@ public final class MainActivity extends AppCompatActivity {
                 Filters.in("members", singletonList(user.getId()))
         );
 
-        ChannelListViewModelFactory factory = new ChannelListViewModelFactory(
-                filter,
-                ChannelListViewModel.DEFAULT_SORT
-        );
+        ViewModelProvider.Factory factory = new ChannelListViewModelFactory.Builder()
+                .filter(filter)
+                .sort(ChannelListViewModel.DEFAULT_SORT)
+                .build();
 
         ChannelListViewModel channelsViewModel =
                 new ViewModelProvider(this, factory).get(ChannelListViewModel.class);

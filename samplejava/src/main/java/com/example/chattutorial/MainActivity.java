@@ -44,7 +44,7 @@ public final class MainActivity extends AppCompatActivity {
         );
 
         // Step 2 - Set up the client for API calls with the plugin for offline storage
-        ChatClient client = new ChatClient.Builder("b67pax5b2wdq", getApplicationContext())
+        ChatClient client = new ChatClient.Builder("uun7ywwamhs9", getApplicationContext())
                 .withPlugin(streamOfflinePluginFactory)
                 .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod
                 .build();
@@ -57,7 +57,7 @@ public final class MainActivity extends AppCompatActivity {
 
         client.connectUser(
                 user,
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.NhEr0hP9W9nwqV7ZkdShxvi02C5PR7SJE7Cs4y7kyqg"
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.WwfBzU1GZr0brt_fXnqKdKhz3oj0rbDUm2DqJO_SS5U"
         ).enqueue();
 
         // Step 4 - Set the channel list filter and order

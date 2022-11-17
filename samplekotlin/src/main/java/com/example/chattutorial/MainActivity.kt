@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Step 2 - Set up the client for API calls with the plugin for offline storage
-        val client = ChatClient.Builder("b67pax5b2wdq", applicationContext)
+        val client = ChatClient.Builder("uun7ywwamhs9", applicationContext)
             .withPlugin(offlinePluginFactory)
             .logLevel(ChatLogLevel.ALL) // Set to NOTHING in prod
             .build()
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         )
         client.connectUser(
             user = user,
-            token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.NhEr0hP9W9nwqV7ZkdShxvi02C5PR7SJE7Cs4y7kyqg"
+            token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoidHV0b3JpYWwtZHJvaWQifQ.WwfBzU1GZr0brt_fXnqKdKhz3oj0rbDUm2DqJO_SS5U"
         ).enqueue()
 
         // Step 4 - Set the channel list filter and order

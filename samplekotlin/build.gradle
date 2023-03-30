@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.chattutorial"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
     }
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     // Add new dependencies
-    implementation "io.getstream:stream-chat-android-ui-components:5.8.2"
+    implementation "io.getstream:stream-chat-android-ui-components:5.12.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
     implementation "com.google.android.material:material:1.6.1"
     implementation "androidx.activity:activity-ktx:1.5.1"

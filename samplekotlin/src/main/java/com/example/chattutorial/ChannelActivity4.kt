@@ -53,7 +53,7 @@ class ChannelActivity4 : AppCompatActivity() {
         messageListViewModel.bindView(binding.messageListView, this)
         messageComposerViewModel.bindView(binding.messageComposerView, this)
 
-        // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
+        // Step 3 - Let both MessageListHeaderView and MessageComposerView know when we open a thread
         messageListViewModel.mode.observe(this) { mode ->
             when (mode) {
                 is MessageMode.MessageThread -> {

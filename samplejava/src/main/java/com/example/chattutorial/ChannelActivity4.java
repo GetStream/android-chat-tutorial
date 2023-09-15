@@ -83,7 +83,7 @@ public class ChannelActivity4 extends AppCompatActivity {
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageComposerViewModelBinding.bind(messageComposerViewModel, binding.messageComposerView, this);
 
-        // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
+        // Step 3 - Let both MessageListHeaderView and MessageComposerView know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
             if (mode instanceof MessageMode.MessageThread) {
                 Message parentMessage = ((MessageMode.MessageThread) mode).getParentMessage();

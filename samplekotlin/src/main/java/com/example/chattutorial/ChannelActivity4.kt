@@ -7,22 +7,19 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chattutorial.databinding.ActivityChannel4Binding
-import com.getstream.sdk.chat.viewmodel.MessageInputViewModel
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.channel.subscribeFor
 import io.getstream.chat.android.client.events.TypingStartEvent
 import io.getstream.chat.android.client.events.TypingStopEvent
-import io.getstream.chat.android.client.models.Channel
-import io.getstream.chat.android.ui.message.input.viewmodel.bindView
-import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager
-import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel
-import io.getstream.chat.android.ui.message.list.header.viewmodel.bindView
-import io.getstream.chat.android.ui.message.list.viewmodel.bindView
-import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory
+import io.getstream.chat.android.models.Channel
+import io.getstream.chat.android.ui.common.state.messages.Edit
+import io.getstream.chat.android.ui.common.state.messages.MessageMode
+import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactoryManager
+import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModel
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModel
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModel
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelFactory
+import io.getstream.chat.android.ui.viewmodel.messages.bindView
 
 class ChannelActivity4 : AppCompatActivity() {
 
@@ -41,10 +38,10 @@ class ChannelActivity4 : AppCompatActivity() {
 
         // Step 1 - Create three separate ViewModels for the views so it's easy
         //          to customize them individually
-        val factory = MessageListViewModelFactory(cid)
+        val factory = MessageListViewModelFactory(this, cid)
         val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { factory }
         val messageListViewModel: MessageListViewModel by viewModels { factory }
-        val messageInputViewModel: MessageInputViewModel by viewModels { factory }
+        val messageComposerViewModel: MessageComposerViewModel by viewModels { factory }
 
         // Set a view factory manager for Imgur attachments
         val imgurAttachmentViewFactory = ImgurAttachmentFactory()
@@ -54,28 +51,31 @@ class ChannelActivity4 : AppCompatActivity() {
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
-        messageInputViewModel.bindView(binding.messageInputView, this)
+        messageComposerViewModel.bindView(binding.messageComposerView, this)
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
         messageListViewModel.mode.observe(this) { mode ->
             when (mode) {
-                is Thread -> {
+                is MessageMode.MessageThread -> {
                     messageListHeaderViewModel.setActiveThread(mode.parentMessage)
-                    messageInputViewModel.setActiveThread(mode.parentMessage)
+                    messageComposerViewModel.setMessageMode(MessageMode.MessageThread(mode.parentMessage))
                 }
-                Normal -> {
+
+                is MessageMode.Normal -> {
                     messageListHeaderViewModel.resetThread()
-                    messageInputViewModel.resetThread()
+                    messageComposerViewModel.leaveThread()
                 }
             }
         }
 
         // Step 4 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit)
+        binding.messageListView.setMessageEditHandler { message ->
+            messageComposerViewModel.performMessageAction(Edit(message))
+        }
 
         // Step 5 - Handle navigate up state
         messageListViewModel.state.observe(this) { state ->
-            if (state is NavigateUp) {
+            if (state is MessageListViewModel.State.NavigateUp) {
                 finish()
             }
         }

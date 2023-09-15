@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import coil.load
 import com.example.chattutorial.databinding.AttachmentImgurBinding
-import io.getstream.chat.android.client.models.Attachment
-import io.getstream.chat.android.client.models.Message
-import io.getstream.chat.android.ui.message.list.adapter.MessageListListenerContainer
-import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactory
-import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.InnerAttachmentViewHolder
+import io.getstream.chat.android.models.Attachment
+import io.getstream.chat.android.models.Message
+import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListenerContainer
+import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactory
+import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.InnerAttachmentViewHolder
 
 /** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. */
 class ImgurAttachmentFactory : AttachmentFactory {

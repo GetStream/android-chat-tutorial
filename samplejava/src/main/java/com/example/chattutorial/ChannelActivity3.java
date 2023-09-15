@@ -13,29 +13,28 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.chattutorial.databinding.ActivityChannel3Binding;
-import com.getstream.sdk.chat.viewmodel.MessageInputViewModel;
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel;
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Normal;
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.Mode.Thread;
-import com.getstream.sdk.chat.viewmodel.messages.MessageListViewModel.State.NavigateUp;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.getstream.chat.android.client.ChatClient;
+import io.getstream.chat.android.client.channel.state.ChannelState;
 import io.getstream.chat.android.client.extensions.FlowExtensions;
-import io.getstream.chat.android.client.models.Channel;
-import io.getstream.chat.android.client.models.Message;
-import io.getstream.chat.android.client.models.TypingEvent;
-import io.getstream.chat.android.offline.extensions.ChatClientExtensions;
-import io.getstream.chat.android.offline.plugin.state.channel.ChannelState;
-import io.getstream.chat.android.ui.message.input.viewmodel.MessageInputViewModelBinding;
-import io.getstream.chat.android.ui.message.list.adapter.viewholder.attachment.AttachmentFactoryManager;
-import io.getstream.chat.android.ui.message.list.header.MessageListHeaderView;
-import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModel;
-import io.getstream.chat.android.ui.message.list.header.viewmodel.MessageListHeaderViewModelBinding;
-import io.getstream.chat.android.ui.message.list.viewmodel.MessageListViewModelBinding;
-import io.getstream.chat.android.ui.message.list.viewmodel.factory.MessageListViewModelFactory;
+import io.getstream.chat.android.models.Channel;
+import io.getstream.chat.android.models.Message;
+import io.getstream.chat.android.models.TypingEvent;
+import io.getstream.chat.android.state.extensions.ChatClientExtensions;
+import io.getstream.chat.android.ui.common.state.messages.Edit;
+import io.getstream.chat.android.ui.common.state.messages.MessageMode;
+import io.getstream.chat.android.ui.feature.messages.header.MessageListHeaderView;
+import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactoryManager;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModel;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModelBinding;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModel;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModelBinding;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModel;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelBinding;
+import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelFactory;
 import kotlinx.coroutines.flow.Flow;
 
 public class ChannelActivity3 extends AppCompatActivity {
@@ -43,7 +42,7 @@ public class ChannelActivity3 extends AppCompatActivity {
     private final static String CID_KEY = "key:cid";
 
     public static Intent newIntent(Context context, Channel channel) {
-        final Intent intent = new Intent(context, ChannelActivity3.class);
+        final Intent intent = new Intent(context, ChannelActivity.class);
         intent.putExtra(CID_KEY, channel.getCid());
         return intent;
     }
@@ -63,13 +62,13 @@ public class ChannelActivity3 extends AppCompatActivity {
 
         // Step 1 - Create three separate ViewModels for the views so it's easy
         //          to customize them individually
-        ViewModelProvider.Factory factory = new MessageListViewModelFactory.Builder()
+        ViewModelProvider.Factory factory = new MessageListViewModelFactory.Builder(this)
                 .cid(cid)
                 .build();
         ViewModelProvider provider = new ViewModelProvider(this, factory);
         MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
-        MessageInputViewModel messageInputViewModel = provider.get(MessageInputViewModel.class);
+        MessageComposerViewModel messageComposerViewModel = provider.get(MessageComposerViewModel.class);
 
         // Set a view factory manager for Imgur attachments
         ImgurAttachmentFactory imgurAttachmentFactory = new ImgurAttachmentFactory();
@@ -82,35 +81,35 @@ public class ChannelActivity3 extends AppCompatActivity {
 
         // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
         MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
-        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this, true);
-        MessageInputViewModelBinding.bind(messageInputViewModel, binding.messageInputView, this);
+        MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
+        MessageComposerViewModelBinding.bind(messageComposerViewModel, binding.messageComposerView, this);
 
         // Step 3 - Let both MessageListHeaderView and MessageInputView know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
-            if (mode instanceof Thread) {
-                Message parentMessage = ((Thread) mode).getParentMessage();
+            if (mode instanceof MessageMode.MessageThread) {
+                Message parentMessage = ((MessageMode.MessageThread) mode).getParentMessage();
                 messageListHeaderViewModel.setActiveThread(parentMessage);
-                messageInputViewModel.setActiveThread(parentMessage);
-            } else if (mode instanceof Normal) {
+                messageComposerViewModel.setMessageMode(new MessageMode.MessageThread(parentMessage));
+            } else if (mode instanceof MessageMode.Normal) {
                 messageListHeaderViewModel.resetThread();
-                messageInputViewModel.resetThread();
+                messageComposerViewModel.leaveThread();
             }
         });
 
         // Step 4 - Let the message input know when we are editing a message
-        binding.messageListView.setMessageEditHandler(messageInputViewModel::postMessageToEdit);
+        binding.messageListView.setMessageEditHandler(message -> {
+            messageComposerViewModel.performMessageAction(new Edit(message));
+        });
 
         // Step 5 - Handle navigate up state
         messageListViewModel.getState().observe(this, state -> {
-            if (state instanceof NavigateUp) {
+            if (state instanceof MessageListViewModel.State.NavigateUp) {
                 finish();
             }
         });
 
         // Step 6 - Handle back button behaviour correctly when you're in a thread
-        MessageListHeaderView.OnClickListener backHandler = () -> {
-            messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
-        };
+        MessageListHeaderView.OnClickListener backHandler = () -> messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
         binding.messageListHeaderView.setBackButtonClickListener(backHandler);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override

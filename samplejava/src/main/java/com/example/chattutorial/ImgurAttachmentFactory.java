@@ -16,11 +16,11 @@ import coil.request.ImageRequest;
 import io.getstream.chat.android.models.Attachment;
 import io.getstream.chat.android.models.Message;
 import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListenerContainer;
-import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactory;
+import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.BaseAttachmentFactory;
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.InnerAttachmentViewHolder;
 
 /** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. **/
-public class ImgurAttachmentFactory implements AttachmentFactory {
+public class ImgurAttachmentFactory extends BaseAttachmentFactory {
 
 
     // Step 1 - Check whether the message contains an Imgur attachment

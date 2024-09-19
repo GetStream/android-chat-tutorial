@@ -15,11 +15,13 @@ import coil.Coil;
 import coil.request.ImageRequest;
 import io.getstream.chat.android.models.Attachment;
 import io.getstream.chat.android.models.Message;
-import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListenerContainer;
+import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListeners;
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.BaseAttachmentFactory;
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.InnerAttachmentViewHolder;
 
-/** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. **/
+/**
+ * A custom attachment factory to show an imgur logo if the attachment URL is an imgur image.
+ **/
 public class ImgurAttachmentFactory extends BaseAttachmentFactory {
 
 
@@ -35,7 +37,7 @@ public class ImgurAttachmentFactory extends BaseAttachmentFactory {
     @Override
     public InnerAttachmentViewHolder createViewHolder(
             @NonNull Message message,
-            @Nullable MessageListListenerContainer listeners,
+            @Nullable MessageListListeners listeners,
             @NonNull ViewGroup parent
     ) {
         Attachment imgurAttachment = containsImgurAttachments(message);

@@ -6,7 +6,7 @@ import coil.load
 import com.example.chattutorial.databinding.AttachmentImgurBinding
 import io.getstream.chat.android.models.Attachment
 import io.getstream.chat.android.models.Message
-import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListenerContainer
+import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListeners
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactory
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.InnerAttachmentViewHolder
 
@@ -23,10 +23,10 @@ class ImgurAttachmentFactory : AttachmentFactory {
     // over Imgur attachments
     override fun createViewHolder(
         message: Message,
-        listeners: MessageListListenerContainer?,
+        listeners: MessageListListeners?,
         parent: ViewGroup
     ): InnerAttachmentViewHolder {
-        val imgurAttachment = message.attachments.first() { it.isImgurAttachment() }
+        val imgurAttachment = message.attachments.first { it.isImgurAttachment() }
         val binding = AttachmentImgurBinding
             .inflate(LayoutInflater.from(parent.context), null, false)
         return ImgurAttachmentViewHolder(

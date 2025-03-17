@@ -6,6 +6,14 @@ This repository allows you to check the result after completing each step descri
 
 The project is pre-configured with a shared [Stream](https://getstream.io) account for testing purposes. You can learn more about Stream Chat [here](https://getstream.io/chat/), and then sign up for an account and obtain your own keys [here](https://getstream.io/chat/trial).
 
+## Stream Chat, Video and Activity Feeds
+
+This project uses [Stream](https://getstream.io/)'s battle-tested chat infrastructure. Check out our:
+
+- ⭐ [Chat API](https://getstream.io/chat/)
+- 📱 [Video API](https://getstream.io/video/)
+- 🔔 [Activity Feeds](https://getstream.io/activity-feeds/)
+
 ## Quick start
 
 1. Clone the repository

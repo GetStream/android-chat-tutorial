@@ -18,15 +18,15 @@ import io.getstream.chat.android.models.Channel;
 import io.getstream.chat.android.models.Message;
 import io.getstream.chat.android.ui.common.state.messages.Edit;
 import io.getstream.chat.android.ui.common.state.messages.MessageMode;
-import io.getstream.chat.android.ui.feature.messages.header.MessageListHeaderView;
+import io.getstream.chat.android.ui.feature.messages.header.ChannelHeaderView;
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactoryManager;
 import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModel;
 import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModelBinding;
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModel;
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModelBinding;
+import io.getstream.chat.android.ui.viewmodel.messages.ChannelHeaderViewModel;
+import io.getstream.chat.android.ui.viewmodel.messages.ChannelHeaderViewModelBinding;
 import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModel;
 import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelBinding;
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelFactory;
+import io.getstream.chat.android.ui.viewmodel.messages.ChannelViewModelFactory;
 
 public class ChannelActivity2 extends AppCompatActivity {
 
@@ -42,22 +42,24 @@ public class ChannelActivity2 extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Step 0 - inflate binding
+        // inflate binding
         ActivityChannel2Binding binding = ActivityChannel2Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        EdgeToEdge.applySystemBarInsetsAsPadding(binding.getRoot());
 
         String cid = getIntent().getStringExtra(CID_KEY);
         if (cid == null) {
             throw new IllegalStateException("Specifying a channel id is required when starting ChannelActivity2");
         }
 
-        // Step 1 - Create three separate ViewModels for the views so it's easy
-        //          to customize them individually
-        ViewModelProvider.Factory factory = new MessageListViewModelFactory.Builder(this)
+        // Create three separate ViewModels for the views so it's easy
+        // to customize them individually
+        ViewModelProvider.Factory factory = new ChannelViewModelFactory.Builder(this)
                 .cid(cid)
                 .build();
         ViewModelProvider provider = new ViewModelProvider(this, factory);
-        MessageListHeaderViewModel messageListHeaderViewModel = provider.get(MessageListHeaderViewModel.class);
+        ChannelHeaderViewModel channelHeaderViewModel = provider.get(ChannelHeaderViewModel.class);
         MessageListViewModel messageListViewModel = provider.get(MessageListViewModel.class);
         MessageComposerViewModel messageComposerViewModel = provider.get(MessageComposerViewModel.class);
 
@@ -70,38 +72,38 @@ public class ChannelActivity2 extends AppCompatActivity {
         AttachmentFactoryManager attachmentFactoryManager = new AttachmentFactoryManager(imgurAttachmentViewFactories);
         binding.messageListView.setAttachmentFactoryManager(attachmentFactoryManager);
 
-        // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        MessageListHeaderViewModelBinding.bind(messageListHeaderViewModel, binding.messageListHeaderView, this);
+        // Bind the view and ViewModels, they are loosely coupled so it's easy to customize
+        ChannelHeaderViewModelBinding.bind(channelHeaderViewModel, binding.channelHeaderView, this);
         MessageListViewModelBinding.bind(messageListViewModel, binding.messageListView, this);
         MessageComposerViewModelBinding.bind(messageComposerViewModel, binding.messageComposerView, this);
 
-        // Step 3 - Let both MessageListHeaderView and MessageComposerView know when we open a thread
+        // Let both ChannelHeaderView and MessageComposerView know when we open a thread
         messageListViewModel.getMode().observe(this, mode -> {
             if (mode instanceof MessageMode.MessageThread) {
                 Message parentMessage = ((MessageMode.MessageThread) mode).getParentMessage();
-                messageListHeaderViewModel.setActiveThread(parentMessage);
+                channelHeaderViewModel.setActiveThread(parentMessage);
                 messageComposerViewModel.setMessageMode(new MessageMode.MessageThread(parentMessage));
             } else if (mode instanceof MessageMode.Normal) {
-                messageListHeaderViewModel.resetThread();
+                channelHeaderViewModel.resetThread();
                 messageComposerViewModel.leaveThread();
             }
         });
 
-        // Step 4 - Let the message input know when we are editing a message
+        // Let the message input know when we are editing a message
         binding.messageListView.setMessageEditHandler(message -> {
             messageComposerViewModel.performMessageAction(new Edit(message));
         });
 
-        // Step 5 - Handle navigate up state
+        // Handle navigate up state
         messageListViewModel.getState().observe(this, state -> {
             if (state instanceof MessageListViewModel.State.NavigateUp) {
                 finish();
             }
         });
 
-        // Step 6 - Handle back button behaviour correctly when you're in a thread
-        MessageListHeaderView.OnClickListener backHandler = () -> messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
-        binding.messageListHeaderView.setBackButtonClickListener(backHandler);
+        // Handle back button behaviour correctly when you're in a thread
+        ChannelHeaderView.OnClickListener backHandler = () -> messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed.INSTANCE);
+        binding.channelHeaderView.setBackButtonClickListener(backHandler);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

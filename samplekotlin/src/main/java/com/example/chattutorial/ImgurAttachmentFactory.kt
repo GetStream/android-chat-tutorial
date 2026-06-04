@@ -2,7 +2,10 @@ package com.example.chattutorial
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import coil.load
+import coil3.load
+import coil3.request.allowHardware
+import coil3.request.crossfade
+import coil3.request.placeholder
 import com.example.chattutorial.databinding.AttachmentImgurBinding
 import io.getstream.chat.android.models.Attachment
 import io.getstream.chat.android.models.Message
@@ -13,13 +16,13 @@ import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.att
 /** A custom attachment factory to show an imgur logo if the attachment URL is an imgur image. */
 class ImgurAttachmentFactory : AttachmentFactory {
 
-    // Step 1 - Check whether the message contains an Imgur attachment
+    // Check whether the message contains an Imgur attachment
     override fun canHandle(message: Message): Boolean {
         val imgurAttachment = message.attachments.firstOrNull { it.isImgurAttachment() }
         return imgurAttachment != null
     }
 
-    // Step 2 - Create the ViewHolder that will be used to display the Imgur logo
+    // Create the ViewHolder that will be used to display the Imgur logo
     // over Imgur attachments
     override fun createViewHolder(
         message: Message,

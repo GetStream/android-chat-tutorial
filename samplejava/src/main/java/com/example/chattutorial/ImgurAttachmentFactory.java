@@ -11,8 +11,10 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import coil.Coil;
-import coil.request.ImageRequest;
+import coil3.SingletonImageLoader;
+import coil3.request.ImageRequest;
+import coil3.request.ImageRequestsKt;
+import coil3.request.ImageRequests_androidKt;
 import io.getstream.chat.android.models.Attachment;
 import io.getstream.chat.android.models.Message;
 import io.getstream.chat.android.ui.feature.messages.list.adapter.MessageListListeners;
@@ -25,13 +27,13 @@ import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.att
 public class ImgurAttachmentFactory extends BaseAttachmentFactory {
 
 
-    // Step 1 - Check whether the message contains an Imgur attachment
+    // Check whether the message contains an Imgur attachment
     @Override
     public boolean canHandle(@NonNull Message message) {
         return containsImgurAttachments(message) != null;
     }
 
-    // Step 2 - Create the ViewHolder that will be used to display the Imgur logo
+    // Create the ViewHolder that will be used to display the Imgur logo
     // over Imgur attachments
     @NonNull
     @Override
@@ -73,14 +75,13 @@ public class ImgurAttachmentFactory extends BaseAttachmentFactory {
             binding.ivMediaThumb.setShapeAppearanceModel(shapeAppearanceModel);
 
             if (imgurAttachment != null) {
-                ImageRequest imageRequest = new ImageRequest.Builder(binding.getRoot().getContext())
-                        .data(imgurAttachment.getImageUrl())
-                        .allowHardware(false)
-                        .crossfade(true)
-                        .placeholder(io.getstream.chat.android.ui.R.drawable.stream_ui_picture_placeholder)
-                        .target(binding.ivMediaThumb)
-                        .build();
-                Coil.imageLoader(binding.getRoot().getContext()).enqueue(imageRequest);
+                ImageRequest.Builder requestBuilder = new ImageRequest.Builder(binding.getRoot().getContext())
+                        .data(imgurAttachment.getImageUrl());
+                ImageRequests_androidKt.allowHardware(requestBuilder, false);
+                ImageRequestsKt.crossfade(requestBuilder, true);
+                ImageRequests_androidKt.placeholder(requestBuilder, io.getstream.chat.android.ui.R.drawable.stream_ui_picture_placeholder);
+                ImageRequests_androidKt.target(requestBuilder, binding.ivMediaThumb);
+                SingletonImageLoader.get(binding.getRoot().getContext()).enqueue(requestBuilder.build());
             }
         }
     }

@@ -16,9 +16,9 @@ import io.getstream.chat.android.ui.common.state.messages.Edit
 import io.getstream.chat.android.ui.common.state.messages.MessageMode
 import io.getstream.chat.android.ui.feature.messages.list.adapter.viewholder.attachment.AttachmentFactoryManager
 import io.getstream.chat.android.ui.viewmodel.messages.MessageComposerViewModel
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListHeaderViewModel
+import io.getstream.chat.android.ui.viewmodel.messages.ChannelHeaderViewModel
 import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModel
-import io.getstream.chat.android.ui.viewmodel.messages.MessageListViewModelFactory
+import io.getstream.chat.android.ui.viewmodel.messages.ChannelViewModelFactory
 import io.getstream.chat.android.ui.viewmodel.messages.bindView
 
 class ChannelActivity4 : AppCompatActivity() {
@@ -28,18 +28,20 @@ class ChannelActivity4 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Step 0 - inflate binding
+        // inflate binding
         binding = ActivityChannel4Binding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.root.applySystemBarInsetsAsPadding()
 
         val cid = checkNotNull(intent.getStringExtra(CID_KEY)) {
             "Specifying a channel id is required when starting ChannelActivity4"
         }
 
-        // Step 1 - Create three separate ViewModels for the views so it's easy
-        //          to customize them individually
-        val factory = MessageListViewModelFactory(this, cid)
-        val messageListHeaderViewModel: MessageListHeaderViewModel by viewModels { factory }
+        // Create three separate ViewModels for the views so it's easy
+        // to customize them individually
+        val factory = ChannelViewModelFactory(this, cid)
+        val channelHeaderViewModel: ChannelHeaderViewModel by viewModels { factory }
         val messageListViewModel: MessageListViewModel by viewModels { factory }
         val messageComposerViewModel: MessageComposerViewModel by viewModels { factory }
 
@@ -48,43 +50,43 @@ class ChannelActivity4 : AppCompatActivity() {
         val attachmentViewFactory = AttachmentFactoryManager(listOf(imgurAttachmentViewFactory))
         binding.messageListView.setAttachmentFactoryManager(attachmentViewFactory)
 
-        // Step 2 - Bind the view and ViewModels, they are loosely coupled so it's easy to customize
-        messageListHeaderViewModel.bindView(binding.messageListHeaderView, this)
+        // Bind the view and ViewModels, they are loosely coupled so it's easy to customize
+        channelHeaderViewModel.bindView(binding.channelHeaderView, this)
         messageListViewModel.bindView(binding.messageListView, this)
         messageComposerViewModel.bindView(binding.messageComposerView, this)
 
-        // Step 3 - Let both MessageListHeaderView and MessageComposerView know when we open a thread
+        // Let both ChannelHeaderView and MessageComposerView know when we open a thread
         messageListViewModel.mode.observe(this) { mode ->
             when (mode) {
                 is MessageMode.MessageThread -> {
-                    messageListHeaderViewModel.setActiveThread(mode.parentMessage)
+                    channelHeaderViewModel.setActiveThread(mode.parentMessage)
                     messageComposerViewModel.setMessageMode(MessageMode.MessageThread(mode.parentMessage))
                 }
 
                 is MessageMode.Normal -> {
-                    messageListHeaderViewModel.resetThread()
+                    channelHeaderViewModel.resetThread()
                     messageComposerViewModel.leaveThread()
                 }
             }
         }
 
-        // Step 4 - Let the message input know when we are editing a message
+        // Let the message input know when we are editing a message
         binding.messageListView.setMessageEditHandler { message ->
             messageComposerViewModel.performMessageAction(Edit(message))
         }
 
-        // Step 5 - Handle navigate up state
+        // Handle navigate up state
         messageListViewModel.state.observe(this) { state ->
             if (state is MessageListViewModel.State.NavigateUp) {
                 finish()
             }
         }
 
-        // Step 6 - Handle back button behaviour correctly when you're in a thread
+        // Handle back button behaviour correctly when you're in a thread
         val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
-        binding.messageListHeaderView.setBackButtonClickListener(backHandler)
+        binding.channelHeaderView.setBackButtonClickListener(backHandler)
         onBackPressedDispatcher.addCallback(this) {
             backHandler()
         }

@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                 // coupling makes it easy to customize
                 viewModel.bindView(binding.channelListView, this)
                 binding.channelListView.setChannelItemClickListener { channel ->
-                    startActivity(ChannelActivity4.newIntent(this, channel))
+                    startActivity(ChannelActivity.newIntent(this, channel))
                 }
             } else {
                 Toast.makeText(this, "something went wrong!", Toast.LENGTH_SHORT).show()
